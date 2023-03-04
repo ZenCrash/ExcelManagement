@@ -1,0 +1,169 @@
+﻿@using DxBlazor.Data
+@using DxBlazor.Pages
+@using ClassLibary;
+
+@using ClosedXML.Excel
+
+@page "/"
+
+@*Logo*@
+<div style="width: 100%; height: auto; display: flex; justify-content: center;">
+    <img src="/images/index.png" style="width: 50%" />
+</div>
+<p> </p>
+<p> </p>
+
+
+@*Loading Animation*@
+@if (IsLoadingRender)
+{
+    <div class="text-center">
+        <div class="spinner-border text-secondary" role="status">
+            <span class="sr-only">Loading</span>
+        </div>
+        <h2>Loading...</h2>
+    </div>
+}
+else
+{
+    if (!IsWorkbookSelected) //Select Sheet
+    {
+        <h3>Please select a excel document:</h3>
+        <p></p>
+        <DxComboBox Data="@Files"
+            NullText="Select a File..."
+            Value="@SelectedFile"
+            ValueChanged="(string fileName) => { SelectedFile = fileName; GetFile(SelectedFile); }">
+        </DxComboBox>
+    }
+
+    else //If Sheet Has Been Selected
+    {
+        if (IsLoadingWorkbook)
+        {
+            <div class="text-center">
+                <div class="spinner-border text-secondary" role="status">
+                    <span class="sr-only">Loading</span>
+                </div>
+                <h2>Loading...</h2>
+                <h4><span style="color: gray;">(Please Make sure the file issent open in the bagground on your pc)</span></h4>
+            </div>
+        }
+
+        @*The Workbook*@
+        else
+        {
+            <h1><span style="color: gray;">Excel Document: </span>@SelectedFile.Replace("_", " ")</h1>
+            <DxTabs ScrollMode="TabsScrollMode.NavButtons"
+            @bind-ActiveTabIndex="@ActiveTabIndex">
+                @foreach (var sheetData in Data)
+                {
+                    <DxTabPage Text="@sheetData.Key" TabIconCssClass="oi oi-spreadsheet">
+                        <GridComponent Grid="Grids"
+                                        SheetData="sheetData"
+                                        UpdateData="GetData">
+                        </GridComponent>
+                    </DxTabPage>
+                }
+                @*Add New Sheet*@
+                <DxTab TabIconCssClass="oi oi-plus" Click="@(() => AddNewSheet(SelectedFile))"></DxTab>
+            </DxTabs>
+        }
+    }
+}
+
+@code {
+    //Loading
+    bool IsLoadingRender { get; set; } = true;
+    bool IsLoadingWorkbook { get; set; } = true;
+    bool IsWorkbookSelected { get; set; } = false;
+    //Files
+    private string SelectedFile { get; set; }
+    private List<string> Files { get; set; } = new List<string>();
+    //TabIndex
+    private int _ActiveTabIndex { get; set; }
+    private int ActiveTabIndex
+    {
+        get => _ActiveTabIndex;
+        set { _ActiveTabIndex = (value == Data.Count) ? Data.Count - 1 : value; }
+    }
+    //Grid
+    IGrid Grids;
+    //Get Data
+    private Dictionary<string, List<dynamic>> Data;
+    ExcelRepository excelRepository;
+
+    //test
+    string testString { get; set; } = "No";
+
+    //---------------------------------------------------------------------------//
+    /* Razor Page                                                                */
+    //---------------------------------------------------------------------------//
+
+    protected override async Task OnInitializedAsync()
+    {
+
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            GetFiles();
+
+            IsLoadingRender = false;
+            StateHasChanged();
+        }
+    }
+
+    //Insert OnInitialized here.
+    private void InitializedElements()
+    {
+        GetFiles();
+    }
+
+    //Get files in from dirictory.
+    private void GetFiles(string directoryPath = @"..\ExcelDocuments")
+    {
+        var fileNames = Directory.GetFiles(directoryPath, "*.xlsx");
+        Files.AddRange(fileNames.Select(fileName => Path.GetFileNameWithoutExtension(fileName)));
+    }
+
+    //Combobox On file change
+    private async Task GetFile(string workbookName, string directory = @"..\ExcelDocuments")
+    {
+        IsWorkbookSelected = true;
+        StateHasChanged();
+
+        excelRepository = new ExcelRepository();
+        GetData(workbookName, directory);
+
+        IsLoadingWorkbook = false;
+    }
+
+    //---------------------------------------------------------------------------//
+    /* CRUD Operations - Repository Interactions                                 */
+    //---------------------------------------------------------------------------//
+
+    //GetData
+    private async Task GetData(string workbookName, string directory = @"..\ExcelDocuments")
+    {
+        Data = excelRepository.GetSheetsByBookname(workbookName, directory);
+        StateHasChanged();
+    }
+    private async Task GetData()
+    {
+        string workbookName = SelectedFile;
+        string directory = @"..\ExcelDocuments";
+        Data = excelRepository.GetSheetsByBookname(workbookName, directory);
+        StateHasChanged();
+    }
+
+    //AddTab
+    private void AddNewSheet(string workbookName, string directory = @"..\ExcelDocuments", string newWorksheetName = "DefaultProp")
+    {
+        excelRepository.CreateWorksheet(workbookName, directory, newWorksheetName);
+        GetData(workbookName, directory);
+    }
+
+}

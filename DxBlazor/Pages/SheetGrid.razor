@@ -1,0 +1,119 @@
+﻿@using ClosedXML.Excel
+@using DevExpress.Data
+
+
+
+<DxGrid @ref="Grid"
+        Data="@SheetData.Value"
+        PageSize="10"
+        PagerPosition="GridPagerPosition.TopAndBottom"
+        PageSizeSelectorVisible="true"
+        PageSizeSelectorItems="@(new int[] {5, 10, 20, 50, 100})"
+        PageSizeSelectorAllRowsItemVisible="true"
+        PagerSwitchToInputBoxButtonCount="10"
+        PagerVisibleNumericButtonCount="10"
+        EditMode="GridEditMode.PopupEditForm"
+        PopupEditFormCssClass="pw-800"
+        PopupEditFormHeaderText="Edit Row"
+        ValidationEnabled="false"
+        KeyFieldName="GridId"
+        EditModelSaving="@((args) => Grid_EditModelSaving(args, SheetData.Key))"
+        DataItemDeleting="@((args) => Grid_DataItemDeleting(args, SheetData.Key))"
+        CustomizeEditModel="@((args) => Grid_CustomizeEditModel(args, SheetData.Key))">
+
+    <Columns>
+        <DxGridCommandColumn Width="160px" />
+        @foreach (var property in ((IDictionary<string, object>)SheetData.Value[0]).Keys.Skip(1))
+        {
+            <DxGridDataColumn FieldName="@property" MinWidth="100" />
+        }
+    </Columns>
+    <EditFormTemplate Context="EditFormContext">
+        <DxFormLayout CssClass="w-100">
+            @foreach (var property in ((IDictionary<string, object>)SheetData.Value[0]).Keys.Skip(1))
+            {
+                var cellContext = (XLCellValue)((IDictionary<string, object>)EditFormContext.EditModel)[property];
+
+                <DxFormLayoutItem Caption="@(property + ":")" ColSpanMd="6">
+                    @*If Value Datetime*@
+                    @if (cellContext.Type == XLDataType.DateTime)
+                    {
+                        <DxDateEdit @bind-Date="@(cellContext)"></DxDateEdit>
+                    }
+
+                    @*If value Text*@
+                    @if (cellContext.Type == XLDataType.Text)
+                    {
+                        var cell = cellContext.ToString();
+                        <DxTextBox @bind-Text="@(cell)"></DxTextBox>
+                    }
+
+                    @*If value Text*@
+                    @if (cellContext.Type == XLDataType.Number)
+                    {
+                        var cell = int.Parse(cellContext.ToString());
+                        <DxTextBox @bind-Value="@(cell)"></DxTextBox>
+                    }
+
+                    @*If value Text*@
+                    @if (cellContext.Type == XLDataType.Blank)
+                    {
+                        var cell = cellContext.ToString();
+                        <DxTextBox @bind-Text="@(cell)"></DxTextBox>
+                    }
+
+
+                </DxFormLayoutItem>
+            }
+        </DxFormLayout>
+    </EditFormTemplate>
+
+</DxGrid>
+
+
+@code {
+    [Parameter] public IGrid? Grid { get; set; }
+    [Parameter] public KeyValuePair<string, List<dynamic>> SheetData { get; set; }
+    [Parameter] public EventCallback UpdateData { get; set; }
+
+    protected async Task OnInitializedAsync()
+    {
+
+    }
+
+    //---------------------------------------------------------------------------//
+    /* CRUD Operations - Repository Interactions                                 */
+    //---------------------------------------------------------------------------//
+
+    //Edit Model
+    private async Task Grid_CustomizeEditModel(GridCustomizeEditModelEventArgs e, string sheetName)
+    {
+        if (e.IsNew)
+        {
+            var dataItem = (IDictionary<string, object>)e.DataItem;
+        }
+    }
+
+    //Save Row
+    private async Task Grid_EditModelSaving(GridEditModelSavingEventArgs e, string sheetName)
+    {
+        var updatedDataItem = e.EditModel;
+        var originalDataItem = e.DataItem;
+
+        //excelRepository.UpdateRowBySheetName(updatedDataItem, sheetName);
+
+        //int index = data[sheetName].IndexOf(originalDataItem);
+        //data[sheetName][index] = updatedDataItem;
+
+        await UpdateData.InvokeAsync();
+    }
+
+    //Delete Row
+    private async Task Grid_DataItemDeleting(GridDataItemDeletingEventArgs e, string sheetName)
+    {
+        var deletedDataItem = e.DataItem;
+        //data[sheetName].Remove(deletedDataItem);
+
+        await UpdateData.InvokeAsync();
+    }
+}
