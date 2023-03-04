@@ -21,9 +21,9 @@ else
         @foreach (var sheetData in Data)
         {
             <DxTabPage Text="@sheetData.Key" TabIconCssClass="oi oi-spreadsheet">
-                <GridComponent Grid="Grids"
-                       SheetData="sheetData"
-                       UpdateData="GetData">
+                <GridComponent Grid="@Grids"
+                       SheetData="@sheetData"
+                       UpdateData="@GetData">
                 </GridComponent>
             </DxTabPage>
         }
@@ -60,15 +60,16 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        string x = SelectedFile;
-        excelRepository = new ExcelRepository();
-        GetData(SelectedFile);
+        
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
+            excelRepository = new ExcelRepository();
+            GetData(SelectedFile);
+
             IsLoadingRender = false;
             StateHasChanged();
         }
