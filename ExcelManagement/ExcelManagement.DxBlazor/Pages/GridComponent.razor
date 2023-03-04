@@ -1,7 +1,6 @@
-﻿@using ClosedXML.Excel
+﻿
 @using DevExpress.Data
-
-
+@using ClosedXML.Excel
 
 <DxGrid @ref="Grid"
         Data="@SheetData.Value"
@@ -38,7 +37,8 @@
                     @*If Value Datetime*@
                     @if (cellContext.Type == XLDataType.DateTime)
                     {
-                        <DxDateEdit @bind-Date="@(cellContext)"></DxDateEdit>
+                        var cell = cellContext.GetDateTime();
+                        <DxDateEdit @bind-Date="@(cell)"></DxDateEdit>
                     }
 
                     @*If value Text*@
@@ -51,8 +51,8 @@
                     @*If value Text*@
                     @if (cellContext.Type == XLDataType.Number)
                     {
-                        var cell = int.Parse(cellContext.ToString());
-                        <DxTextBox @bind-Value="@(cell)"></DxTextBox>
+                        var cell = cellContext.ToString();
+                        <DxTextBox @bind-Text="@(cell)"></DxTextBox>
                     }
 
                     @*If value Text*@

@@ -1,11 +1,10 @@
-﻿using System;
+﻿using ClosedXML.Excel;
+using System;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using ClosedXML;
-using ClosedXML.Excel;
 
 namespace ExcelManagement.ClassLibary
 {
@@ -81,7 +80,7 @@ namespace ExcelManagement.ClassLibary
                                 dictionary["GridId"] = dataRow.RowNumber();
                                 for (int i = 0; i < headers.Cells().Count(); i++)
                                 {
-                                    dictionary[headers.Cell(i + 1).Value.ToString().Replace(" ", "")] = dataRow.Cell(i + 1);
+                                    dictionary[headers.Cell(i + 1).Value.ToString().Replace(" ", "")] = dataRow.Cell(i + 1).Value;
                                 }
 
                                 sheetData.Add(item);

@@ -1,4 +1,4 @@
-namespace DxBlazor.Data
+namespace ExcelManagement.DxBlazor.Data
 {
     public class WeatherForecastService
     {

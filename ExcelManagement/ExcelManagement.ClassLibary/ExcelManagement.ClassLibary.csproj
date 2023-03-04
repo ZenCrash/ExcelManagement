@@ -7,11 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="ExcelDocuments\" />
+    <PackageReference Include="ClosedXML" Version="0.100.3" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="ClosedXML" Version="0.100.3" />
+    <Folder Include="ExcelDocuments\" />
   </ItemGroup>
 
 </Project>

@@ -11,4 +11,7 @@
   <ItemGroup>
     <Folder Include="wwwroot\images\" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ExcelManagement.ClassLibary\ExcelManagement.ClassLibary.csproj" />
+  </ItemGroup>
 </Project>

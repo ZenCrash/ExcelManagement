@@ -39,3 +39,8 @@ html, body {
     right: 0.75rem;
     top: 0.5rem;
 }
+
+.pw-800 {
+    max-width: 1000px !important;
+    width: 800px !important;
+}
