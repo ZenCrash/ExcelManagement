@@ -1,0 +1,101 @@
+﻿@using ExcelManagement.DxBlazor.Data
+@using ExcelManagement.DxBlazor.Pages
+@using ExcelManagement.ClassLibary
+
+@using ClosedXML.Excel
+
+@if (IsLoadingRender) //Loading Animation
+{
+    <div class="text-center">
+        <div class="spinner-border text-secondary" role="status">
+            <span class="sr-only">Loading</span>
+        </div>
+        <h2>Loading...</h2>
+    </div>
+}
+else
+{
+    <h1><span style="color: gray;">Excel Document: </span>@SelectedFile.Replace("_", " ")</h1>
+    <DxTabs ScrollMode="TabsScrollMode.NavButtons"
+        @bind-ActiveTabIndex="@ActiveTabIndex">
+        @foreach (var sheetData in Data)
+        {
+            <DxTabPage Text="@sheetData.Key" TabIconCssClass="oi oi-spreadsheet">
+                <GridComponent Grid="Grids"
+                       SheetData="sheetData"
+                       UpdateData="GetData">
+                </GridComponent>
+            </DxTabPage>
+        }
+        @*Add New Sheet*@
+        <DxTab TabIconCssClass="oi oi-plus" Click="@(() => AddNewSheet(SelectedFile))"></DxTab>
+    </DxTabs>
+}
+
+@code {
+    [Parameter] public string SelectedFile { get; set; }
+    //Loading
+    bool IsLoadingRender { get; set; } = true;
+    //Files
+    private List<string> Files { get; set; } = new List<string>();
+    //TabIndex
+    private int _ActiveTabIndex { get; set; }
+    private int ActiveTabIndex
+    {
+        get => _ActiveTabIndex;
+        set { _ActiveTabIndex = (value == Data.Count) ? Data.Count - 1 : value; }
+    }
+    //Grid
+    IGrid Grids;
+    //Get Data
+    private Dictionary<string, List<dynamic>> Data;
+    ExcelRepository excelRepository;
+
+    //test
+    string testString { get; set; } = "No";
+
+    //---------------------------------------------------------------------------//
+    /* Razor Page                                                                */
+    //---------------------------------------------------------------------------//
+
+    protected override async Task OnInitializedAsync()
+    {
+        string x = SelectedFile;
+        excelRepository = new ExcelRepository();
+        GetData(SelectedFile);
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            IsLoadingRender = false;
+            StateHasChanged();
+        }
+    }
+
+    //---------------------------------------------------------------------------//
+    /* CRUD Operations - Repository Interactions                                 */
+    //---------------------------------------------------------------------------//
+
+    //GetData
+    private async Task GetData(string workbookName, string directory = @"..\ExcelDocuments")
+    {
+        Data = excelRepository.GetSheetsByBookname(workbookName, directory);
+        StateHasChanged();
+    }
+    private async Task GetData()
+    {
+        string workbookName = SelectedFile;
+        string directory = @"..\ExcelDocuments";
+        Data = excelRepository.GetSheetsByBookname(workbookName, directory);
+        StateHasChanged();
+    }
+
+    //AddTab
+    private void AddNewSheet(string workbookName, string directory = @"..\ExcelDocuments", string newWorksheetName = "DefaultProp")
+    {
+        excelRepository.CreateWorksheet(workbookName, directory, newWorksheetName);
+        GetData(workbookName, directory);
+    }
+}
