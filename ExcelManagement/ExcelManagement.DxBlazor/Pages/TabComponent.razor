@@ -21,7 +21,7 @@ else
         @foreach (var sheetData in Data)
         {
             <DxTabPage Text="@sheetData.Key" TabIconCssClass="oi oi-spreadsheet">
-                <GridComponent Grid="@Grids"
+                <GridComponent SelectedFile="SelectedFile"
                        SheetData="@sheetData"
                        UpdateData="@GetData">
                 </GridComponent>
@@ -45,8 +45,6 @@ else
         get => _ActiveTabIndex;
         set { _ActiveTabIndex = (value == Data.Count) ? Data.Count - 1 : value; }
     }
-    //Grid
-    IGrid Grids;
     //Get Data
     private Dictionary<string, List<dynamic>> Data;
     ExcelRepository excelRepository;
