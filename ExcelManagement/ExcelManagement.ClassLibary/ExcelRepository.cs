@@ -156,27 +156,27 @@ namespace ExcelManagement.ClassLibary
                 foreach (var cellObject in ((IDictionary<string, object>)updatedDataItem).Values.Skip(1))
                 {
                     var cell = (XlCellView)cellObject;
-                    if (!cell.XlCell.HasFormula)
+                    if (!cell.XlCell?.HasFormula ?? true)
                     {
-                        if (cell.XlCell.Value.Type == XLDataType.Text)
+                        if (cell.Type == XLDataType.Text)
                         {
                             var cellValue = (string)cell.Value;
-                            worksheet.Cell(rowIndex, cell.XlCell.Address.ColumnNumber).Value = cellValue;
+                            worksheet.Cell(rowIndex, cell.ColumnNumber).Value = cellValue;
                         }
-                        else if (cell.XlCell.Value.Type == XLDataType.Blank)
+                        else if (cell.Type == XLDataType.Blank)
                         {
                             var cellValue = (string)cell.Value;
-                            worksheet.Cell(rowIndex, cell.XlCell.Address.ColumnNumber).Value = cellValue;
+                            worksheet.Cell(rowIndex, cell.ColumnNumber).Value = cellValue;
                         }
-                        else if (cell.XlCell.Value.Type == XLDataType.Number)
+                        else if (cell.Type == XLDataType.Number)
                         {
                             var cellValue = (double)cell.Value;
-                            worksheet.Cell(rowIndex, cell.XlCell.Address.ColumnNumber).Value = cellValue;
+                            worksheet.Cell(rowIndex, cell.ColumnNumber).Value = cellValue;
                         }
-                        else if (cell.XlCell.Value.Type == XLDataType.DateTime)
+                        else if (cell.Type == XLDataType.DateTime)
                         {
                             var cellValue = (DateTime)cell.Value;
-                            worksheet.Cell(rowIndex, cell.XlCell.Address.ColumnNumber).Value = cellValue;
+                            worksheet.Cell(rowIndex, cell.ColumnNumber).Value = cellValue;
                         }
                     }
                 }

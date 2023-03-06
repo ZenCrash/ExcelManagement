@@ -10,8 +10,10 @@ namespace ExcelManagement.ClassLibary.Models
 {
     public class XlCellView
     {
-        public IXLCell XlCell { get; set; }
+        public IXLCell? XlCell { get; set; }
         public XLDataType Type { get; set; }
+        public int ColumnNumber { get; set; }
+
         public object Value
         {
             get
@@ -25,9 +27,12 @@ namespace ExcelManagement.ClassLibary.Models
         }
         private object _value = (object)string.Empty;
 
+        public XlCellView() { }
+
         public XlCellView(IXLCell cell)
         {
             XlCell = cell;
+            ColumnNumber = cell.Address.ColumnNumber;
 
             switch (cell.Value.Type)
             {

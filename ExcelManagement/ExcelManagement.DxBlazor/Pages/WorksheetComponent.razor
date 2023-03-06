@@ -58,7 +58,7 @@ else
                     <DxFormLayoutItem Caption="@(property + ":")" ColSpanMd="6">
 
                         @*If Cell has Formula*@
-                        @if (((XlCellView)dataItem[property]).XlCell.HasFormula)
+                        @if (((XlCellView)dataItem[property]).XlCell?.HasFormula ?? false)
                         {
                             //var value = @"=" + ((XlCellView)dataItem[property]).XlCell.FormulaA1; //display cell formel instead
                             var value = (string)cellValue;
@@ -158,12 +158,16 @@ else
             var dataItem = (IDictionary<string, object>)e.Grid.GetDataItem(0);
             var properties = dataItem.Keys.ToArray();
 
-            for (var i = 0; i < properties.Length; i++)
+
+            model[properties[0]] = SheetData.Value.Count + 2;
+
+            for (var i = 1; i < properties.Length; i++)
             {
-                if (properties[i] != "ID")
-                {
-                    model[properties[i]] = string.Empty;
-                }
+                var cell = new XlCellView();
+                cell.ColumnNumber = i;
+                cell.Type = XLDataType.Text;
+                cell.Value = "";
+                model[properties[i]] = cell;
             }
             e.EditModel = model;
         }
