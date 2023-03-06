@@ -135,5 +135,17 @@ namespace ExcelManagement.ClassLibary
             }
         }
 
+        //---------------------------------------------------------------------------//
+        /* Update                                                                    */
+        //---------------------------------------------------------------------------//
+
+        public void UpdateRowInExcel(string sheetName, object updatedDataItem)
+        {
+            var cell = ((IDictionary<string, object>)updatedDataItem).First();
+            // Console.WriteLine(((XlCellView)cell.Value).XlCell.Address.RowNumber);
+
+            int number = ((XlCellView)cell.Value).XlCell.Address.RowNumber;
+        }
+
     }
 }
