@@ -35,6 +35,12 @@ else
         <DxTab TabIconCssClass="oi oi-plus" Click="@(() => AddNewSheet(SelectedFileName))"></DxTab>
     </DxTabs>
 }
+@*Alert*@
+@foreach (AlertMessageModel message in alertMessages)
+{
+    <AlertMessage model="@message" dispose="DisposeAlert" />
+}
+
 
 @code {
     [Parameter] public string SelectedFileName { get; set; }
@@ -56,6 +62,10 @@ else
 
     //test
     string testString { get; set; } = "No";
+
+    // Alert
+    List<AlertMessageModel> alertMessages = new List<AlertMessageModel>();
+
 
     //---------------------------------------------------------------------------//
     /* Razor Page                                                                */
@@ -100,7 +110,14 @@ else
         string workbookName = SelectedFileName;
         string directory = DirectoryPath;
 
-        excelRepository.CreateWorksheet(workbookName, directory, newWorksheetName);
+        excelRepository.CreateWorksheet(workbookName, newWorksheetName, directory);
+        alertMessages.Add(new AlertMessageModel("A tab was create sucessfully"));
         GetWorkbook();
+    }
+
+    // Dispose alert message
+    private async Task DisposeAlert(Guid guid)
+    {
+        alertMessages.Remove(alertMessages.Single(message => message.Guid.CompareTo(guid) == 0));
     }
 }

@@ -44,3 +44,26 @@ html, body {
     max-width: 1000px !important;
     width: 800px !important;
 }
+
+.fade {
+    animation-duration: 5s;
+    animation-name: fade;
+}
+
+@keyframes fade {
+    0% {
+        opacity: 0;
+    }
+
+    10% {
+        opacity: 1;
+    }
+
+    80% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0;
+    }
+}

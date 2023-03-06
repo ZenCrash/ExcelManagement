@@ -1,0 +1,28 @@
+﻿@using ExcelManagement.DxBlazor.Data;
+<div class="alert-success fade">@model.Message</div>
+
+@code {
+    [Parameter]
+    public AlertMessageModel model { get; set; }
+    private System.Timers.Timer timer;
+    [Parameter]
+    public EventCallback<Guid> dispose { get; set; }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if (firstRender)
+        {
+            timer = new System.Timers.Timer(5000);
+
+            timer.Elapsed += (source, e) =>
+            {
+                InvokeAsync(() => dispose.InvokeAsync(model.Guid));
+            };
+
+            timer.Enabled = true;
+        }
+
+        base.OnAfterRender(firstRender);
+    }
+
+}
