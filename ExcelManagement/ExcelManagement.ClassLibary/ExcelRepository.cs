@@ -1,4 +1,5 @@
 ﻿using ClosedXML.Excel;
+using ExcelManagement.ClassLibary.Models;
 using System;
 using System.Collections.Generic;
 using System.Dynamic;
@@ -57,7 +58,7 @@ namespace ExcelManagement.ClassLibary
                                 dictionary["GridId"] = row;
                                 for (int col = 1; col <= maxCols; col++)
                                 {
-                                    dictionary[string.Format("Column {0}", col)] = worksheet.Cell(row, col);
+                                    dictionary[string.Format("Column {0}", col)] = new XlCellView(worksheet.Cell(row, col));
                                 }
 
                                 sheetData.Add(item);
@@ -80,7 +81,7 @@ namespace ExcelManagement.ClassLibary
                                 dictionary["GridId"] = dataRow.RowNumber();
                                 for (int i = 0; i < headers.Cells().Count(); i++)
                                 {
-                                    dictionary[headers.Cell(i + 1).Value.ToString().Replace(" ", "")] = dataRow.Cell(i + 1).Value;
+                                    dictionary[headers.Cell(i + 1).Value.ToString().Replace(" ", "")] = new XlCellView(dataRow.Cell(i + 1));
                                 }
 
                                 sheetData.Add(item);

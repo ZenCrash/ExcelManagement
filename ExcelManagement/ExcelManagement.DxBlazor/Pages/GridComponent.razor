@@ -1,8 +1,10 @@
-﻿
+﻿@using System.Dynamic
 @using DevExpress.Data
 @using ClosedXML.Excel
+@using ClassLibary.Models
 
-<DxGrid Data="@SheetData.Value"
+<DxGrid @ref="Grid"
+        Data="@SheetData.Value"
         PageSize="10"
         PagerPosition="GridPagerPosition.TopAndBottom"
         PageSizeSelectorVisible="true"
@@ -30,10 +32,16 @@
         <DxFormLayout CssClass="w-100">
             @foreach (var property in ((IDictionary<string, object>)SheetData.Value[0]).Keys.Skip(1))
             {
-                var cellContext = (XLCellValue)((IDictionary<string, object>)EditFormContext.EditModel)[property];
+                var cellContext = (XlCellView)((IDictionary<string, object>)EditFormContext.EditModel)[property];
 
                 <DxFormLayoutItem Caption="@(property + ":")" ColSpanMd="6">
-                    
+                    @*If Value Datetime*@
+                    @if (cellContext.Type == XLDataType.DateTime)
+                    {
+                        var cell = (DateTime)cellContext.Value;
+                        <DxDateEdit @bind-Date="@(cell)"></DxDateEdit>
+                    }
+
                     @*If value Text*@
                     @if (cellContext.Type == XLDataType.Text)
                     {
@@ -44,24 +52,9 @@
                     @*If value Text*@
                     @if (cellContext.Type == XLDataType.Number)
                     {
-                        var cell = cellContext.ToString();
+                        var cell = cellContext.Value.ToString();
                         <DxTextBox @bind-Text="@(cell)"></DxTextBox>
                     }
-
-                    @*If Value Datetime*@
-                    @if (cellContext.Type == XLDataType.DateTime)
-                    {
-                        var cell = cellContext.GetDateTime();
-                        <DxDateEdit @bind-Date="@(cell)"></DxDateEdit>
-                    }
-
-                    @*If value Text*@
-                    @if (cellContext.Type == XLDataType.Blank)
-                    {
-                        var cell = cellContext.ToString();
-                        <DxTextBox @bind-Text="@(cell)"></DxTextBox>
-                    }
-
 
                 </DxFormLayoutItem>
             }
@@ -72,7 +65,7 @@
 
 
 @code {
-    //Grid
+    [Parameter] public IGrid? Grid { get; set; }
     [Parameter] public string SelectedFile { get; set; }
     [Parameter] public KeyValuePair<string, List<dynamic>> SheetData { get; set; }
     [Parameter] public EventCallback UpdateData { get; set; }
@@ -100,6 +93,11 @@
     {
         var updatedDataItem = e.EditModel;
         var originalDataItem = e.DataItem;
+
+        //excelRepository.UpdateRowBySheetName(updatedDataItem, sheetName);
+
+        //int index = data[sheetName].IndexOf(originalDataItem);
+        //data[sheetName][index] = updatedDataItem;
 
         await UpdateData.InvokeAsync();
     }
