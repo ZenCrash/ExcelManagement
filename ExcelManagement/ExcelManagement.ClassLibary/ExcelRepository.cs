@@ -1,11 +1,16 @@
-﻿using ClosedXML.Excel;
-using ExcelManagement.ClassLibary.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Dynamic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+
+using ExcelManagement.ClassLibary.Models;
+
+using ClosedXML.Excel;
+using DocumentFormat.OpenXml.Bibliography;
+using DocumentFormat.OpenXml.Spreadsheet;
 
 namespace ExcelManagement.ClassLibary
 {
@@ -102,7 +107,7 @@ namespace ExcelManagement.ClassLibary
 
         //Create worksheet
         //by workbook, directory, sheetname
-        public void CreateWorksheet(string workbookName, string directory, string sheetName = "DefaultProp")
+        public void CreateWorksheet(string workbookName, string sheetName, string directory)
         {
             string filePath = GetFilePath(directory, workbookName);
 
@@ -113,7 +118,7 @@ namespace ExcelManagement.ClassLibary
                     //If Default:
                     int i = 1;
                     string newSheetName;
-                    if (sheetName == "DefaultProp")
+                    if (sheetName == "")
                     {
                         sheetName = "Sheet";
                         newSheetName = sheetName + $" {i}";
@@ -139,13 +144,61 @@ namespace ExcelManagement.ClassLibary
         /* Update                                                                    */
         //---------------------------------------------------------------------------//
 
-        public void UpdateRowInExcel(string sheetName, object updatedDataItem)
+        public void UpdateRowInExcel(string sheetName, object updatedDataItem, string fileName, string directory)
         {
-            var cell = ((IDictionary<string, object>)updatedDataItem).First();
-            // Console.WriteLine(((XlCellView)cell.Value).XlCell.Address.RowNumber);
+            string path = GetFilePath(directory, fileName);
+            using (var workbook = new XLWorkbook(path))
+            {
+                var worksheet = workbook.Worksheet(sheetName);
 
-            int number = ((XlCellView)cell.Value).XlCell.Address.RowNumber;
+                int rowIndex = (int)((IDictionary<string, object>)updatedDataItem).First().Value;
+
+                foreach (var cellObject in ((IDictionary<string, object>)updatedDataItem).Values.Skip(1))
+                {
+                    var cell = (XlCellView)cellObject;
+                    if (!cell.XlCell.HasFormula)
+                    {
+                        if (cell.XlCell.Value.Type == XLDataType.Text)
+                        {
+                            var cellValue = (string)cell.Value;
+                            worksheet.Cell(rowIndex, cell.XlCell.Address.ColumnNumber).Value = cellValue;
+                        }
+                        else if (cell.XlCell.Value.Type == XLDataType.Blank)
+                        {
+                            var cellValue = (string)cell.Value;
+                            worksheet.Cell(rowIndex, cell.XlCell.Address.ColumnNumber).Value = cellValue;
+                        }
+                        else if (cell.XlCell.Value.Type == XLDataType.Number)
+                        {
+                            var cellValue = (double)cell.Value;
+                            worksheet.Cell(rowIndex, cell.XlCell.Address.ColumnNumber).Value = cellValue;
+                        }
+                        else if (cell.XlCell.Value.Type == XLDataType.DateTime)
+                        {
+                            var cellValue = (DateTime)cell.Value;
+                            worksheet.Cell(rowIndex, cell.XlCell.Address.ColumnNumber).Value = cellValue;
+                        }
+                    }
+                }
+
+                workbook.SaveAs(path);
+            }
         }
 
+        //---------------------------------------------------------------------------//
+        /* Delete                                                                    */
+        //---------------------------------------------------------------------------//
+
+        public void DeleteRowInSheet(int rowIndex, string sheetName, string fileName, string directory)
+        {
+            string path = GetFilePath(directory, fileName);
+            using (var workbook = new XLWorkbook(path))
+            {
+                var worksheet = workbook.Worksheet(sheetName);
+                worksheet.Row(rowIndex).Delete();
+
+                workbook.SaveAs(path);
+            }
+        }
     }
 }

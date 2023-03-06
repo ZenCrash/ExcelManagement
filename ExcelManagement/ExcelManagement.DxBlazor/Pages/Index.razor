@@ -1,6 +1,7 @@
 ﻿@using ExcelManagement.DxBlazor.Data
 @using ExcelManagement.DxBlazor.Pages
 @using ExcelManagement.ClassLibary
+@using ExcelManagement.ClassLibary.Models
 
 @using ClosedXML.Excel
 
@@ -12,6 +13,7 @@
 </div>
 <p> </p>
 <p> </p>
+
 
 @*Loading Animation*@
 @if (IsLoadingRender)
@@ -31,14 +33,16 @@ else
         <p></p>
         <DxComboBox Data="@Files"
             NullText="Select a File..."
-            Value="@SelectedFile"
-            ValueChanged="(string fileName) => { SelectedFile = fileName; UpdateFileSelection(SelectedFile); }">
+            Value="@SelectedFileName"
+            ValueChanged="(string fileName) => { SelectedFileName = fileName; IsWorkbookSelected = true; }">
         </DxComboBox>
     }
 
     else //If Sheet Has Been Selected
     {
-        <TabComponent SelectedFile="@SelectedFile"></TabComponent>
+        <WorkbookComponent SelectedFileName="@SelectedFileName"
+            DirectoryPath="@DirectoryPath">
+        </WorkbookComponent>
     }
 }
 
@@ -47,7 +51,8 @@ else
     bool IsLoadingRender { get; set; } = true;
     bool IsWorkbookSelected { get; set; } = false;
     //Files
-    private string SelectedFile { get; set; }
+    private string SelectedFileName { get; set; }
+    private string DirectoryPath { get; set; }
     private List<string> Files { get; set; } = new List<string>();
 
     //---------------------------------------------------------------------------//
@@ -63,22 +68,16 @@ else
     {
         if (firstRender)
         {
-            GetFiles();
+            DirectoryPath = @"..\ExcelDocuments"; //Default dirictory
+            GetFiles(DirectoryPath);
 
             IsLoadingRender = false;
             StateHasChanged();
         }
     }
 
-    //On Combobox Change
-    private void UpdateFileSelection(string selectedFile)
-    {
-        IsWorkbookSelected = true;
-        StateHasChanged();
-    }
-
     //Get files in from dirictory.
-    private void GetFiles(string directoryPath = @"..\ExcelDocuments")
+    private void GetFiles(string directoryPath)
     {
         var fileNames = Directory.GetFiles(directoryPath, "*.xlsx");
         Files.AddRange(fileNames.Select(fileName => Path.GetFileNameWithoutExtension(fileName)));

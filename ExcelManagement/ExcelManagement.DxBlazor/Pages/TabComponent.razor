@@ -1,39 +1,44 @@
 ﻿@using ExcelManagement.DxBlazor.Data
 @using ExcelManagement.DxBlazor.Pages
 @using ExcelManagement.ClassLibary
+@using ExcelManagement.ClassLibary.Models
 
 @using ClosedXML.Excel
 
+@*Workbook / Tab Component*@
 @if (IsLoadingRender) //Loading Animation
 {
     <div class="text-center">
         <div class="spinner-border text-secondary" role="status">
             <span class="sr-only">Loading</span>
         </div>
-        <h2>Loading...</h2>
+        <h2>Loading Excel Document...</h2>
     </div>
 }
 else
 {
-    <h1><span style="color: gray;">Excel Document: </span>@SelectedFile.Replace("_", " ")</h1>
+    <h1><span style="color: gray;">Excel Document: </span>@SelectedFileName</h1>
+
     <DxTabs ScrollMode="TabsScrollMode.NavButtons"
         @bind-ActiveTabIndex="@ActiveTabIndex">
         @foreach (var sheetData in Data)
         {
             <DxTabPage Text="@sheetData.Key" TabIconCssClass="oi oi-spreadsheet">
-                <GridComponent SelectedFile="SelectedFile"
-                       SheetData="@sheetData"
-                       UpdateData="@GetData">
-                </GridComponent>
+                <WorksheetComponent SelectedFileName="@SelectedFileName"
+                        DirectoryPath="@DirectoryPath"
+                        SheetData="@sheetData"
+                        UpdateWorkbook="@GetWorkbook">
+                </WorksheetComponent>
             </DxTabPage>
         }
         @*Add New Sheet*@
-        <DxTab TabIconCssClass="oi oi-plus" Click="@(() => AddNewSheet(SelectedFile))"></DxTab>
+        <DxTab TabIconCssClass="oi oi-plus" Click="@(() => AddNewSheet(SelectedFileName))"></DxTab>
     </DxTabs>
 }
 
 @code {
-    [Parameter] public string SelectedFile { get; set; }
+    [Parameter] public string SelectedFileName { get; set; }
+    [Parameter] public string DirectoryPath { get; set; }
     //Loading
     bool IsLoadingRender { get; set; } = true;
     //Files
@@ -58,15 +63,14 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        
+
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
-            excelRepository = new ExcelRepository();
-            GetData(SelectedFile);
+            GetWorkbook();
 
             IsLoadingRender = false;
             StateHasChanged();
@@ -78,23 +82,25 @@ else
     //---------------------------------------------------------------------------//
 
     //GetData
-    private async Task GetData(string workbookName, string directory = @"..\ExcelDocuments")
+    private async Task GetWorkbook()
     {
+        string workbookName = SelectedFileName;
+        string directory = DirectoryPath;
+        excelRepository = new ExcelRepository();
         Data = excelRepository.GetSheetsByBookname(workbookName, directory);
-        StateHasChanged();
-    }
-    private async Task GetData()
-    {
-        string workbookName = SelectedFile;
-        string directory = @"..\ExcelDocuments";
-        Data = excelRepository.GetSheetsByBookname(workbookName, directory);
+
         StateHasChanged();
     }
 
     //AddTab
-    private void AddNewSheet(string workbookName, string directory = @"..\ExcelDocuments", string newWorksheetName = "DefaultProp")
+    private void AddNewSheet(string newWorksheetName = "")
     {
+        newWorksheetName.Replace(" ", "");
+        newWorksheetName = (newWorksheetName == newWorksheetName.Replace(" ", "")) ? "" : newWorksheetName;
+        string workbookName = SelectedFileName;
+        string directory = DirectoryPath;
+
         excelRepository.CreateWorksheet(workbookName, directory, newWorksheetName);
-        GetData(workbookName, directory);
+        GetWorkbook();
     }
 }
