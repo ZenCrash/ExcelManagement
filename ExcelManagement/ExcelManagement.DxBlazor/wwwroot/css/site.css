@@ -40,11 +40,13 @@ html, body {
     top: 0.5rem;
 }
 
+/*Edit Row Popup*/
 .pw-800 {
     max-width: 1000px !important;
     width: 800px !important;
 }
 
+/*Alert Message Animation*/
 .fade {
     animation-duration: 5s;
     animation-name: fade;

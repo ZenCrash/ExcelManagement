@@ -50,67 +50,86 @@ else
         </Columns>
         <EditFormTemplate Context="EditFormContext">
             <DxFormLayout CssClass="w-100">
-                @foreach (var property in ((IDictionary<string, object>)SheetData.Value[0]).Keys.Skip(1))
+                @if (fileLogic.IsFileAccessable(DirectoryPath, SelectedFileName))
                 {
-                    var dataItem = (IDictionary<string, object>)EditFormContext.EditModel;
-                    var cellValue = ((XlCellView)dataItem[property]).Value;
+                    @foreach (var property in ((IDictionary<string, object>)SheetData.Value[0]).Keys.Skip(1))
+                    {
+                        var dataItem = (IDictionary<string, object>)EditFormContext.EditModel;
+                        var xlCellView = (XlCellView)dataItem[property];
 
-                    <DxFormLayoutItem Caption="@(property + ":")" ColSpanMd="6">
+                        var xlCell = xlCellView.XlCell;
+                        var cellValue = xlCellView.Value;
+                        var cellType = xlCellView.Type;
+                        var validation = xlCell.GetDataValidation();
 
-                        @*If Cell has Formula*@
-                        @if (((XlCellView)dataItem[property]).XlCell.HasFormula)
-                        {
-                            //var value = @"=" + ((XlCellView)dataItem[property]).XlCell.FormulaA1; //display cell formel instead
-                            var value = (string)cellValue;
-                            <DxTextBox Text="@value"
-                           ReadOnly="true"
-                           Enabled="false">
-                            </DxTextBox>
-                        }
+                        <DxFormLayoutItem Caption="@(property + ":")" ColSpanMd="6">
 
-                        @*If Value Text*@
-                        else if (((XlCellView)dataItem[property]).Type == XLDataType.Text)
-                        {
-                            var value = (string)cellValue;
-                            <DxTextBox Text="@value"
-                           TextChanged="@((string newVal) => ((XlCellView)dataItem[property]).Value = newVal)"
-                           TextExpression="@(() => value)">
-                            </DxTextBox>
-                        }
+                            @*If Cell has Formula*@
+                            @if (xlCell.HasFormula)
+                            {
+                                //var value = @"=" + ((XlCellView)dataItem[property]).XlCell.FormulaA1; //display cell formel instead
+                                var value = (string)cellValue;
+                                <DxTextBox Text="@value"
+                                   ReadOnly="true"
+                                   Enabled="false" />
+                            }
 
-                        @*If Value Blank*@
-                        else if (((XlCellView)dataItem[property]).Type == XLDataType.Blank)
-                        {
-                            var value = (string)cellValue;
-                            <DxTextBox Text="@value"
-                           TextChanged="@((string newVal) => ((XlCellView)dataItem[property]).Value = newVal)"
-                           TextExpression="@(() => value)">
-                            </DxTextBox>
-                        }
+                            @*If Cell has data validation*@
+                            else if (!(validation.MinValue == "" || validation.MinValue == null))
+                            {
+                                var value = (string)cellValue;
+                                List<string> dataValidationElements = DataValidationLogic.ConvertStringToList(validation.MinValue);
+                                <DxComboBox Data="@dataValidationElements"
+                                Value="@value"
+                                ValueChanged="@((string newVal) => ((XlCellView)dataItem[property]).Value = newVal)" />
+                            }
 
-                        @*If Value Number*@
-                        else if (((XlCellView)dataItem[property]).Type == XLDataType.Number)
-                        {
-                            var value = (double)cellValue;
-                            <DxSpinEdit Text="@value"
-                            ValueChanged="@((double newVal) => ((XlCellView)dataItem[property]).Value = newVal)"
-                            ValueExpression="@(() => value)">
-                            </DxSpinEdit>
-                        }
+                            @*If Value Text*@
+                            else if (cellType == XLDataType.Text)
+                            {
+                                var value = (string)cellValue;
+                                <DxTextBox Text="@value"
+                                           TextChanged="@((string newVal) => ((XlCellView)dataItem[property]).Value = newVal)"
+                                           TextExpression="@(() => value)" />
+                            }
 
-                        @*If Value Datetime*@
-                        else if (((XlCellView)dataItem[property]).Type == XLDataType.DateTime)
-                        {
-                            var value = (DateTime)cellValue;
-                            <DxDateEdit Date="@value"
-                            DateChanged="@((DateTime newVal) => ((XlCellView)dataItem[property]).Value = newVal)"
-                            DateExpression="@(() => value)">
-                            </DxDateEdit>
-                        }
+                            @*If Value Blank*@
+                            else if (cellType == XLDataType.Blank)
+                            {
+                                var value = (string)cellValue;
+                                <DxTextBox Text="@value"
+                                           TextChanged="@((string newVal) => ((XlCellView)dataItem[property]).Value = newVal)"
+                                           TextExpression="@(() => value)" />
+                            }
 
-                    </DxFormLayoutItem>
+                            @*If Value Number*@
+                            else if (cellType == XLDataType.Number)
+                            {
+                                var value = (double)cellValue;
+                                <DxSpinEdit Text="@value"
+                                            ValueChanged="@((double newVal) => ((XlCellView)dataItem[property]).Value = newVal)"
+                                            ValueExpression="@(() => value)" />
+                            }
 
+                            @*If Value Datetime*@
+                            else if (cellType == XLDataType.DateTime)
+                            {
+                                var value = (DateTime)cellValue;
+                                <DxDateEdit Date="@value"
+                                            DateChanged="@((DateTime newVal) => ((XlCellView)dataItem[property]).Value = newVal)"
+                                            DateExpression="@(() => value)" />
+                            }
+
+                        </DxFormLayoutItem>
+                    }
                 }
+                else
+                {
+                    //this alert messge is here incase the exceldocument is opened before editing a row.
+                    //if form submitted while document is open operation will still fail but user just lost all their progress.
+                    AlertMessage.InvokeAsync(new AlertMessageModel(AlertMessageModel.AlertType.FileInaccessible));
+                }
+
             </DxFormLayout>
         </EditFormTemplate>
 
@@ -122,12 +141,14 @@ else
     [Parameter] public string DirectoryPath { get; set; }
     [Parameter] public KeyValuePair<string, List<dynamic>> SheetData { get; set; }
     [Parameter] public EventCallback UpdateWorkbook { get; set; }
-
+    [Parameter] public EventCallback<AlertMessageModel> AlertMessage { get; set; }
     //Loading
     bool IsLoadingRender { get; set; } = true;
-
     public IGrid? Grid { get; set; }
-    ExcelRepository excelRepository;
+    //Repository
+    ExcelRepository excelRepository = new();
+    //File Logic
+    FileLogic fileLogic = new();
 
     protected async Task OnInitializedAsync()
     {
@@ -138,8 +159,6 @@ else
     {
         if (firstRender)
         {
-            excelRepository = new ExcelRepository();
-
             IsLoadingRender = false;
             StateHasChanged();
         }
@@ -154,35 +173,11 @@ else
     {
         if (e.IsNew)
         {
-            //var model = new ExpandoObject() as IDictionary<string, object>;
-            //var dataItem = (IDictionary<string, object>)e.Grid.GetDataItem(0);
-            //var properties = dataItem.Keys.ToArray();
+            var model = new ExpandoObject() as IDictionary<string, object>;
+            var dataItem = (IDictionary<string, object>)excelRepository.GetFirstRow(SelectedFileName, sheetName, DirectoryPath);
 
-            //for (var i = 0; i < properties.Length; i++)
-            //{
-            //    if (properties[i] != "ID")
-            //    {
-            //        model[properties[i]] = string.Empty;
-            //    }
-            //}
-            //e.EditModel = model;
-
-            var workbook = new XLWorkbook(DirectoryPath + SelectedFileName + ".xlsx");
-            var worksheet = workbook.Worksheet("Products");
-
-            var rows = worksheet.RowsUsed();
-            var headers = rows.First();
-
-            var item = new ExpandoObject();
-            var dictionary = (IDictionary<string, object>)item;
-
-            int newIndex = (Int32)(((IDictionary<string, object>)SheetData.Value[0]).Values.Last()) + 1;
-            dictionary["GridId"] = newIndex;
-            for (int i = 0; i < headers.Cells().Count(); i++)
-            {
-                item[headers.Cell(i + 1).Value.ToString().Replace(" ", "")] = new XlCellView(dataRow.Cell(i + 1));
-            }
-            e.EditModel = item;
+            model = dataItem;
+            e.EditModel = model;
         }
     }
 
@@ -192,9 +187,20 @@ else
         var updatedDataItem = e.EditModel;
         var originalDataItem = e.DataItem;
 
-        excelRepository.UpdateRowInExcel(sheetName, updatedDataItem, SelectedFileName, DirectoryPath);
+        bool operationSucess = excelRepository.UpdateRowInExcel(sheetName, updatedDataItem, SelectedFileName, DirectoryPath);
 
-        await UpdateWorkbook.InvokeAsync();
+        if (operationSucess)
+        {
+            await UpdateWorkbook.InvokeAsync();
+            AlertMessage.InvokeAsync(new AlertMessageModel(AlertMessageModel.AlertType.EditRowSuccess));
+        }
+        else
+        {
+            AlertMessage.InvokeAsync(new AlertMessageModel(AlertMessageModel.AlertType.EditRowFailed));
+        }
+
+        StateHasChanged();
+
     }
 
     //Delete Row
@@ -203,8 +209,24 @@ else
         var deletedDataItem = e.DataItem;
         var cellRow = (int)((IDictionary<string, object>)deletedDataItem).First().Value;
 
-        excelRepository.DeleteRowInSheet(cellRow, sheetName, SelectedFileName, DirectoryPath);
+        bool operationSucess = excelRepository.DeleteRowInSheet(cellRow, sheetName, SelectedFileName, DirectoryPath);
 
-        await UpdateWorkbook.InvokeAsync();
+        if (operationSucess)
+        {
+            await UpdateWorkbook.InvokeAsync();
+            AlertMessage.InvokeAsync(new AlertMessageModel(AlertMessageModel.AlertType.DeleteRowSuccess));
+        }
+        else
+        {
+            AlertMessage.InvokeAsync(new AlertMessageModel(AlertMessageModel.AlertType.DeleteRowFailed));
+        }
+
+        StateHasChanged();
     }
+
+    //---------------------------------------------------------------------------//
+    /* Other                                                                     */
+    //---------------------------------------------------------------------------//
+
+
 }

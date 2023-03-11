@@ -1,12 +1,36 @@
 ﻿@using ExcelManagement.DxBlazor.Data;
-<div class="alert-success fade">@model.Message</div>
+@switch (model.Type)
+{
+    case AlertMessageModel.MessageType.Primary:
+        <div class="alert alert-primaryfade">@model.Message</div>
+        break;
+    case AlertMessageModel.MessageType.Secondary:
+        <div class="alert alert-secondary fade">@model.Message</div>
+        break;
+    case AlertMessageModel.MessageType.Success:
+        <div class="alert alert-success fade">@model.Message</div>
+        break;
+    case AlertMessageModel.MessageType.Danger:
+        <div class="alert alert-danger fade">@model.Message</div>
+        break;
+    case AlertMessageModel.MessageType.Warning:
+        <div class="alert alert-warning fade">@model.Message</div>
+        break;
+    case AlertMessageModel.MessageType.Info:
+        <div class="alert alert-info fade">@model.Message</div>
+        break;
+    case AlertMessageModel.MessageType.Light:
+        <div class="alert alert-light fade">@model.Message</div>
+        break;
+    case AlertMessageModel.MessageType.Dark:
+        <div class="alert alert-dark fade">@model.Message</div>
+        break;
+}
 
 @code {
-    [Parameter]
-    public AlertMessageModel model { get; set; }
+    [Parameter] public AlertMessageModel model { get; set; }
+    [Parameter] public EventCallback<Guid> dispose { get; set; }
     private System.Timers.Timer timer;
-    [Parameter]
-    public EventCallback<Guid> dispose { get; set; }
 
     protected override void OnAfterRender(bool firstRender)
     {
@@ -21,8 +45,6 @@
 
             timer.Enabled = true;
         }
-
-        base.OnAfterRender(firstRender);
     }
-
 }
+

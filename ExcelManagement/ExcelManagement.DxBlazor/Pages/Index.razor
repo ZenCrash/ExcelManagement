@@ -34,15 +34,25 @@ else
         <DxComboBox Data="@Files"
             NullText="Select a File..."
             Value="@SelectedFileName"
-            ValueChanged="(string fileName) => { SelectedFileName = fileName; IsWorkbookSelected = true; }">
+            ValueChanged="(string fileName) => { SelectedFileName = fileName; FileSelection(fileName); }">
         </DxComboBox>
     }
 
     else //If Sheet Has Been Selected
     {
+        @*Workbook*@
         <WorkbookComponent SelectedFileName="@SelectedFileName"
-            DirectoryPath="@DirectoryPath">
-        </WorkbookComponent>
+            DirectoryPath="@DirectoryPath"
+            AlertMessage="@Alert">
+        </WorkbookComponent>     
+    }
+
+    @*Alert*@
+    <p></p>
+    <p></p>
+    @foreach (AlertMessageModel message in alertMessages)
+    {
+        <AlertMessage model="@message" dispose="DisposeAlert" />
     }
 }
 
@@ -53,7 +63,11 @@ else
     //Files
     private string SelectedFileName { get; set; }
     private string DirectoryPath { get; set; }
-    private List<string> Files { get; set; } = new List<string>();
+    private List<string> Files { get; set; } = new();
+    // Alert
+    List<AlertMessageModel> alertMessages = new();
+    //File Logic
+    FileLogic fileLogic = new();
 
     //---------------------------------------------------------------------------//
     /* Razor Page                                                                */
@@ -81,5 +95,47 @@ else
     {
         var fileNames = Directory.GetFiles(directoryPath, "*.xlsx");
         Files.AddRange(fileNames.Select(fileName => Path.GetFileNameWithoutExtension(fileName)));
+    }
+
+    //File has been Selected
+    private void FileSelection(string fileName)
+    {
+        string selectedFileName = ((fileName.Contains(" ") && fileName == fileName.Replace(" ", "")) || fileName == null) ? null : fileName;
+
+        if (!((fileName.Contains(" ") && selectedFileName == selectedFileName.Replace(" ", "")) || selectedFileName == null))
+        {
+            if (fileLogic.IsFileAccessable(DirectoryPath, selectedFileName))
+            {
+                IsWorkbookSelected = true;
+            }
+
+            else
+            {
+                Alert(new AlertMessageModel(AlertMessageModel.AlertType.FileInaccessible));
+            }
+
+            StateHasChanged();
+        }
+    }
+
+    //---------------------------------------------------------------------------//
+    /* Allert Messages                                                           */
+    //---------------------------------------------------------------------------//
+
+    //Add alert messgae to alert list
+    private void Alert(AlertMessageModel alertObject)
+    {
+        alertMessages.Add(alertObject);
+    }
+
+    // Dispose alert message
+    private void DisposeAlert(Guid guid)
+    {
+        //alertMessages.Remove(alertMessages.Single(message => message.Guid.CompareTo(guid) == 0));
+        AlertMessageModel alertToBeDeleted = alertMessages.Find(alert => alert.Guid == guid);
+        if (alertToBeDeleted != null)
+        {
+            alertMessages.Remove(alertToBeDeleted);
+        }
     }
 }
