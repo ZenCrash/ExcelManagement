@@ -40,6 +40,28 @@ else
 
     else //If Sheet Has Been Selected
     {
+        <h1><span style="color: gray;">Excel Document: </span>@SelectedFileName</h1>
+        <div style="display:flex; justify-content:space-between;">
+            <DxTabs ScrollMode="TabsScrollMode.NavButtons" TabClick="OnTabClick">
+                @foreach (var item in listString)
+                {
+                    <DxTabPage Text="@item" TabIconCssClass="oi oi-book" />
+                }
+            </DxTabs>
+
+            <div>
+                <DxButton RenderStyle="ButtonRenderStyle.Primary"
+                      Text="Download File"
+                      IconCssClass="oi oi-data-transfer-download">
+                </DxButton>
+                <DxButton RenderStyle="ButtonRenderStyle.Secondary"
+                      Text="Upload File"
+                      IconCssClass="oi oi-cloud-upload">
+                </DxButton>
+            </div>
+
+        </div>
+
         @*Workbook*@
         <WorkbookComponent SelectedFileName="@SelectedFileName"
             DirectoryPath="@DirectoryPath"
@@ -69,6 +91,22 @@ else
     //File Logic
     FileLogic fileLogic = new();
 
+    //test
+    List<string> listString = new();
+    private string SelectedTab { get; set; } = "default Value";
+
+    //---------------------------------------------------------------------------//
+    /* test                                                              */
+    //---------------------------------------------------------------------------//
+    void OnTabClick(TabClickEventArgs e)
+    {
+        int tabIndex = e.TabIndex;
+        if (e.TabIndex < listString.Count())
+        {
+            SelectedTab = listString[tabIndex];
+        }
+    }
+
     //---------------------------------------------------------------------------//
     /* Razor Page                                                                */
     //---------------------------------------------------------------------------//
@@ -82,6 +120,11 @@ else
     {
         if (firstRender)
         {
+            listString.Add("Tab 1.0");
+            listString.Add("Tab 2.0");
+            listString.Add("Tab 3.0");
+            SelectedTab = listString.First();
+
             DirectoryPath = @"..\ExcelDocuments"; //Default dirictory
             GetFiles(DirectoryPath);
 

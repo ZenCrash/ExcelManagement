@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.4.33213.308
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExcelManagement.DxBlazor", "ExcelManagement.DxBlazor\ExcelManagement.DxBlazor.csproj", "{D2F5BA8E-F843-425B-93F0-69E38F0AB7DF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExcelManagement.DxBlazor", "ExcelManagement.DxBlazor\ExcelManagement.DxBlazor.csproj", "{D2F5BA8E-F843-425B-93F0-69E38F0AB7DF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExcelManagement.ClassLibary", "ExcelManagement.ClassLibary\ExcelManagement.ClassLibary.csproj", "{308FDCD7-A89B-4B2C-80DB-612C91DE844F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExcelManagement.ClassLibary", "ExcelManagement.ClassLibary\ExcelManagement.ClassLibary.csproj", "{308FDCD7-A89B-4B2C-80DB-612C91DE844F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
