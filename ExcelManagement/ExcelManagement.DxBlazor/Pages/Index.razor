@@ -1,7 +1,7 @@
-﻿@using ExcelManagement.DxBlazor.Data
-@using ExcelManagement.DxBlazor.Pages
-@using ExcelManagement.ClassLibary
-@using ExcelManagement.ClassLibary.Models
+﻿@using DxBlazor.Data
+@using DxBlazor.Pages
+@using ClassLibary
+@using ClassLibary.Models
 
 @using ClosedXML.Excel
 
@@ -27,46 +27,25 @@
 }
 else
 {
-    if (!IsWorkbookSelected) //Select Sheet
+    if (!IsWorkbookSelected) //Select Workbook
     {
         <h3>Please select a excel document:</h3>
         <p></p>
         <DxComboBox Data="@Files"
             NullText="Select a File..."
             Value="@SelectedFileName"
-            ValueChanged="(string fileName) => { SelectedFileName = fileName; FileSelection(fileName); }">
+            ValueChanged="(string fileName) => { FileSelection(fileName); }">
         </DxComboBox>
     }
 
-    else //If Sheet Has Been Selected
+    else //If Workbook Has Been Selected
     {
-        <h1><span style="color: gray;">Excel Document: </span>@SelectedFileName</h1>
-        <div style="display:flex; justify-content:space-between;">
-            <DxTabs ScrollMode="TabsScrollMode.NavButtons" TabClick="OnTabClick">
-                @foreach (var item in listString)
-                {
-                    <DxTabPage Text="@item" TabIconCssClass="oi oi-book" />
-                }
-            </DxTabs>
-
-            <div>
-                <DxButton RenderStyle="ButtonRenderStyle.Primary"
-                      Text="Download File"
-                      IconCssClass="oi oi-data-transfer-download">
-                </DxButton>
-                <DxButton RenderStyle="ButtonRenderStyle.Secondary"
-                      Text="Upload File"
-                      IconCssClass="oi oi-cloud-upload">
-                </DxButton>
-            </div>
-
-        </div>
-
-        @*Workbook*@
         <WorkbookComponent SelectedFileName="@SelectedFileName"
-            DirectoryPath="@DirectoryPath"
-            AlertMessage="@Alert">
-        </WorkbookComponent>     
+                   FileList="Files"
+                   DirectoryPath="@DirectoryPath"
+                   AlertMessage="@Alert"
+                   NewFileName="@NewWorkbookSelected">
+        </WorkbookComponent>
     }
 
     @*Alert*@
@@ -91,22 +70,6 @@ else
     //File Logic
     FileLogic fileLogic = new();
 
-    //test
-    List<string> listString = new();
-    private string SelectedTab { get; set; } = "default Value";
-
-    //---------------------------------------------------------------------------//
-    /* test                                                              */
-    //---------------------------------------------------------------------------//
-    void OnTabClick(TabClickEventArgs e)
-    {
-        int tabIndex = e.TabIndex;
-        if (e.TabIndex < listString.Count())
-        {
-            SelectedTab = listString[tabIndex];
-        }
-    }
-
     //---------------------------------------------------------------------------//
     /* Razor Page                                                                */
     //---------------------------------------------------------------------------//
@@ -120,11 +83,6 @@ else
     {
         if (firstRender)
         {
-            listString.Add("Tab 1.0");
-            listString.Add("Tab 2.0");
-            listString.Add("Tab 3.0");
-            SelectedTab = listString.First();
-
             DirectoryPath = @"..\ExcelDocuments"; //Default dirictory
             GetFiles(DirectoryPath);
 
@@ -143,6 +101,7 @@ else
     //File has been Selected
     private void FileSelection(string fileName)
     {
+        SelectedFileName = fileName;
         string selectedFileName = ((fileName.Contains(" ") && fileName == fileName.Replace(" ", "")) || fileName == null) ? null : fileName;
 
         if (!((fileName.Contains(" ") && selectedFileName == selectedFileName.Replace(" ", "")) || selectedFileName == null))
@@ -161,8 +120,14 @@ else
         }
     }
 
+    //New File has been selected from the WorkbookComponents
+    public void NewWorkbookSelected(string newWorkbookName)
+    {
+        SelectedFileName = newWorkbookName;
+    }
+
     //---------------------------------------------------------------------------//
-    /* Allert Messages                                                           */
+    /* Alert Messages                                                           */
     //---------------------------------------------------------------------------//
 
     //Add alert messgae to alert list
@@ -174,11 +139,18 @@ else
     // Dispose alert message
     private void DisposeAlert(Guid guid)
     {
-        //alertMessages.Remove(alertMessages.Single(message => message.Guid.CompareTo(guid) == 0));
-        AlertMessageModel alertToBeDeleted = alertMessages.Find(alert => alert.Guid == guid);
-        if (alertToBeDeleted != null)
+        try
         {
-            alertMessages.Remove(alertToBeDeleted);
+            //alertMessages.Remove(alertMessages.Single(message => message.Guid.CompareTo(guid) == 0));
+            AlertMessageModel alertToBeDeleted = alertMessages.Find(alert => alert.Guid == guid);
+            if (alertToBeDeleted != null)
+            {
+                alertMessages.Remove(alertToBeDeleted);
+            }
+        }
+        catch
+        {
+
         }
     }
 }

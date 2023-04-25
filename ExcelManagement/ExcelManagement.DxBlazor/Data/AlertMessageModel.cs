@@ -15,6 +15,7 @@
 
         public AlertMessageModel(AlertType alertType, string messageArg1 = null!, string messageArg2 = null!, string messageArg3 = null!, string messageArg4 = null!)
         {
+            // This should probably be done using a .resx resource file
             Guid = Guid.NewGuid();
             switch (alertType)
             {
@@ -44,7 +45,7 @@
                     Type = MessageType.Success;
                     break;
                 case AlertType.UploadSuccess:
-                    Message = $"File has been uploaded sucessfully!";
+                    Message = $"File: \"{messageArg1}\" has been sucessfully been overwritten!";
                     Type = MessageType.Success;
                     break;
 
@@ -111,15 +112,27 @@
                     Message = $"Error 417: Failed to create a new sheet!";
                     Type = MessageType.Danger;
                     break;
+                case AlertType.WorkbookReserved:
+                    Message = $"Error: The file cannot be uploaded since it is currently in use be other useres!";
+                    Type = MessageType.Danger;
+                    break;
 
                 //Excel Sheet
                 case AlertType.NewRowFailed:
                     Message = $"Error 417: Failed to create a new row!";
                     Type = MessageType.Danger;
                     break;
+                case AlertType.RowReserved:
+                    Message = $"The Row is currently being edited by another user!";
+                    Type = MessageType.Warning;
+                    break;
                 case AlertType.EditRowFailed:
                     Message = $"Error 417: Failed to edit row!";
                     Type = MessageType.Danger;
+                    break;
+                case AlertType.DuplicateRowData:
+                    Message = $"No new data was submitted!";
+                    Type = MessageType.Warning;
                     break;
                 case AlertType.DeleteRowFailed:
                     Message = $"Error 417: Failed to delete row!";
@@ -130,9 +143,17 @@
                     Type = MessageType.Danger;
                     break;
 
-                    //-------//
-                    /* Other */
-                    //-------//
+                //-------//
+                /* Other */
+                //-------//
+                case AlertType.UnknownError:
+                    Message = $"Operation failed, unknown error";
+                    Type = MessageType.Warning;
+                    break;
+                case AlertType.Test:
+                    Message = $"This is a Test!";
+                    Type = MessageType.Info;
+                    break;
             }
         }
         public enum AlertType
@@ -165,12 +186,17 @@
             //Excel Book
             NewBookFailed,
             NewSheetFailed,
+            WorkbookReserved,
             //Excel Sheet
+            RowReserved,
+            DuplicateRowData,
             NewRowFailed,
             EditRowFailed,
             DeleteRowFailed,
 
             /*Other*/
+            UnknownError,
+            Test
         }
 
         public enum MessageType

@@ -1,9 +1,21 @@
+using ExcelManagement.ClassLibary;
 using ExcelManagement.DxBlazor.Data;
+using ExcelManagement.DxBlazor.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
+using Microsoft.AspNetCore.Identity;
 
 
 var builder = WebApplication.CreateBuilder(args);
+
+//Clean on startup
+SheetLogic sheetLogic = new();
+FileLogic fileLogic = new();
+
+//Clean json files on startup
+sheetLogic.CleanJsonFiles();
+//Clean Temp Folder
+fileLogic.DeleteFilesInTempFolder();
 
 // Add services to the container.
 builder.Services.AddRazorPages();
@@ -13,6 +25,12 @@ builder.Services.AddDevExpressBlazor(options => {
     options.SizeMode = DevExpress.Blazor.SizeMode.Medium;
 });
 builder.Services.AddSingleton<WeatherForecastService>();
+builder.WebHost.UseWebRoot("wwwroot");
+builder.WebHost.UseStaticWebAssets();
+
+//user service
+builder.Services.AddSingleton<UserService>();
+
 builder.WebHost.UseWebRoot("wwwroot");
 builder.WebHost.UseStaticWebAssets();
 

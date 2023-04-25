@@ -1,0 +1,13 @@
+﻿@page "/test1"
+
+<h3>Index_Test_1</h3>
+<TestComponent xxx="@testString"></TestComponent>
+
+@code {
+	string testString { get; set; }
+
+	protected override async Task OnInitializedAsync()
+	{
+		testString = "Test String Value";
+	}
+}

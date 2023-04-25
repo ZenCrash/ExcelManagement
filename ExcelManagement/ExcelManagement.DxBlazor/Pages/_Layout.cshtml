@@ -15,23 +15,11 @@
     <component type="typeof(HeadOutlet)" render-mode="ServerPrerendered" />
 </head>
 <body>
+    @*Call hidden A tag with a button (upload redirict)*@
     <script>
         function triggerFileUpload() {
             var element = document.getElementById('inputFile');
             element.click();
-        }
-    </script>
-    <script>
-        window.downloadFileFromStream = async (fileName, contentStreamReference) => {
-            const arrayBuffer = await contentStreamReference.arrayBuffer();
-            const blob = new Blob([arrayBuffer]);
-            const url = URL.createObjectURL(blob);
-            const anchorElement = document.createElement('a');
-            anchorElement.href = url;
-            anchorElement.download = fileName ?? '';
-            anchorElement.click();
-            anchorElement.remove();
-            URL.revokeObjectURL(url);
         }
     </script>
 
@@ -46,6 +34,21 @@
     else
     {
         @RenderBody()
+
+        //Download file script
+        <script>
+            window.downloadFileFromStream = async (fileName, contentStreamReference) => {
+                const arrayBuffer = await contentStreamReference.arrayBuffer();
+                const blob = new Blob([arrayBuffer]);
+                const url = URL.createObjectURL(blob);
+                const anchorElement = document.createElement('a');
+                anchorElement.href = url;
+                anchorElement.download = fileName ?? '';
+                anchorElement.click();
+                anchorElement.remove();
+                URL.revokeObjectURL(url);
+            }
+        </script>
 
         <div id="blazor-error-ui">
             <environment include="Staging,Production">

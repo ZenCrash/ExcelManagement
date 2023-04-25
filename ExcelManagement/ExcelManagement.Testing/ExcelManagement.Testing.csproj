@@ -21,4 +21,9 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\ExcelManagement.ClassLibary\ExcelManagement.ClassLibary.csproj" />
+    <ProjectReference Include="..\ExcelManagement.DxBlazor\ExcelManagement.DxBlazor.csproj" />
+  </ItemGroup>
+
 </Project>

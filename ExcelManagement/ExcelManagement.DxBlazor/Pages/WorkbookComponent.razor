@@ -1,13 +1,17 @@
 ﻿@using System.IO
 
-@using ExcelManagement.DxBlazor.Data
-@using ExcelManagement.DxBlazor.Pages
-@using ExcelManagement.ClassLibary
-@using ExcelManagement.ClassLibary.Models
+@using DxBlazor.Data
+@using DxBlazor.Pages
+@using DxBlazor.Services
+@using ClassLibary
+@using ClassLibary.Models
 
-@using ClosedXML.Excel
+@using ClosedXML.Excel;
 
+@inject UserService UserService;
 @inject IJSRuntime JS;
+@implements IDisposable
+
 
 @*Workbook / Tab Component*@
 @if (IsLoadingRender) //Loading Animation
@@ -21,7 +25,31 @@
 }
 else
 {
+    @*Select new File*@
+    <div style="width: 400px; ">
+        <DxComboBox Data="@FileList"
+                NullText="@SelectedFileName"
+                Value="@SelectedFileName"
+                ValueChanged="(string fileName) => { ChangeWorkbook(fileName); }">
+        </DxComboBox>
+    </div>
 
+    <div style="display: flex; justify-content: space-between;">
+        <h1><span style="color: gray;">Excel Document: </span>@SelectedFileName</h1>
+        <div>
+            <DxButton RenderStyle="ButtonRenderStyle.Primary"
+                  Text="Download File"
+                  Click="@DownloadFileFromStream"
+                  IconCssClass="oi oi-data-transfer-download">
+            </DxButton>
+            <DxButton RenderStyle="ButtonRenderStyle.Secondary"
+                  Text="Upload File"
+                  Click="@TriggerFileUpload"
+                  IconCssClass="oi oi-cloud-upload">
+            </DxButton>
+            <InputFile id="inputFile" OnChange="@LoadFiles" multiple accept="@acceptedFileFormats" style="display: none" />
+        </div>
+    </div>
 
     <DxTabs ScrollMode="TabsScrollMode.NavButtons"
         @bind-ActiveTabIndex="@ActiveTabIndex">
@@ -29,22 +57,62 @@ else
         {
             <DxTabPage Text="@sheetData.Key" TabIconCssClass="oi oi-spreadsheet">
                 <WorksheetComponent SelectedFileName="@SelectedFileName"
-                        DirectoryPath="@DirectoryPath"
-                        SheetData="@sheetData"
-                        UpdateWorkbook="@GetWorkbook"
-                        AlertMessage="@(async (alert) => await AlertMessage.InvokeAsync(alert))">
+                            DirectoryPath="@DirectoryPath"
+                            SheetData="@sheetData"
+                            UserId="@currentUserId"
+                            UpdateWorkbook="@GetAllWorksheets"
+                            AlertMessage="@(async (alert) => await AlertMessage.InvokeAsync(alert))">
                 </WorksheetComponent>
             </DxTabPage>
         }
         @*Add New Sheet*@
-        <DxTab TabIconCssClass="oi oi-plus" Click="@(() => AddNewSheet())"></DxTab>
+        @*<DxTab TabIconCssClass="oi oi-plus" Click="@(() => AddNewSheet())" CssClass="@ButtonRenderStyle.Primary.ToString()"></DxTab>*@
+        <DxTab TabIconCssClass="oi oi-plus" Click="@(() => NewSheetPopupVisible = true)" CssClass="@ButtonRenderStyle.Primary.ToString()"></DxTab>
     </DxTabs>
+
+    @*popup*@
+    <DxPopup Visible="@NewSheetPopupVisible"
+         ShowFooter="true"
+         HeaderText="Create New Tab">
+        <BodyContentTemplate>
+            <div>
+                <span>New Sheet Name: </span>
+                <DxTextBox @bind-Text="@newSheetName"
+                       NullText="Sheet 1" />
+
+            </div>
+
+        </BodyContentTemplate>
+        <FooterContentTemplate>
+            <DxButton CssClass="popup-button my-1 ms-2" RenderStyle="ButtonRenderStyle.Primary" Text="OK" Click="@(() => { NewSheetPopupVisible = false; AddNewSheet(newSheetName); ActiveTabIndex = Data.Count() - 1; })" />
+            <DxButton CssClass="popup-button my-1 ms-2" RenderStyle="ButtonRenderStyle.Secondary" Text="Cancel" Click="@(() => NewSheetPopupVisible = false)" />
+        </FooterContentTemplate>
+
+    </DxPopup>
 }
+
+@*user id list*@
+@*<h3>List Of connected Users</h3>
+@if (userIds == null)
+{
+    <p>Loading Users...</p>
+}
+else
+{
+    @foreach (var user in userIds)
+    {
+        <ul>
+            <li>@user</li>
+        </ul>
+    }
+}*@
 
 @code {
     [Parameter] public string SelectedFileName { get; set; }
     [Parameter] public string DirectoryPath { get; set; }
     [Parameter] public EventCallback<AlertMessageModel> AlertMessage { get; set; }
+    [Parameter] public List<string> FileList { get; set; }
+    [Parameter] public EventCallback<string> NewFileName { get; set; }
     //Loading
     bool IsLoadingRender { get; set; } = true;
     //Files
@@ -56,14 +124,22 @@ else
         get => _ActiveTabIndex;
         set { _ActiveTabIndex = (value == Data.Count) ? Data.Count - 1 : value; }
     }
+    bool NewSheetPopupVisible { get; set; }
+    private string newSheetName { get; set; } = "";
+
     //Get Data
     private Dictionary<string, List<dynamic>> Data;
     ExcelRepository excelRepository = new();
+    FileLogic fileLogic = new();
+    SheetLogic sheetLogic = new();
     //Upload Files
     private long maxFileSize = 1024 * 1024 * 100; //Represents 100 MB
     private int maxAllowedFiles = 1;
     private string acceptedFileFormats = $".xlsx"; // "" = accepts all file formats
 
+    //User Ids
+    private List<string> userIds;
+    private string currentUserId = Guid.NewGuid().ToString();
 
     //---------------------------------------------------------------------------//
     /* Razor Page                                                                */
@@ -78,11 +154,36 @@ else
     {
         if (firstRender)
         {
-            GetWorkbook();
+            GetAllWorksheets();
+            //UserService.AddConnectedUser(currentUserId); //tesing purpeses
+            //userIds = await UserService.GetUserIdsAsync(); //tesing purpeses
+            sheetLogic.ReserverWorkbook(currentUserId, SelectedFileName, DirectoryPath);
 
             IsLoadingRender = false;
             StateHasChanged();
         }
+    }
+
+    //Combobox Workbook change
+    public void ChangeWorkbook(string fileName)
+    {
+        SelectedFileName = fileName;
+        NewFileName.InvokeAsync(fileName);
+        ActiveTabIndex = 0;
+
+        sheetLogic.UnreserveUseresWorkbooks(currentUserId);
+        sheetLogic.UnreserveUseresSheetRows(currentUserId);
+        sheetLogic.ReserverWorkbook(currentUserId, fileName, DirectoryPath);
+
+
+        GetAllWorksheets();
+    }
+
+    public void Dispose()
+    {
+        UserService.RemoveConnectedUser(currentUserId);
+        sheetLogic.UnreserveUseresWorkbooks(currentUserId);
+        sheetLogic.UnreserveUseresSheetRows(currentUserId);
     }
 
     //---------------------------------------------------------------------------//
@@ -90,34 +191,53 @@ else
     //---------------------------------------------------------------------------//
 
     //GetData
-    private async Task GetWorkbook()
+    private async Task GetAllWorksheets()
     {
-        string workbookName = SelectedFileName;
-        string directory = DirectoryPath;
-        Data = excelRepository.GetSheetsByBookname(workbookName, directory);
+        try
+        {
+            Data = excelRepository.GetallSheets(SelectedFileName, DirectoryPath);
+        }
+        catch (IOException ex)
+        {
+            await AlertMessage.InvokeAsync(new AlertMessageModel(AlertMessageModel.AlertType.FileInaccessible));
+        }
+        catch (Exception ex)
+        {
+            await AlertMessage.InvokeAsync(new AlertMessageModel(AlertMessageModel.AlertType.UnknownError));
+        }
+
     }
 
     //AddTab
-    private void AddNewSheet(string newWorksheetName = "")
+    private async Task AddNewSheet(string newWorksheetName = "")
     {
-        newWorksheetName = (newWorksheetName == newWorksheetName.Replace(" ", "") || newWorksheetName == null) ? "" : newWorksheetName;
-        string workbookName = SelectedFileName;
-        string directory = DirectoryPath;
+        var y = SelectedFileName;
+        newWorksheetName = ("" == newWorksheetName.Replace(" ", "") || newWorksheetName == null) ? "" : newWorksheetName;
 
-        bool operationSucess = excelRepository.CreateWorksheet(workbookName, newWorksheetName, directory);
-        if (operationSucess)
+        try
         {
-            GetWorkbook();
+            excelRepository.CreateWorksheet(SelectedFileName, newWorksheetName, DirectoryPath);
+            await GetAllWorksheets();
 
             AlertMessage.InvokeAsync(new AlertMessageModel(AlertMessageModel.AlertType.NewSheetSuccess));
         }
-        else
+        catch (IOException ex)
+        {
+            AlertMessage.InvokeAsync(new AlertMessageModel(AlertMessageModel.AlertType.FileInaccessible));
+        }
+        catch (Exception ex)
         {
             AlertMessage.InvokeAsync(new AlertMessageModel(AlertMessageModel.AlertType.NewSheetFailed));
+            AlertMessage.InvokeAsync(new AlertMessageModel(AlertMessageModel.AlertType.UnknownError));
         }
-
-
+        var x = SelectedFileName;
         StateHasChanged();
+    }
+
+    //Upload File Button Navigation Helper (<DxButten> => <InputFile>)
+    private async Task TriggerFileUpload()
+    {
+        await JS.InvokeVoidAsync("triggerFileUpload");
     }
 
     //---------------------------------------------------------------------------//
@@ -128,16 +248,19 @@ else
     private Stream GetFileStream()
     {
         // ..\ExcelDocuments
-        string filePath = DirectoryPath + @"\" + SelectedFileName + ".xlsx";
-        return File.OpenRead(filePath);
+        string fullFilePath = Path.Combine(DirectoryPath, SelectedFileName + ".xlsx");
+        return File.OpenRead(fullFilePath);
     }
-
-    
 
     private async Task DownloadFileFromStream()
     {
         try
         {
+            if (!fileLogic.IsFileAccessable(DirectoryPath, SelectedFileName))
+            {
+                throw new IOException();
+            }
+
             var fileStream = GetFileStream();
             var fileName = SelectedFileName + ".xlsx";
 
@@ -146,26 +269,25 @@ else
 
             await AlertMessage.InvokeAsync(new AlertMessageModel(AlertMessageModel.AlertType.DownloadSuccess));
         }
-        catch
+        catch (IOException)
+        {
+            await AlertMessage.InvokeAsync(new AlertMessageModel(AlertMessageModel.AlertType.FileInaccessible));
+        }
+        catch (Exception)
         {
             await AlertMessage.InvokeAsync(new AlertMessageModel(AlertMessageModel.AlertType.DownloadFailed));
+            await AlertMessage.InvokeAsync(new AlertMessageModel(AlertMessageModel.AlertType.UnknownError));
         }
 
     }
 
-    
-    //Upload File Button Navigation Helper (<DxButten> => <InputFile>)
-    private async Task TriggerFileUpload()
-    {
-        await JS.InvokeVoidAsync("triggerFileUpload");
-    }
 
     //Upload File
     private async Task LoadFiles(InputFileChangeEventArgs e)
     {
-        if(e.FileCount > maxAllowedFiles) //if file count is invalid. if true, exit method
+        if (e.FileCount > maxAllowedFiles) //if file count is invalid. if true, exit method
         {
-            await AlertMessage.InvokeAsync(new AlertMessageModel(AlertMessageModel.AlertType.ExceededMaxFileLimit,$"{e.FileCount}",$"{maxAllowedFiles}"));
+            await AlertMessage.InvokeAsync(new AlertMessageModel(AlertMessageModel.AlertType.ExceededMaxFileLimit, $"{e.FileCount}", $"{maxAllowedFiles}"));
             return;
         }
 
@@ -186,15 +308,35 @@ else
                     directoryInfo.Attributes = directoryInfo.Attributes | FileAttributes.Hidden; //Hidden
                 }
 
-                await using FileStream fs = new(filePath, FileMode.Create);
-                await file.OpenReadStream(maxFileSize).CopyToAsync(fs);
+                using (FileStream fs = new(filePath, FileMode.Create))
+                {
+                    await file.OpenReadStream(maxFileSize).CopyToAsync(fs);
+                }
+
+
+                if (!sheetLogic.IsWorkbookReserved(SelectedFileName, DirectoryPath))
+                {
+                    fileLogic.UpdateWorkbook(newFileName, directoryPath, SelectedFileName, DirectoryPath);
+
+                }
+
+                GetAllWorksheets();
+
+                await AlertMessage.InvokeAsync(new AlertMessageModel(AlertMessageModel.AlertType.UploadSuccess, $"{file.Name}"));
+            }
+            catch (IOException)
+            {
+                await AlertMessage.InvokeAsync(new AlertMessageModel(AlertMessageModel.AlertType.FileInaccessible));
+            }
+            catch (WorkbookReservedException)
+            {
+                await AlertMessage.InvokeAsync(new AlertMessageModel(AlertMessageModel.AlertType.WorkbookReserved));
             }
             catch (Exception ex)
             {
                 await AlertMessage.InvokeAsync(new AlertMessageModel(AlertMessageModel.AlertType.UploadFailed, $"{file.Name}", $"{ex.Message}"));
             }
-            
+
         }
     }
-
 }

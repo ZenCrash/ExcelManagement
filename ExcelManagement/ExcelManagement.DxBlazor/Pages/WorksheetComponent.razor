@@ -1,232 +1,515 @@
 ﻿@using System.Dynamic
+@using System.Diagnostics;
+@using System
 
-@using ExcelManagement.DxBlazor.Data
-@using ExcelManagement.DxBlazor.Pages
-@using ExcelManagement.ClassLibary
-@using ExcelManagement.ClassLibary.Models
+@using DxBlazor.Data
+@using DxBlazor.Pages
+@using ClassLibary
+@using ClassLibary.Models
 
-@using DevExpress.Data
 @using ClosedXML.Excel
+@using DevExpress.Data.Linq
 
 @if (IsLoadingRender)
 {
-    <p></p>
-    <p></p>
-    <p></p>
-    <p></p>
-    <div class="text-center">
-        <div class="spinner-border text-secondary" role="status">
-            <span class="sr-only">Loading</span>
-        </div>
-        <h2>Loading @SheetData.Key...</h2>
-    </div>
+	<p></p>
+	<p></p>
+	<p></p>
+	<p></p>
+	<div class="text-center">
+		<div class="spinner-border text-secondary" role="status">
+			<span class="sr-only">Loading</span>
+		</div>
+		<h2>Loading @SheetData.Key...</h2>
+	</div>
 }
 else
 {
-    <DxGrid @ref="Grid"
-        Data="@SheetData.Value"
-        PageSize="10"
-        PagerPosition="GridPagerPosition.TopAndBottom"
-        PageSizeSelectorVisible="true"
-        PageSizeSelectorItems="@(new int[] {5, 10, 20, 50, 100})"
-        PageSizeSelectorAllRowsItemVisible="true"
-        PagerSwitchToInputBoxButtonCount="10"
-        PagerVisibleNumericButtonCount="10"
-        EditMode="GridEditMode.PopupEditForm"
-        PopupEditFormCssClass="pw-800"
-        PopupEditFormHeaderText="Edit Row"
-        ValidationEnabled="false"
-        KeyFieldName="GridId"
-        EditModelSaving="@((args) => Grid_EditModelSaving(args, SheetData.Key))"
-        DataItemDeleting="@((args) => Grid_DataItemDeleting(args, SheetData.Key))"
-        CustomizeEditModel="@((args) => Grid_CustomizeEditModel(args, SheetData.Key))">
+	@*ButtonClickMode features placeholder (add buttons here for features)*@
+	@*<p></p>
+		<DxButton RenderStyle="ButtonRenderStyle.Secondary"
+				RenderStyleMode="ButtonRenderStyleMode.Outline"
+			  Text="Add Column">
+		</DxButton>
+		<DxButton RenderStyle="ButtonRenderStyle.Secondary"
+			  RenderStyleMode="ButtonRenderStyleMode.Outline"
+			  Text="WIP!">
+		</DxButton>*@
 
-        <Columns>
-            <DxGridCommandColumn Width="160px" />
-            @foreach (var property in ((IDictionary<string, object>)SheetData.Value[0]).Keys.Skip(1))
-            {
-                <DxGridDataColumn FieldName="@property" MinWidth="100" />
-            }
-        </Columns>
-        <EditFormTemplate Context="EditFormContext">
-            <DxFormLayout CssClass="w-100">
-                @if (fileLogic.IsFileAccessable(DirectoryPath, SelectedFileName))
-                {
-                    @foreach (var property in ((IDictionary<string, object>)SheetData.Value[0]).Keys.Skip(1))
-                    {
-                        var dataItem = (IDictionary<string, object>)EditFormContext.EditModel;
-                        var xlCellView = (XlCellView)dataItem[property];
+	<DxGrid @ref="Grid"
+		Data="@SheetData.Value"
+		PageSize="10"
+		PagerPosition="GridPagerPosition.TopAndBottom"
+		PageSizeSelectorVisible="true"
+		PageSizeSelectorItems="@(new int[] {5, 10, 20, 50, 100})"
+		PageSizeSelectorAllRowsItemVisible="true"
+		PagerSwitchToInputBoxButtonCount="10"
+		PagerVisibleNumericButtonCount="10"
+		ColumnResizeMode="GridColumnResizeMode.ColumnsContainer"
+		EditMode="GridEditMode.PopupEditForm"
+		PopupEditFormCssClass="pw-800"
+		PopupEditFormHeaderText="Edit Row"
+		ValidationEnabled="false"
+		KeyFieldName="GridId"
+		EditStart="@((args) => Grid_EditStart(args, SheetData.Key))"
+		EditModelSaving="@((args) => Grid_EditModelSaving(args, SheetData.Key))"
+		DataItemDeleting="@((args) => Grid_DataItemDeleting(args, SheetData.Key))"
+		CustomizeEditModel="@((args) => Grid_CustomizeEditModel(args, SheetData.Key))"
+		EditCanceling="@((args) => Grid_EditCanceling(args, SheetData.Key))"
+		ShowSearchBox="true"
+		SearchTextParseMode="CurrentSearchTextParseMode">
 
-                        var xlCell = xlCellView.XlCell;
-                        var cellValue = xlCellView.Value;
-                        var cellType = xlCellView.Type;
-                        var validation = xlCell.GetDataValidation();
+		@*Grid*@
+		<Columns>
+			<DxGridCommandColumn Width="160px" />
+			@foreach (var property in ((IDictionary<string, object>)SheetData.Value[0]).Keys.Skip(1))
+			{
+				var columnObject = ((IDictionary<string, object>)SheetData.Value[0])[property];
+				var ColumnCell = (XlCellView)columnObject;
+				var cellWidth = ColumnCell.XlCell.WorksheetColumn().Width * 7.025; //conversion from excel number to pixel seems to be * 7.025
+				var cellWidthAsString = ((int)Math.Ceiling(cellWidth)).ToString();
+				//var cellHeight = ColumnCell.XlCell.WorksheetRow().Height;
 
-                        <DxFormLayoutItem Caption="@(property + ":")" ColSpanMd="6">
+				<DxGridDataColumn FieldName="@property" Width="@cellWidthAsString" MinWidth="100">
+					<CellDisplayTemplate>
+						@if (context.Value != null)
+						{
 
-                            @*If Cell has Formula*@
-                            @if (xlCell.HasFormula)
-                            {
-                                //var value = @"=" + ((XlCellView)dataItem[property]).XlCell.FormulaA1; //display cell formel instead
-                                var value = (string)cellValue;
-                                <DxTextBox Text="@value"
-                                   ReadOnly="true"
-                                   Enabled="false" />
-                            }
+							var cell = (XlCellView)context.Value;
+							var cellStyle = cell.XlCell.Style;
+							var cellStyleStyle = GetCellStyle(cellStyle, cell.XlCell.HasHyperlink);
+							var cellFormula = cell.XlCell.FormulaA1;
 
-                            @*If Cell has data validation*@
-                            else if (!(validation.MinValue == "" || validation.MinValue == null))
-                            {
-                                var value = (string)cellValue;
-                                List<string> dataValidationElements = DataValidationLogic.ConvertStringToList(validation.MinValue);
-                                <DxComboBox Data="@dataValidationElements"
-                                Value="@value"
-                                ValueChanged="@((string newVal) => ((XlCellView)dataItem[property]).Value = newVal)" />
-                            }
+							@*If Cell has hyperlink*@
+							@if (cell.XlCell.HasHyperlink || cellFormula.ToLower().StartsWith("hyperlink"))
+							{
+								@if (cell.XlCell.GetHyperlink().ExternalAddress != null)
+								{
+									string cellHyperlink = cell.XlCell.GetHyperlink().ExternalAddress.AbsoluteUri;
+									<a class="d-block text-left" href="@cellHyperlink">@context.Value</a>
+								}
+								else //if link is a formula
+								{
+									try
+									{
+										//"HYPERLINK(\"www.google.com\", \"google\")"
+										var urlLink = StringHyperlink(cellFormula);
+										<a class="d-block text-left" href="@urlLink.Value">@urlLink.Key</a>
+									}
+									catch (Exception ex)
+									{
+										//does the cell have number formatting, if true format
+										if (!string.IsNullOrEmpty(cellStyle.NumberFormat.Format) && cell.XlCell.DataType == XLDataType.Number)
+										{
+											<span style="@cellStyleStyle">@cell.XlCell.GetFormattedString()</span>
+										}
+										else
+										{
+											<span style="@cellStyleStyle">@context.Value</span>
+										}
+									}
+								}
+							}
 
-                            @*If Value Text*@
-                            else if (cellType == XLDataType.Text)
-                            {
-                                var value = (string)cellValue;
-                                <DxTextBox Text="@value"
-                                           TextChanged="@((string newVal) => ((XlCellView)dataItem[property]).Value = newVal)"
-                                           TextExpression="@(() => value)" />
-                            }
+							else
+							{
+								//does the cell have number formatting, if true format
+								if (!string.IsNullOrEmpty(cellStyle.NumberFormat.Format) && cell.XlCell.DataType == XLDataType.Number)
+								{
+									<span style="@cellStyleStyle">@cell.XlCell.GetFormattedString()</span>
+								}
+								else if (cell.Type == XLDataType.DateTime)
+								{
+									<span>@cell.XlCell.GetFormattedString()</span>
+								}
+								else
+								{
+									<span style="@cellStyleStyle">@context.Value</span>
+								}
+							}
+						}
+						else
+						{
+							<span>@context.Value</span>
+						}
+					</CellDisplayTemplate>
+				</DxGridDataColumn>
+			}
+		</Columns>
 
-                            @*If Value Blank*@
-                            else if (cellType == XLDataType.Blank)
-                            {
-                                var value = (string)cellValue;
-                                <DxTextBox Text="@value"
-                                           TextChanged="@((string newVal) => ((XlCellView)dataItem[property]).Value = newVal)"
-                                           TextExpression="@(() => value)" />
-                            }
+		@*Edit Form*@
+		<EditFormTemplate Context="EditFormContext">
+			<DxFormLayout CssClass="w-100">
+				@foreach (var property in ((IDictionary<string, object>)SheetData.Value[0]).Keys.Skip(1))
+				{
+					var dataItem = (IDictionary<string, object>)EditFormContext.EditModel;
+					var xlCellView = (XlCellView)dataItem[property];
 
-                            @*If Value Number*@
-                            else if (cellType == XLDataType.Number)
-                            {
-                                var value = (double)cellValue;
-                                <DxSpinEdit Text="@value"
-                                            ValueChanged="@((double newVal) => ((XlCellView)dataItem[property]).Value = newVal)"
-                                            ValueExpression="@(() => value)" />
-                            }
+					var xlCell = xlCellView.XlCell;
+					var cellValue = xlCellView.Value;
+					var cellType = xlCellView.Type;
+					var validation = xlCell.GetDataValidation();
 
-                            @*If Value Datetime*@
-                            else if (cellType == XLDataType.DateTime)
-                            {
-                                var value = (DateTime)cellValue;
-                                <DxDateEdit Date="@value"
-                                            DateChanged="@((DateTime newVal) => ((XlCellView)dataItem[property]).Value = newVal)"
-                                            DateExpression="@(() => value)" />
-                            }
+					<DxFormLayoutItem Caption="@(property + ":")" ColSpanMd="6">
 
-                        </DxFormLayoutItem>
-                    }
-                }
-                else
-                {
-                    //this alert messge is here incase the exceldocument is opened before editing a row.
-                    //if form submitted while document is open operation will still fail but user just lost all their progress.
-                    AlertMessage.InvokeAsync(new AlertMessageModel(AlertMessageModel.AlertType.FileInaccessible));
-                }
+						@*If Cell has Formula*@
+						@if (xlCell.HasFormula || xlCell.HasHyperlink)
+						{
+							//var value = @"=" + ((XlCellView)dataItem[property]).XlCell.FormulaA1; //display cell formel instead
+							var value = (string)cellValue;
+							<DxTextBox Text="@value"
+						   ReadOnly="true"
+						   Enabled="false" />
+						}
 
-            </DxFormLayout>
-        </EditFormTemplate>
+						@*If Cell has data validation*@
+						else if (!(validation.MinValue == "" || validation.MinValue == null))
+						{
+							var value = (string)cellValue;
+							List<string> dataValidationElements = DataValidationLogic.ConvertStringToList(validation.MinValue);
+							<DxComboBox Data="@dataValidationElements"
+							Value="@value"
+							ValueChanged="@((string newVal) => ((XlCellView)dataItem[property]).Value = newVal)" />
+						}
 
-    </DxGrid>
+						@*If Value Text*@
+						else if (cellType == XLDataType.Text)
+						{
+							var value = (string)cellValue;
+							<DxTextBox Text="@value"
+						   TextChanged="@((string newVal) => ((XlCellView)dataItem[property]).Value = newVal)"
+						   TextExpression="@(() => value)" />
+						}
+
+						@*If Value Blank*@
+						else if (cellType == XLDataType.Blank)
+						{
+							var value = (string)cellValue;
+							<DxTextBox Text="@value"
+						   TextChanged="@((string newVal) => ((XlCellView)dataItem[property]).Value = newVal)"
+						   TextExpression="@(() => value)" />
+						}
+
+						@*If Value Number*@
+						else if (cellType == XLDataType.Number)
+						{
+							var value = (double)cellValue;
+							<DxSpinEdit Value="@value"
+							ValueChanged="@((double newVal) => {((XlCellView)dataItem[property]).Value = newVal; xlCell.Value = newVal; })"
+							ValueExpression="@(() => value)" />
+							@if (!string.IsNullOrEmpty(xlCell.Style.NumberFormat.Format))
+							{
+								<p>@xlCell.GetFormattedString()</p>
+							}
+						}
+
+						@*If Value Datetime*@
+						else if (cellType == XLDataType.DateTime)
+						{
+							var value = (DateTime)cellValue;
+							<DxDateEdit Date="@value"
+							DateChanged="@((DateTime newVal) => ((XlCellView)dataItem[property]).Value = newVal)"
+							DateExpression="@(() => value)" />
+						}
+
+					</DxFormLayoutItem>
+				}
+			</DxFormLayout>
+		</EditFormTemplate>
+
+	</DxGrid>
 }
 
 @code {
-    [Parameter] public string SelectedFileName { get; set; }
-    [Parameter] public string DirectoryPath { get; set; }
-    [Parameter] public KeyValuePair<string, List<dynamic>> SheetData { get; set; }
-    [Parameter] public EventCallback UpdateWorkbook { get; set; }
-    [Parameter] public EventCallback<AlertMessageModel> AlertMessage { get; set; }
-    //Loading
-    bool IsLoadingRender { get; set; } = true;
-    public IGrid? Grid { get; set; }
-    //Repository
-    ExcelRepository excelRepository = new();
-    //File Logic
-    FileLogic fileLogic = new();
+	[Parameter] public string SelectedFileName { get; set; }
+	[Parameter] public string DirectoryPath { get; set; }
+	[Parameter] public string UserId { get; set; }
+	[Parameter] public KeyValuePair<string, List<dynamic>> SheetData { get; set; }
+	[Parameter] public EventCallback UpdateWorkbook { get; set; }
+	[Parameter] public EventCallback<AlertMessageModel> AlertMessage { get; set; }
+	//Loading
+	bool IsLoadingRender { get; set; } = true;
+	public IGrid? Grid { get; set; }
+	//Repository
+	ExcelRepository excelRepository = new();
+	//File Logic
+	FileLogic fileLogic = new();
+	//sheet logic
+	SheetLogic sheetLogic = new();
+	int ReservedRowTimeOutInMiliseconds = 1000 * 60 * 2; //if production 2 min
+															//int ReservedRowTimeOutInMiliseconds = 1000 * 10; //if test 10 sec
 
-    protected async Task OnInitializedAsync()
-    {
+	//test
+	IEnumerable<GridSearchTextParseMode> SearchTextParseModes { get; } = Enum.GetValues<GridSearchTextParseMode>();
+	GridSearchTextParseMode CurrentSearchTextParseMode { get; set; } = GridSearchTextParseMode.GroupWordsByAnd;
 
-    }
+	protected async Task OnInitializedAsync()
+	{
 
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        if (firstRender)
-        {
-            IsLoadingRender = false;
-            StateHasChanged();
-        }
-    }
+	}
 
-    //---------------------------------------------------------------------------//
-    /* CRUD Operations - Repository Interactions                                 */
-    //---------------------------------------------------------------------------//
+	protected override async Task OnAfterRenderAsync(bool firstRender)
+	{
+		if (firstRender)
+		{
 
-    //Edit Model
-    private async Task Grid_CustomizeEditModel(GridCustomizeEditModelEventArgs e, string sheetName)
-    {
-        if (e.IsNew)
-        {
-            var model = new ExpandoObject() as IDictionary<string, object>;
-            var dataItem = (IDictionary<string, object>)excelRepository.GetFirstRow(SelectedFileName, sheetName, DirectoryPath);
+			IsLoadingRender = false;
+			StateHasChanged();
+		}
+	}
 
-            model = dataItem;
-            e.EditModel = model;
-        }
-    }
+	//---------------------------------------------------------------------------//
+	/* CRUD Operations - Repository Interactions                                 */
+	//---------------------------------------------------------------------------//
 
-    //Save Row
-    private async Task Grid_EditModelSaving(GridEditModelSavingEventArgs e, string sheetName)
-    {
-        var updatedDataItem = e.EditModel;
-        var originalDataItem = e.DataItem;
+	//Before Edit
+	private async Task Grid_EditStart(GridEditStartEventArgs e, string sheetName)
+	{
+		var originalDataItem = e.DataItem;
+		var intCellRow = (int)((IDictionary<string, object>)originalDataItem).First().Value;
+		bool shouldCancelEdit = false;
 
-        bool operationSucess = excelRepository.UpdateRowInExcel(sheetName, updatedDataItem, SelectedFileName, DirectoryPath);
+		try
+		{
+			sheetLogic.UnreserveUseresSheetRows(UserId);
+			sheetLogic.IsRowReserved(UserId, intCellRow, sheetName, SelectedFileName, DirectoryPath);
+		}
+		catch (IOException ex)
+		{
+			shouldCancelEdit = true;
+			await AlertMessage.InvokeAsync(new AlertMessageModel(AlertMessageModel.AlertType.FileInaccessible));
+		}
+		catch (RowReservedException)
+		{
+			shouldCancelEdit = true;
+			await AlertMessage.InvokeAsync(new AlertMessageModel(AlertMessageModel.AlertType.RowReserved));
+		}
+		catch (DuplicateRowDataException ex)
+		{
+			shouldCancelEdit = true;
+			await AlertMessage.InvokeAsync(new AlertMessageModel(AlertMessageModel.AlertType.DuplicateRowData));
+		}
+		catch (Exception ex)
+		{
+			shouldCancelEdit = true;
+			await AlertMessage.InvokeAsync(new AlertMessageModel(AlertMessageModel.AlertType.UnknownError));
+		}
 
-        if (operationSucess)
-        {
-            await UpdateWorkbook.InvokeAsync();
-            AlertMessage.InvokeAsync(new AlertMessageModel(AlertMessageModel.AlertType.EditRowSuccess));
-        }
-        else
-        {
-            AlertMessage.InvokeAsync(new AlertMessageModel(AlertMessageModel.AlertType.EditRowFailed));
-        }
+		if (shouldCancelEdit)
+		{
+			e.Cancel = true;
+			Debug.WriteLine($"Row: \"{intCellRow}\" Edit event canceled. no row cant be removed, or it already has! (\"{Path.Combine(SelectedFileName, sheetName)}\")");
+		}
 
-        StateHasChanged();
+	}
 
-    }
+	//Edit Row
+	private async Task Grid_CustomizeEditModel(GridCustomizeEditModelEventArgs e, string sheetName)
+	{
+		sheetLogic.UnreserveUseresSheetRows(UserId);
+		if (e.IsNew)
+		{
+			var model = new ExpandoObject() as IDictionary<string, object>;
+			var dataItem = (IDictionary<string, object>)excelRepository.GetLastUnusedRow(SelectedFileName, sheetName, DirectoryPath);
 
-    //Delete Row
-    private async Task Grid_DataItemDeleting(GridDataItemDeletingEventArgs e, string sheetName)
-    {
-        var deletedDataItem = e.DataItem;
-        var cellRow = (int)((IDictionary<string, object>)deletedDataItem).First().Value;
+			model = dataItem;
+			e.EditModel = model;
+		}
+		else
+		{
+			var intCellRow = (int)((IDictionary<string, object>)e.DataItem).First().Value;
 
-        bool operationSucess = excelRepository.DeleteRowInSheet(cellRow, sheetName, SelectedFileName, DirectoryPath);
+			try
+			{
+				sheetLogic.ReserveSheetRow(UserId, intCellRow, sheetName, SelectedFileName, DirectoryPath);
 
-        if (operationSucess)
-        {
-            await UpdateWorkbook.InvokeAsync();
-            AlertMessage.InvokeAsync(new AlertMessageModel(AlertMessageModel.AlertType.DeleteRowSuccess));
-        }
-        else
-        {
-            AlertMessage.InvokeAsync(new AlertMessageModel(AlertMessageModel.AlertType.DeleteRowFailed));
-        }
+				Debug.WriteLine($"Row: \"{intCellRow}\" has been reserved. (\"{Path.Combine(SelectedFileName, sheetName)}\")");
 
-        StateHasChanged();
-    }
+				//Remove reserved row
+				Task.Run(() =>
+				{
+					Thread.Sleep(ReservedRowTimeOutInMiliseconds);
+					try
+					{
+						sheetLogic.UnReserveSheetRow(UserId, intCellRow, sheetName, SelectedFileName, DirectoryPath);
+						Debug.WriteLine($"Row: \"{intCellRow}\" has been atempted to be unreserved. (\"{Path.Combine(SelectedFileName, sheetName)}\")");
+					}
+					catch
+					{
 
-    //---------------------------------------------------------------------------//
-    /* Other                                                                     */
-    //---------------------------------------------------------------------------//
+					}
+				});
+			}
+			catch (IOException ex)
+			{
+				await AlertMessage.InvokeAsync(new AlertMessageModel(AlertMessageModel.AlertType.FileInaccessible));
+			}
+			catch (RowReservedException)
+			{
+				await AlertMessage.InvokeAsync(new AlertMessageModel(AlertMessageModel.AlertType.RowReserved));
+			}
+			catch (DuplicateRowDataException ex)
+			{
+				await AlertMessage.InvokeAsync(new AlertMessageModel(AlertMessageModel.AlertType.DuplicateRowData));
+			}
+			catch (Exception ex)
+			{
+				await AlertMessage.InvokeAsync(new AlertMessageModel(AlertMessageModel.AlertType.UnknownError));
+			}
+
+		}
+	}
+
+	//Save Row
+	private async Task Grid_EditModelSaving(GridEditModelSavingEventArgs e, string sheetName)
+	{
+		var updatedDataItem = e.EditModel;
+		var intCellRow = (int)((IDictionary<string, object>)updatedDataItem).First().Value;
+
+		try
+		{
+			sheetLogic.UnreserveUseresSheetRows(UserId);
+			excelRepository.UpdateRowInExcel(sheetName, updatedDataItem, SelectedFileName, DirectoryPath);
+			SheetData = excelRepository.GetWorksheet(SelectedFileName, sheetName, DirectoryPath);
+
+			await UpdateWorkbook.InvokeAsync();
+
+			if (intCellRow == 0)
+			{
+				await AlertMessage.InvokeAsync(new AlertMessageModel(AlertMessageModel.AlertType.NewRowSuccess));
+			}
+			else
+			{
+				await AlertMessage.InvokeAsync(new AlertMessageModel(AlertMessageModel.AlertType.EditRowSuccess));
+			}
+		}
+		catch (IOException ex)
+		{
+			await AlertMessage.InvokeAsync(new AlertMessageModel(AlertMessageModel.AlertType.FileInaccessible));
+		}
+		catch (RowReservedException)
+		{
+			await AlertMessage.InvokeAsync(new AlertMessageModel(AlertMessageModel.AlertType.RowReserved));
+		}
+		catch (DuplicateRowDataException ex)
+		{
+			await AlertMessage.InvokeAsync(new AlertMessageModel(AlertMessageModel.AlertType.DuplicateRowData));
+		}
+		catch (Exception ex)
+		{
+			if (intCellRow == 0)
+			{
+				await AlertMessage.InvokeAsync(new AlertMessageModel(AlertMessageModel.AlertType.NewRowFailed));
+			}
+			else
+			{
+				await AlertMessage.InvokeAsync(new AlertMessageModel(AlertMessageModel.AlertType.EditRowFailed));
+			}
+			await AlertMessage.InvokeAsync(new AlertMessageModel(AlertMessageModel.AlertType.UnknownError));
+		}
+
+		StateHasChanged();
+
+	}
+
+	//Delete Row
+	private async Task Grid_DataItemDeleting(GridDataItemDeletingEventArgs e, string sheetName)
+	{
+		var deletedDataItem = e.DataItem;
+		var intCellRow = (int)((IDictionary<string, object>)deletedDataItem).First().Value;
+
+		try
+		{
+			sheetLogic.IsRowReserved(UserId, intCellRow, sheetName, SelectedFileName, DirectoryPath);
+			excelRepository.DeleteRowInSheet(intCellRow, sheetName, SelectedFileName, DirectoryPath);
+
+			SheetData = excelRepository.GetWorksheet(SelectedFileName, sheetName, DirectoryPath);
+			await UpdateWorkbook.InvokeAsync();
+			await AlertMessage.InvokeAsync(new AlertMessageModel(AlertMessageModel.AlertType.DeleteRowSuccess));
+		}
+		catch (IOException ex)
+		{
+			await AlertMessage.InvokeAsync(new AlertMessageModel(AlertMessageModel.AlertType.FileInaccessible));
+		}
+		catch (RowReservedException)
+		{
+			await AlertMessage.InvokeAsync(new AlertMessageModel(AlertMessageModel.AlertType.RowReserved));
+		}
+		catch (Exception ex)
+		{
+			await AlertMessage.InvokeAsync(new AlertMessageModel(AlertMessageModel.AlertType.DeleteRowFailed));
+			await AlertMessage.InvokeAsync(new AlertMessageModel(AlertMessageModel.AlertType.UnknownError));
+		}
+
+		StateHasChanged();
+	}
+
+	private async Task Grid_EditCanceling(GridEditCancelingEventArgs e, string sheetName)
+	{
+		var originalDataItem = e.DataItem;
+		var intCellRow = (int)((IDictionary<string, object>)originalDataItem).First().Value;
+
+		try
+		{
+			sheetLogic.UnReserveSheetRow(UserId, intCellRow, sheetName, SelectedFileName, DirectoryPath);
+			Debug.WriteLine($"Row: \"{intCellRow}\" has been unreserved. (\"{Path.Combine(SelectedFileName, sheetName)}\")");
+		}
+		catch (Exception ex)
+		{
+			Debug.WriteLine($"Row: \"{intCellRow}\" unreserved unsucessfull. (\"{Path.Combine(SelectedFileName, sheetName)}\")");
+		}
+	}
+
+	//---------------------------------------------------------------------------//
+	/* Other                                                                     */
+	//---------------------------------------------------------------------------//
 
 
+	//String to Hyberlink & link text
+	private KeyValuePair<string, string> StringHyperlink(string value)
+	{
+		//"HYPERLINK(\"www.google.com\", \"google\")"
+		if (value.ToLower().StartsWith("hyperlink"))
+		{
+			var refinedstring = value.Replace("\"", "\\");
+
+			int urlstart = refinedstring.IndexOf(@"\") + 1;
+			int urlend = refinedstring.IndexOf(@"\", urlstart);
+			string url = refinedstring.Substring(urlstart, urlend - urlstart);
+			if (!(url.StartsWith(@"http://") || url.StartsWith(@"https://")))
+			{
+				url = @"http://" + url;
+			}
+
+			int textStart = refinedstring.IndexOf(@",") + 3;
+			int textEnd = refinedstring.IndexOf(@"\", textStart);
+			string linkText = refinedstring.Substring(textStart, textEnd - textStart);
+
+			return new KeyValuePair<string, string>(linkText, url);
+		}
+
+		else
+		{
+			throw new Exception();
+		}
+	}
+
+	//cell style formatting
+	private string GetCellStyle(IXLStyle cellStyle, bool hasHyberlink)
+	{
+		string cellStyleStyle = "";
+
+		cellStyleStyle += (cellStyle.Font.Bold) ? "font-weight:bold; " : "";
+		cellStyleStyle += (cellStyle.Font.Italic) ? "font-style:italic; " : "";
+		cellStyleStyle += (cellStyle.Font.Underline == XLFontUnderlineValues.Single) ? "text-decoration:underline; " : "";
+		cellStyleStyle += (cellStyle.Font.Underline == XLFontUnderlineValues.Double) ? "text-decoration:underline double; " : "";
+		cellStyleStyle += (cellStyle.Font.FontColor.ColorType == XLColorType.Color) ? $"color: rgba({cellStyle.Font.FontColor.Color.R}, {cellStyle.Font.FontColor.Color.G}, {cellStyle.Font.FontColor.Color.B}, {cellStyle.Font.FontColor.Color.A}); " : "";
+		cellStyleStyle += (!(cellStyle.Font.FontName == null || cellStyle.Font.FontName == "")) ? $"font-family: {cellStyle.Font.FontName}; " : "";
+		cellStyleStyle += (cellStyle.Font.Strikethrough) ? $"text-decoration: line-through; " : "";
+
+		//closedxml heilight cell color not supportet.
+		//cellStyleStyle += (cellStyle.Font.FontColor. == XLColorType.Color) ? $"background-color: rgba({cellStyle.Fill.BackgroundColor.Color.R}, {cellStyle.Fill.BackgroundColor.Color.G}, {cellStyle.Fill.BackgroundColor.Color.B}, {cellStyle.Fill.BackgroundColor.Color.A}); " : "";
+
+		return cellStyleStyle;
+	}
 }

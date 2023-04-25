@@ -70,18 +70,18 @@ html, body {
     }
 }
 
-/*File Tab Menu*/
-
-.dx-tab-primary{
-    padding:10px 20px;
-    text-align:center;
-    background-color:rgb(95,54,111);
-    color:white;
-}
-
-.dx-tab-secondary {
+/*Excel Workbook Tab*/
+.workbook-tab {
     padding: 10px 20px;
     text-align: center;
-    background-color: rgb(237,237,237);
-    color: black;
+    background-color: rgb(95, 53, 141);
+    color: white;
+    /*border-top-left-radius: 10px;*/
+    /*border-top-right-radius: 10px;*/
+    /*background-color: rgb(237,237,237); hoverColor*/
+    /*color: rgb(95, 53, 141); primarycolor*/
+}
+
+.workbook-tab:hover {
+    background-color: red;
 }
