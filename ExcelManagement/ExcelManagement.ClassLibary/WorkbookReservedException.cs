@@ -6,7 +6,11 @@ using System.Threading.Tasks;
 
 namespace ExcelManagement.ClassLibary
 {
-    internal class WorkbookReservedException
+    public class WorkbookReservedException : Exception
     {
+        public WorkbookReservedException(string message) : base(message)
+        {
+
+        }
     }
 }

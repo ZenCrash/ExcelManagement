@@ -6,7 +6,11 @@ using System.Threading.Tasks;
 
 namespace ExcelManagement.ClassLibary
 {
-    internal class DuplicateRowDataException
+    public class DuplicateRowDataException : Exception
     {
+        public DuplicateRowDataException(string message) : base(message)
+        {
+
+        }
     }
 }

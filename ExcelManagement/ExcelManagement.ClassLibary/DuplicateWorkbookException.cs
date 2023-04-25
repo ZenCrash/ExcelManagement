@@ -6,7 +6,11 @@ using System.Threading.Tasks;
 
 namespace ExcelManagement.ClassLibary
 {
-    internal class DuplicateWorkbookException
+    public class DuplicateWorkbookException : Exception
     {
+        public DuplicateWorkbookException(string message) : base(message)
+        {
+
+        }
     }
 }
