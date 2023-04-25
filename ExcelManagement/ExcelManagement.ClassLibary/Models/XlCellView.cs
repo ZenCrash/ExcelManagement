@@ -8,7 +8,7 @@ using ClosedXML.Excel;
 
 namespace ExcelManagement.ClassLibary.Models
 {
-    public class XlCellView
+    public class XlCellView : IComparable<XlCellView>
     {
         public IXLCell XlCell { get; set; }
         public XLDataType Type { get; set; }
@@ -32,8 +32,17 @@ namespace ExcelManagement.ClassLibary.Models
             switch (cell.Value.Type)
             {
                 case XLDataType.Text:
-                    Type = XLDataType.Text;
-                    _value = XlCell.Value.GetText();
+                    double doubleValue;
+                    if (double.TryParse(XlCell.Value.GetText(), out doubleValue))
+                    {
+                        _value = doubleValue;
+                        Type = XLDataType.Number;
+                    }
+                    else
+                    {
+                        _value = XlCell.Value.GetText();
+                        Type = XLDataType.Text;
+                    }
                     break;
                 case XLDataType.Number:
                     Type = XLDataType.Number;
@@ -59,5 +68,28 @@ namespace ExcelManagement.ClassLibary.Models
             return Value + "";
         }
 
+        public int CompareTo(XlCellView other)
+        {
+            if (other == null) return 1;
+
+            if (Type == other.Type)
+            {
+                switch (Type)
+                {
+                    case XLDataType.Number:
+                        return ((double)Value).CompareTo((double)other.Value);
+                    case XLDataType.Boolean:
+                        return ((bool)Value).CompareTo((bool)other.Value);
+                    case XLDataType.DateTime:
+                        return ((DateTime)Value).CompareTo((DateTime)other.Value);
+                    default:
+                        return string.Compare((string)Value, (string)other.Value);
+                }
+            }
+            else
+            {
+                return string.Compare(Type.ToString(), other.Type.ToString());
+            }
+        }
     }
 }
