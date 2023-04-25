@@ -69,3 +69,19 @@ html, body {
         opacity: 0;
     }
 }
+
+/*File Tab Menu*/
+
+.dx-tab-primary{
+    padding:10px 20px;
+    text-align:center;
+    background-color:rgb(95,54,111);
+    color:white;
+}
+
+.dx-tab-secondary {
+    padding: 10px 20px;
+    text-align: center;
+    background-color: rgb(237,237,237);
+    color: black;
+}

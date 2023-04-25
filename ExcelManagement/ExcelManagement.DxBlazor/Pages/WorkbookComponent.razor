@@ -21,24 +21,7 @@
 }
 else
 {
-    <div style="display: flex; justify-content: space-between;">
-        <h1><span style="color: gray;">Excel Document: </span>@SelectedFileName</h1>
-        <div>
-            <DxButton RenderStyle="ButtonRenderStyle.Primary"
-                  Text="Download File"
-                  Click="@DownloadFileFromStream"
-                  IconCssClass="oi oi-data-transfer-download">
-            </DxButton>
-            <DxButton RenderStyle="ButtonRenderStyle.Secondary"
-                  Text="Upload File"
-                  Click="@TriggerFileUpload"
-                  IconCssClass="oi oi-cloud-upload">
-            </DxButton>
-            <InputFile id="inputFile" OnChange="@LoadFiles" multiple accept="@acceptedFileFormats" style="display: none"/>
 
-
-        </div>
-    </div>
 
     <DxTabs ScrollMode="TabsScrollMode.NavButtons"
         @bind-ActiveTabIndex="@ActiveTabIndex">
