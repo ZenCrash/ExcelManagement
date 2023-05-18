@@ -1,12 +1,21 @@
 using ExcelManagement.ClassLibary;
+using ExcelManagement.DxBlazor.Areas.Identity;
 using ExcelManagement.DxBlazor.Data;
 using ExcelManagement.DxBlazor.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 
 var builder = WebApplication.CreateBuilder(args);
+var connectionString = builder.Configuration.GetConnectionString("ExcelManagementDxBlazorContextConnection") ?? throw new InvalidOperationException("Connection string 'ExcelManagementDxBlazorContextConnection' not found.");
+
+builder.Services.AddDbContext<ExcelManagementDxBlazorContext>(options =>
+    options.UseSqlServer(connectionString));
+
+builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+    .AddEntityFrameworkStores<ExcelManagementDxBlazorContext>();
 
 //Clean on startup
 SheetLogic sheetLogic = new();
@@ -25,6 +34,10 @@ builder.Services.AddDevExpressBlazor(options => {
     options.SizeMode = DevExpress.Blazor.SizeMode.Medium;
 });
 builder.Services.AddSingleton<WeatherForecastService>();
+
+//token provider
+builder.Services.AddScoped<TokenProvider>();
+
 builder.WebHost.UseWebRoot("wwwroot");
 builder.WebHost.UseStaticWebAssets();
 
@@ -49,8 +62,14 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+//token access
+app.UseAuthentication();
+app.UseAuthorization();
+
+app.MapRazorPages();
 
 app.MapBlazorHub();
 app.MapFallbackToPage("/_Host");
+app.UseAuthentication();;
 
 app.Run();

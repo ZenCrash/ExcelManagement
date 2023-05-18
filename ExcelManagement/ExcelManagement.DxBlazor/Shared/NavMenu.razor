@@ -1,11 +1,18 @@
-﻿<div class="sidebar @StateCssClass">
-<DxTreeView AllowSelectNodes="true" CssClass="app-sidebar">
-    <Nodes>
-        <DxTreeViewNode NavigateUrl="./" Text="Excel Dokument"></DxTreeViewNode>
-        <DxTreeViewNode NavigateUrl="test1" Text="Test Page 1"></DxTreeViewNode>
-    </Nodes>
-</DxTreeView>
-</div>
+﻿<AuthorizeView>
+    <Authorized>
+        <div class="sidebar @StateCssClass">
+        <DxTreeView AllowSelectNodes="true" CssClass="app-sidebar">
+            <Nodes>
+                <DxTreeViewNode NavigateUrl="./" Text="Excel Dokument"></DxTreeViewNode>
+                <DxTreeViewNode NavigateUrl="test1" Text="Test Page 1"></DxTreeViewNode>
+            </Nodes>
+        </DxTreeView>
+        </div>
+    </Authorized>
+    <NotAuthorized>
+        <div>You are not allowed here</div>
+    </NotAuthorized>
+</AuthorizeView>
 
 @code {
     [Parameter] public string? StateCssClass { get; set; }
