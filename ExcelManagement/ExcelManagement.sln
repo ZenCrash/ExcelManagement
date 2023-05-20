@@ -17,6 +17,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{C6E42031-1
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExcelManagement.Testing", "ExcelManagement.Testing\ExcelManagement.Testing.csproj", "{6D06C6FE-82D4-4CBE-9095-99392CAB2C74}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SqlScripts", "SqlScripts", "{F349FBE7-C7A3-4AAD-920F-521787B333BE}"
+	ProjectSection(SolutionItems) = preProject
+		Database.Create.With.Tables.sql = Database.Create.With.Tables.sql
+		Database.Delete.With.Tables.sql.sql = Database.Delete.With.Tables.sql.sql
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -46,6 +52,7 @@ Global
 		{70A9CE49-3C46-4DE9-ACEF-E905B576ACC8} = {1DCD11F5-44D1-42E0-A2CF-02734F1347DC}
 		{C6E42031-1701-4CB4-AE59-52913DC3C446} = {1DCD11F5-44D1-42E0-A2CF-02734F1347DC}
 		{6D06C6FE-82D4-4CBE-9095-99392CAB2C74} = {C6E42031-1701-4CB4-AE59-52913DC3C446}
+		{F349FBE7-C7A3-4AAD-920F-521787B333BE} = {1DCD11F5-44D1-42E0-A2CF-02734F1347DC}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {2C2757CE-7DD5-44C0-B0FB-FF1F7DBB218E}

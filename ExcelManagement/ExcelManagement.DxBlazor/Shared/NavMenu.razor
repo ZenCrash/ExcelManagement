@@ -1,8 +1,11 @@
 ﻿<div class="sidebar @StateCssClass">
 <DxTreeView AllowSelectNodes="true" CssClass="app-sidebar">
     <Nodes>
-        <DxTreeViewNode NavigateUrl="./" Text="Excel Dokument"></DxTreeViewNode>
-        <DxTreeViewNode NavigateUrl="test1" Text="Test Page 1"></DxTreeViewNode>
+        <DxTreeViewNode NavigateUrl="./" Text="Home"></DxTreeViewNode>
+        <DxTreeViewNode NavigateUrl="fileselection" Text="Excel Dokument"></DxTreeViewNode>
+        <AuthorizeView>
+            <DxTreeViewNode NavigateUrl="test1" Text="Test Page 1"></DxTreeViewNode>
+        </AuthorizeView>
     </Nodes>
 </DxTreeView>
 </div>

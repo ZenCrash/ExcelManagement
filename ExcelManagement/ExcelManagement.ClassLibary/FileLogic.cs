@@ -69,11 +69,14 @@ namespace ExcelManagement.ClassLibary
         //Clean temp folder
         public void DeleteFilesInTempFolder(string directoryPath = @"..\ExcelDocuments\temp")
         {
-            DirectoryInfo directory = new DirectoryInfo(directoryPath);
-
-            foreach (FileInfo file in directory.GetFiles())
+            if (Directory.Exists(directoryPath))
             {
-                file.Delete();
+                DirectoryInfo directory = new DirectoryInfo(directoryPath);
+
+                foreach (FileInfo file in directory.GetFiles())
+                {
+                    file.Delete();
+                }
             }
         }
     }
