@@ -24,10 +24,10 @@ builder.Services.AddServerSideBlazor();
 
 //database connectionstring
 var cs = builder.Configuration.GetConnectionString("Default");
-builder.Services.AddDbContext<DataContext>(options => options.UseSqlServer(cs));
+builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(cs));
 
 //Identity
-builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
+builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
 {
     options.Password.RequireDigit = false;
     options.Password.RequiredLength = 8;
@@ -37,7 +37,7 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
 
     options.SignIn.RequireConfirmedEmail = false;
 })
-    .AddEntityFrameworkStores<DataContext>();
+    .AddEntityFrameworkStores<ApplicationDbContext>();
 
 builder.Services.AddDevExpressBlazor(options => {
     options.BootstrapVersion = DevExpress.Blazor.BootstrapVersion.v5;
