@@ -25,25 +25,32 @@ namespace ExcelManagement.DxBlazor.Areas.Identity.Pages.Account
             ReturnUrl = Url.Content("~/");
         }
 
-        public async Task <IActionResult> OnPostAsync()
-        {
-            ReturnUrl = Url.Content("~/");
-            if (ModelState.IsValid)
-            {
-                var identity = new IdentityUser { UserName = Input.Email, Email = Input.Email };
-                var result = await _userManager.CreateAsync(identity, Input.Password);
+		public async Task<IActionResult> OnPostAsync()
+		{
+			ReturnUrl = Url.Content("~/");
+			if (ModelState.IsValid)
+			{
+				var userExists = await _userManager.FindByEmailAsync(Input.Email);
+				if (userExists != null)
+				{
+					ModelState.AddModelError(string.Empty, "Email already exists.");
+					return Page();
+				}
 
-                if (result.Succeeded)
-                {
-                    await _signInManager.SignInAsync(identity, isPersistent: false);
-                    return LocalRedirect(ReturnUrl);
-                }
-            }
+				var identity = new IdentityUser { UserName = Input.Email, Email = Input.Email };
+				var result = await _userManager.CreateAsync(identity, Input.Password);
 
-            return Page();
-        }
+				if (result.Succeeded)
+				{
+					await _signInManager.SignInAsync(identity, isPersistent: false);
+					return LocalRedirect(ReturnUrl);
+				}
+			}
 
-        public class InputModel
+			return Page();
+		}
+
+		public class InputModel
         {
             [Required]
             [EmailAddress]

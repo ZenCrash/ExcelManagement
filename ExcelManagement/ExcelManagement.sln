@@ -23,6 +23,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SqlScripts", "SqlScripts", 
 		Database.Delete.With.Tables.sql.sql = Database.Delete.With.Tables.sql.sql
 	EndProjectSection
 EndProject
+Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "BluestarDatabase", "BluestarDatabase\BluestarDatabase.sqlproj", "{982AEE11-3CC4-4BBF-A208-8ABB19CA6EE9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -41,6 +43,12 @@ Global
 		{6D06C6FE-82D4-4CBE-9095-99392CAB2C74}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6D06C6FE-82D4-4CBE-9095-99392CAB2C74}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6D06C6FE-82D4-4CBE-9095-99392CAB2C74}.Release|Any CPU.Build.0 = Release|Any CPU
+		{982AEE11-3CC4-4BBF-A208-8ABB19CA6EE9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{982AEE11-3CC4-4BBF-A208-8ABB19CA6EE9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{982AEE11-3CC4-4BBF-A208-8ABB19CA6EE9}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{982AEE11-3CC4-4BBF-A208-8ABB19CA6EE9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{982AEE11-3CC4-4BBF-A208-8ABB19CA6EE9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{982AEE11-3CC4-4BBF-A208-8ABB19CA6EE9}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -53,6 +61,7 @@ Global
 		{C6E42031-1701-4CB4-AE59-52913DC3C446} = {1DCD11F5-44D1-42E0-A2CF-02734F1347DC}
 		{6D06C6FE-82D4-4CBE-9095-99392CAB2C74} = {C6E42031-1701-4CB4-AE59-52913DC3C446}
 		{F349FBE7-C7A3-4AAD-920F-521787B333BE} = {1DCD11F5-44D1-42E0-A2CF-02734F1347DC}
+		{982AEE11-3CC4-4BBF-A208-8ABB19CA6EE9} = {F349FBE7-C7A3-4AAD-920F-521787B333BE}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {2C2757CE-7DD5-44C0-B0FB-FF1F7DBB218E}
