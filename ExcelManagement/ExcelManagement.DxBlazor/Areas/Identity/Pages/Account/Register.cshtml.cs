@@ -1,3 +1,4 @@
+using ExcelManagement.DxBlazor.Data.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -8,12 +9,12 @@ namespace ExcelManagement.DxBlazor.Areas.Identity.Pages.Account
     public class RegisterModel : PageModel
     {
         private readonly SignInManager<IdentityUser> _signInManager;
-        private readonly UserManager<IdentityUser> _userManager;
+        private readonly UserManager<ApplicationUser> _applicationUserManager;
 
-        public RegisterModel(SignInManager<IdentityUser> signInManager, UserManager<IdentityUser> userManager)
+        public RegisterModel(SignInManager<IdentityUser> signInManager, UserManager<ApplicationUser> applicationUserManager)
         {
             _signInManager = signInManager;
-            _userManager = userManager;
+            _applicationUserManager = applicationUserManager;
         }
 
         [BindProperty]
@@ -30,15 +31,18 @@ namespace ExcelManagement.DxBlazor.Areas.Identity.Pages.Account
 			ReturnUrl = Url.Content("~/");
 			if (ModelState.IsValid)
 			{
-				var userExists = await _userManager.FindByEmailAsync(Input.Email);
+				var userExists = await _applicationUserManager.FindByEmailAsync(Input.Email);
 				if (userExists != null)
 				{
 					ModelState.AddModelError(string.Empty, "Email already exists.");
 					return Page();
 				}
 
-				var identity = new IdentityUser { UserName = Input.Email, Email = Input.Email };
-				var result = await _userManager.CreateAsync(identity, Input.Password);
+				var identity = new ApplicationUser { UserName = Input.Email, Email = Input.Email, 
+					Person = new Person { FirstName = Input.FirstName, LastName = Input.LastName, Company = Input.Company } 
+				};
+
+				var result = await _applicationUserManager.CreateAsync(identity, Input.Password);
 
 				if (result.Succeeded)
 				{
@@ -49,16 +53,5 @@ namespace ExcelManagement.DxBlazor.Areas.Identity.Pages.Account
 
 			return Page();
 		}
-
-		public class InputModel
-        {
-            [Required]
-            [EmailAddress]
-            public string Email { get; set; }
-
-            [Required]
-            [DataType(DataType.Password)]
-            public string Password { get; set; }
-        }
     }
 }

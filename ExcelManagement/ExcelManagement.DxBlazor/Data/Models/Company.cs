@@ -3,25 +3,24 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ExcelManagement.DxBlazor.Data.Models
 {
-    [Table("Departments")]
-    public class Department
+    [Table("Companies")]
+    public class Company
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
-
         [Required]
-        [StringLength(256)]
-        public string DepartmentName { get; set; }
+        [StringLength(2000)]
+        public string CompanyName { get; set; }
         [StringLength(10000)]
         public string Description { get; set; }
+        [Url]
+        public string CompanyLogoUrl { get; set; }
 
-        //Fks
-
-        [Required]
-        public virtual Company Company { get; set; }
-
+        //FKs 
+        public ICollection<Department?>? Departments { get; set; }
         public ICollection<Person?>? People { get; set; }
+
 
     }
 }

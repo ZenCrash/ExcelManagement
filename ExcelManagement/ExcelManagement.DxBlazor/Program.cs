@@ -1,5 +1,6 @@
 using ExcelManagement.ClassLibary;
 using ExcelManagement.DxBlazor.Data;
+using ExcelManagement.DxBlazor.Data.Models;
 using ExcelManagement.DxBlazor.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
