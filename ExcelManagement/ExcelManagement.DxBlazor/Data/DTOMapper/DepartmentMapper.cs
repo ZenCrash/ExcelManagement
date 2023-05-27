@@ -13,9 +13,8 @@ namespace ExcelManagement.DxBlazor.Data.DTOMapper
                 DepartmentName = department.DepartmentName,
                 Description = department.Description,
 
-                CompanyDTO = CompanyMapper.MapToDTOEndpoint(department.Company)
-
-
+                CompanyDTO = CompanyMapper.MapToDTOEndpoint(department.Company),
+                PersonDTOList = PersonMapper.MapPeopleList(department.People),
             };
 
             return departmentDTO;
@@ -31,6 +30,24 @@ namespace ExcelManagement.DxBlazor.Data.DTOMapper
             };
 
             return departmentDTO;
+        }
+
+        public static ICollection<DepartmentDTO> MapDepartmentList(ICollection<Department> departments)
+        {
+            if (departments == null || departments.Count == 0)
+            {
+                return null;
+            }
+
+            var departmentDTOList = new List<DepartmentDTO>();
+
+            foreach (var department in departments)
+            {
+                var departmentDTO = DepartmentMapper.MapToDTOEndpoint(department);
+                departmentDTOList.Add(departmentDTO);
+            }
+
+            return departmentDTOList;
         }
     }
 }
