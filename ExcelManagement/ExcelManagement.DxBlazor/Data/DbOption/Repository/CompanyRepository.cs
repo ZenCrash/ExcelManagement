@@ -1,33 +1,106 @@
-﻿using ExcelManagement.DxBlazor.Data.DbOption.Interface;
+﻿using DocumentFormat.OpenXml.InkML;
+using ExcelManagement.DxBlazor.Data.DbOption.Interface;
 using ExcelManagement.DxBlazor.Data.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace ExcelManagement.DxBlazor.Data.DbOption.Repository
 {
-    public class CompanyRepository : ICompanyRepository
+    public class CompanyRepository : ICompanyRepository, IDisposable
     {
-        public Task<bool> CreateAsync(Company entity)
+        private readonly ApplicationDbContext _dbContext;
+
+        public CompanyRepository(DbContextOptions<ApplicationDbContext> options)
         {
-            throw new NotImplementedException();
+            _dbContext = new ApplicationDbContext(options);
         }
 
-        public Task<bool> DeleteAsync(int id)
+        //GetAll
+        public async Task<List<Company>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            return await _dbContext.Companies.ToListAsync();
         }
 
-        public Task<List<Company>> GetAllAsync()
+        //Get
+        public async Task<Company?> GetAsync(Guid id)
         {
-            throw new NotImplementedException();
+            return await _dbContext.Companies.FindAsync(id);
         }
 
-        public Task<Company> GetAsync(int id)
+        //Create
+        public async Task<bool> CreateAsync(Company company)
         {
-            throw new NotImplementedException();
+            try
+            {
+                _dbContext.Companies.Add(company);
+                return true;
+                //Save changes must be run after this command to impliment changes
+            }
+            catch
+            {
+                return false;
+            }
         }
 
-        public Task<bool> UpdateAsync(Company entity)
+        //Update
+        public async Task<bool> UpdateAsync(Company company)
         {
-            throw new NotImplementedException();
+            try
+            {
+                _dbContext.Entry(company).State = EntityState.Modified;
+                return true;
+                //Save changes must be run after this command to impliment changes
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
         }
+
+        //Delete
+        public async Task<bool> DeleteAsync(Guid id)
+        {
+            try
+            {
+                Company company = _dbContext.Companies.Find(id);
+                _dbContext.Companies.Remove(company);
+                return true;
+                //Save changes must be run after this command to impliment changes
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+
+
+        /* Logic */
+
+        //Save
+        public async Task Save()
+        {
+            await _dbContext.SaveChangesAsync();
+        }
+
+        //Dispose
+        private bool _disposed = false;
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!this._disposed)
+            {
+                if (disposing)
+                {
+                    _dbContext.Dispose();
+                }
+            }
+            this._disposed = true;
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
     }
 }

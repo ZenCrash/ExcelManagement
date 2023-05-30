@@ -1,26 +1,73 @@
-﻿using ExcelManagement.DxBlazor.Data.DbOption.Interface;
+﻿using DocumentFormat.OpenXml.InkML;
+using ExcelManagement.DxBlazor.Data.DbOption.Interface;
 using ExcelManagement.DxBlazor.Data.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace ExcelManagement.DxBlazor.Data.DbOption.Repository
 {
-    public class PersonRepository : IPersonRepository
+    public class PersonRepository : IPersonRepository, IDisposable
     {
-        //GetAll
-        public Task<List<Person>> GetAllAsync()
+        private readonly ApplicationDbContext _dbContext;
+
+        public PersonRepository(DbContextOptions<ApplicationDbContext> options)
         {
-            throw new NotImplementedException();
+            _dbContext = new ApplicationDbContext(options);
+        }
+
+        //GetAll
+        public async Task<List<Person>> GetAllAsync()
+        {
+            return await _dbContext.People.ToListAsync();
         }
 
         //Get
-        public Task<Person> GetAsync(int id)
+        public async Task<Person?> GetAsync(Guid id)
         {
-            throw new NotImplementedException();
+            return await _dbContext.People.FindAsync(id);
         }
 
         //Update
-        public Task<bool> UpdateAsync(Person entity)
+        public async Task<bool> UpdateAsync(Person person)
         {
-            throw new NotImplementedException();
+            try
+            {
+                _dbContext.Entry(person).State = EntityState.Modified;
+                return true;
+            }
+            catch(Exception ex)
+            {
+                return false;
+            }
+        }
+
+
+
+        /* Logic */
+
+        //Save
+        public async Task Save()
+        {
+            await _dbContext.SaveChangesAsync();
+        }
+
+        //Dispose
+        private bool _disposed = false;
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!this._disposed)
+            {
+                if (disposing)
+                {
+                    _dbContext.Dispose();
+                }
+            }
+            this._disposed = true;
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
     }
 }

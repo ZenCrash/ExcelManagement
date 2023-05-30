@@ -17,6 +17,7 @@ namespace ExcelManagement.DxBlazor.Data.DTO
         [StringLength(10000)]
         public string Bio { get; set; }
         [Required]
+        public Guid CompanyId { get; set; }
         public CompanyDTO CompanyDTO { get; set; }
         public DepartmentDTO? DepartmentDTO { get; set; }
     }

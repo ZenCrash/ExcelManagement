@@ -14,7 +14,7 @@ namespace ExcelManagement.DxBlazor.Data.Models
         [StringLength(256)]
         public string DepartmentName { get; set; }
         [StringLength(10000)]
-        public string Description { get; set; }
+        public string? Description { get; set; }
 
         //Fks
 

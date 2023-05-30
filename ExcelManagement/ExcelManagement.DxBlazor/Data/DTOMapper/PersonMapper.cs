@@ -15,9 +15,10 @@ namespace ExcelManagement.DxBlazor.Data.DTOMapper
                 LastName = person.LastName,
                 JobTitle = person.JobTitle,
                 Bio = person.Bio,
+                CompanyId = person.CompanyId,
 
                 CompanyDTO = CompanyMapper.MapToDTOEndpoint(person.Company),
-                DepartmentDTO = DepartmentMapper.MapToDTOEndpoint(person.Department),
+                DepartmentDTO = (person.Department == null) ? null : DepartmentMapper.MapToDTOEndpoint(person.Department),
             };
 
             return personDTO;
@@ -33,13 +34,51 @@ namespace ExcelManagement.DxBlazor.Data.DTOMapper
                 LastName = person.LastName,
                 JobTitle = person.JobTitle,
                 Bio = person.Bio,
+                CompanyId = person.CompanyId,
             };
 
             return personDTO;
         }
 
+        //Map to Model
+        public static Person MapToModel(PersonDTO personDTO)
+        {
+            var person = new Person
+            {
+                Id = personDTO.Id,
+                FirstName = personDTO.FirstName,
+                LastName = personDTO.LastName,
+                JobTitle = personDTO.JobTitle,
+                Bio = personDTO.Bio,
+                CompanyId = personDTO.CompanyId,
+
+                Company = CompanyMapper.MapToModelEndpoint(personDTO.CompanyDTO),
+                Department = (personDTO.DepartmentDTO == null) ? null : DepartmentMapper.MapToModelEndpoint(personDTO.DepartmentDTO),
+            };
+
+            return person;
+        }
+
+        //Map to Model Endpoint
+        public static Person MapToModelEndpoint(PersonDTO personDTO)
+        {
+            var person = new Person
+            {
+                Id = personDTO.Id,
+                FirstName = personDTO.FirstName,
+                LastName = personDTO.LastName,
+                JobTitle = personDTO.JobTitle,
+                Bio = personDTO.Bio,
+                CompanyId = personDTO.CompanyId,
+            };
+
+            return person;
+        }
+
         //Logic
-        public static ICollection<PersonDTO> MapPeopleList(ICollection<Person> people)
+
+        //Map List<Person> to List<PersonDTO>
+        public static ICollection<PersonDTO> MapPersonToDTOList(ICollection<Person> people)
         {
             if (people == null || people.Count == 0)
             {
@@ -50,11 +89,30 @@ namespace ExcelManagement.DxBlazor.Data.DTOMapper
 
             foreach (var person in people)
             {
-                var departmentDTO = MapToDTOEndpoint(person);
-                personDTOList.Add(departmentDTO);
+                var personDTO = MapToDTOEndpoint(person);
+                personDTOList.Add(personDTO);
             }
 
             return personDTOList;
+        }
+
+        //Map List<PersonDTO> to List<Person>
+        public static ICollection<Person> MapPersonToModelList(ICollection<PersonDTO> personDTOs)
+        {
+            if (personDTOs == null || personDTOs.Count == 0)
+            {
+                return null;
+            }
+
+            var people = new List<Person>();
+
+            foreach (var personDTO in personDTOs)
+            {
+                var person = MapToModelEndpoint(personDTO);
+                people.Add(person);
+            }
+
+            return people;
         }
     }
 }

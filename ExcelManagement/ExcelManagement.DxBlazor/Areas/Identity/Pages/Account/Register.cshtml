@@ -15,23 +15,37 @@
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                 <div class="form-floating" style="margin:10px">
                     <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" />
-                    <label asp-for="Input.Email" class="form-label" />
+                    <label asp-for="Input.Email" class="form-label"></label>
                     <span asp-validation-for="Input.Email" class="text-danger"></span>
                 </div>
                 <div class="form-floating" style="margin:10px">
                     <input asp-for="Input.Password" class="form-control" autocomplete="current-password" aria-required="true" />
-                    <label asp-for="Input.Password" class="form-label" />
+                    <label asp-for="Input.Password" class="form-label"></label>
                     <span asp-validation-for="Input.Password" class="text-danger"></span>
                 </div>
                 <div class="form-floating" style="margin:10px">
-                    <input asp-for="Input.FirstName" class="form-control" autocomplete="FirstName" aria-required="true" />
-                    <label asp-for="Input.FirstName" class="form-label" />
+                    <input asp-for="Input.FirstName" class="form-control" aria-required="true" />
+                    <label asp-for="Input.FirstName" class="form-label"></label>
                     <span asp-validation-for="Input.FirstName" class="text-danger"></span>
                 </div>
                 <div class="form-floating" style="margin:10px">
-                    <input asp-for="Input.LastName" class="form-control" autocomplete="LastName" aria-required="true" />
-                    <label asp-for="Input.LastName" class="form-label" />
-                    <span asp-validation-for="Input.Email" class="text-danger"></span>
+                    <input asp-for="Input.LastName" class="form-control" aria-required="true" />
+                    <label asp-for="Input.LastName" class="form-label"></label>
+                    <span asp-validation-for="Input.LastName" class="text-danger"></span>
+                </div>
+                <div class="form-floating" style="margin:10px">
+                    <select asp-for="Input.CompanyDTO.Id" asp-items="@Model.Companies" class="form-select" onchange="loadDepartments(this)">
+                        <option value="">-- Select Company --</option>
+                    </select>
+                    <label asp-for="Input.CompanyDTO.Id" class="form-label"></label>
+                    <span asp-validation-for="Input.CompanyDTO.Id" class="text-danger"></span>
+                </div>
+                <div class="form-floating" style="margin:10px">
+                    <select asp-for="Input.DepartmentDTO.Id" asp-items="@Model.Departments" class="form-select" disabled>
+                        <option value="">-- Select Department --</option>
+                    </select>
+                    <label asp-for="Input.DepartmentDTO.Id" class="form-label"></label>
+                    <span asp-validation-for="Input.DepartmentDTO.Id" class="text-danger"></span>
                 </div>
 
                 <div style="margin:10px">
@@ -42,7 +56,6 @@
             <div style="margin-top: 10px;">
                 <a href="~/">Go Back</a>
             </div>
-
         </section>
     </div>
 </div>

@@ -1,8 +1,10 @@
 ﻿@page
 @using Microsoft.AspNetCore.Identity
+@using ExcelManagement.DxBlazor.Data.Models;
+
 @attribute [IgnoreAntiforgeryToken]
-@inject SignInManager<IdentityUser> SignInManager
-@inject UserManager<IdentityUser> UserManager;
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager;
 
 @functions {
     public async Task<IActionResult> OnGet()

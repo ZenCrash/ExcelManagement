@@ -8,7 +8,7 @@ namespace ExcelManagement.DxBlazor.Data.DbOption.Interface
         public Task<List<Person>> GetAllAsync();
 
         //Get
-        public Task<Person> GetAsync(int id);
+        public Task<Person> GetAsync(Guid id);
 
         //Update
         public Task<bool> UpdateAsync(Person entity);

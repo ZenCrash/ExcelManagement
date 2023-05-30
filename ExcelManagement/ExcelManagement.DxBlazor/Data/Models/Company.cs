@@ -13,9 +13,9 @@ namespace ExcelManagement.DxBlazor.Data.Models
         [StringLength(2000)]
         public string CompanyName { get; set; }
         [StringLength(10000)]
-        public string Description { get; set; }
+        public string? Description { get; set; }
         [Url]
-        public string CompanyLogoUrl { get; set; }
+        public string? CompanyLogoUrl { get; set; }
 
         //FKs 
         public ICollection<Department?>? Departments { get; set; }

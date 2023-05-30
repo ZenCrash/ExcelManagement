@@ -21,14 +21,17 @@ namespace ExcelManagement.DxBlazor.Data.Models
         [StringLength(256, MinimumLength = 2)]
         public string LastName { get; set; }
         [StringLength(256)]
-        public string JobTitle { get; set; }
+        public string? JobTitle { get; set; }
         [StringLength(10000)]
-        public string Bio { get; set; }
+        public string? Bio { get; set; }
 
 
         //FKs - 1 to *
 
         [Required]
+        public Guid CompanyId { get; set; }
+
+        [ForeignKey(nameof(CompanyId))]
         public virtual Company Company { get; set; }
 
         public virtual Department? Department { get; set; }

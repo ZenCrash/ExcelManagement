@@ -1,5 +1,7 @@
 using ExcelManagement.ClassLibary;
 using ExcelManagement.DxBlazor.Data;
+using ExcelManagement.DxBlazor.Data.DbOption.Interface;
+using ExcelManagement.DxBlazor.Data.DbOption.Repository;
 using ExcelManagement.DxBlazor.Data.Models;
 using ExcelManagement.DxBlazor.Services;
 using Microsoft.AspNetCore.Components;
@@ -38,7 +40,9 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
 
     options.SignIn.RequireConfirmedEmail = false;
 })
-    .AddEntityFrameworkStores<ApplicationDbContext>();
+    .AddEntityFrameworkStores<ApplicationDbContext>()
+    .AddSignInManager<SignInManager<ApplicationUser>>();
+
 
 builder.Services.AddDevExpressBlazor(options => {
     options.BootstrapVersion = DevExpress.Blazor.BootstrapVersion.v5;
@@ -48,6 +52,9 @@ builder.Services.AddSingleton<WeatherForecastService>();
 
 //Scoped Services
 builder.Services.AddScoped<AuthenticationStateProvider, IdentityValidationProvider<IdentityUser>>();
+builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>();
+builder.Services.AddScoped<ICompanyRepository, CompanyRepository>();
+
 
 builder.WebHost.UseWebRoot("wwwroot");
 builder.WebHost.UseStaticWebAssets();

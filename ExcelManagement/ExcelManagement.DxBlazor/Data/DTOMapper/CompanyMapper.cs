@@ -15,13 +15,13 @@ namespace ExcelManagement.DxBlazor.Data.DTOMapper
                 Description = company.Description,
                 CompanyLogoUrl = company.CompanyLogoUrl,
 
-                DepartmentDTOList = DepartmentMapper.MapDepartmentList(company.Departments),
-                PersonDTOList = PersonMapper.MapPeopleList(company.People),
+                DepartmentDTOList = (company.Departments == null || company.Departments.Count() == 0) ? null : DepartmentMapper.MapDepartmentToDTOList(company.Departments),
+                PersonDTOList = (company.People == null || company.People.Count == 0) ? null : PersonMapper.MapPersonToDTOList(company.People),
             };
 
             return companyDTO;
         }
-        
+
         //Map to Dto Endpoint
         public static CompanyDTO MapToDTOEndpoint(Company company)
         {
@@ -36,8 +36,45 @@ namespace ExcelManagement.DxBlazor.Data.DTOMapper
             return companyDTO;
         }
 
+        //Map to Model
+        public static Company MapToModel(CompanyDTO companyDTO)
+        {
+            Company company = new Company
+            {
+                Id = companyDTO.Id,
+                CompanyName = companyDTO.CompanyName,
+                Description = companyDTO.Description,
+                CompanyLogoUrl = companyDTO.CompanyLogoUrl,
+
+                Departments = (companyDTO.DepartmentDTOList == null || companyDTO.DepartmentDTOList.Count() == 0) ? null : DepartmentMapper.MapDepartmentToModelList(companyDTO.DepartmentDTOList),
+                People = (companyDTO.PersonDTOList == null || companyDTO.PersonDTOList.Count == 0) ? null : PersonMapper.MapPersonToModelList(companyDTO.PersonDTOList),
+            };
+
+            return company;
+        }
+
+        //Map to Model Endpoint
+        public static Company MapToModelEndpoint(CompanyDTO companyDTO)
+        {
+            Company company = new Company
+            {
+                Id = companyDTO.Id,
+                CompanyName = companyDTO.CompanyName,
+                Description = companyDTO.Description,
+                CompanyLogoUrl = companyDTO.CompanyLogoUrl,
+
+                Departments = DepartmentMapper.MapDepartmentToModelList(companyDTO.DepartmentDTOList),
+                People = PersonMapper.MapPersonToModelList(companyDTO.PersonDTOList),
+            };
+
+            return company;
+        }
+
+
         //Logic
-        public static ICollection<CompanyDTO> MapCompanyList(ICollection<Company> companies)
+
+        //Map List<Commpany> to List<CompanyDTO>
+        public static ICollection<CompanyDTO> MapCompanyToDTOList(ICollection<Company> companies)
         {
             if (companies == null || companies.Count == 0)
             {
@@ -53,6 +90,25 @@ namespace ExcelManagement.DxBlazor.Data.DTOMapper
             }
 
             return companyDTOList;
+        }
+
+        //Map List<CommpanyDTO> to List<Company>
+        public static ICollection<Company> MapCompanyToModelList(ICollection<CompanyDTO> companyDTOList)
+        {
+            if (companyDTOList == null || companyDTOList.Count == 0)
+            {
+                return null;
+            }
+
+            var companies = new List<Company>();
+
+            foreach (var companyDTO in companyDTOList)
+            {
+                var company = MapToModelEndpoint(companyDTO);
+                companies.Add(company);
+            }
+
+            return companies;
         }
 
     }

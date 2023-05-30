@@ -13,9 +13,9 @@ namespace ExcelManagement.DxBlazor.Data
 
         }
 
-        public DbSet<Person> Person { get; set; }
-        public DbSet<Company> Company { get; set; }
-        public DbSet<Department> Department { get; set; }
+        public DbSet<Person> People { get; set; }
+        public DbSet<Company> Companies { get; set; }
+        public DbSet<Department> Departments { get; set; }
         
     }
 }
