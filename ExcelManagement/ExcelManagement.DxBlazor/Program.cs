@@ -51,7 +51,7 @@ builder.Services.AddDevExpressBlazor(options => {
 builder.Services.AddSingleton<WeatherForecastService>();
 
 //Scoped Services
-builder.Services.AddScoped<AuthenticationStateProvider, IdentityValidationProvider<IdentityUser>>();
+builder.Services.AddScoped<AuthenticationStateProvider, IdentityValidationProvider<ApplicationUser>>();
 builder.Services.AddScoped<IDepartmentRepository, DepartmentRepository>();
 builder.Services.AddScoped<ICompanyRepository, CompanyRepository>();
 
