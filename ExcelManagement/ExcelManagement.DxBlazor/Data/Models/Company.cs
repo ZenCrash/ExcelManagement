@@ -20,7 +20,7 @@ namespace ExcelManagement.DxBlazor.Data.Models
         //FKs 
         public ICollection<Department?>? Departments { get; set; }
         public ICollection<Person?>? People { get; set; }
-
+        public ICollection<FileAndFolder?>? fileAndFolders { get; set; }
 
     }
 }

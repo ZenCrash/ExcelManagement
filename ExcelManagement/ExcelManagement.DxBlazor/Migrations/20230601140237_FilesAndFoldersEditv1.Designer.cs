@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ExcelManagement.DxBlazor.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230525130753_ExtendAspNetUserv5")]
-    partial class ExtendAspNetUserv5
+    [Migration("20230601140237_FilesAndFoldersEditv1")]
+    partial class FilesAndFoldersEditv1
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -103,7 +103,6 @@ namespace ExcelManagement.DxBlazor.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("CompanyLogoUrl")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("CompanyName")
@@ -112,7 +111,6 @@ namespace ExcelManagement.DxBlazor.Migrations
                         .HasColumnType("nvarchar(2000)");
 
                     b.Property<string>("Description")
-                        .IsRequired()
                         .HasMaxLength(10000)
                         .HasColumnType("nvarchar(max)");
 
@@ -136,7 +134,6 @@ namespace ExcelManagement.DxBlazor.Migrations
                         .HasColumnType("nvarchar(256)");
 
                     b.Property<string>("Description")
-                        .IsRequired()
                         .HasMaxLength(10000)
                         .HasColumnType("nvarchar(max)");
 
@@ -147,6 +144,52 @@ namespace ExcelManagement.DxBlazor.Migrations
                     b.ToTable("Departments");
                 });
 
+            modelBuilder.Entity("ExcelManagement.DxBlazor.Data.Models.FileAndFolder", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("CompanyId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid?>("DepartmentId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.Property<string>("RelativePath")
+                        .IsRequired()
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
+
+                    b.Property<DateTime?>("UpdateDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("dataType")
+                        .HasColumnType("int");
+
+                    b.Property<int>("editType")
+                        .HasColumnType("int");
+
+                    b.Property<int>("viewType")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CompanyId");
+
+                    b.HasIndex("DepartmentId");
+
+                    b.ToTable("´FilesAndFolders");
+                });
+
             modelBuilder.Entity("ExcelManagement.DxBlazor.Data.Models.Person", b =>
                 {
                     b.Property<Guid>("Id")
@@ -154,7 +197,6 @@ namespace ExcelManagement.DxBlazor.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Bio")
-                        .IsRequired()
                         .HasMaxLength(10000)
                         .HasColumnType("nvarchar(max)");
 
@@ -170,7 +212,6 @@ namespace ExcelManagement.DxBlazor.Migrations
                         .HasColumnType("nvarchar(256)");
 
                     b.Property<string>("JobTitle")
-                        .IsRequired()
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
@@ -343,6 +384,23 @@ namespace ExcelManagement.DxBlazor.Migrations
                     b.Navigation("Company");
                 });
 
+            modelBuilder.Entity("ExcelManagement.DxBlazor.Data.Models.FileAndFolder", b =>
+                {
+                    b.HasOne("ExcelManagement.DxBlazor.Data.Models.Company", "Company")
+                        .WithMany("fileAndFolders")
+                        .HasForeignKey("CompanyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ExcelManagement.DxBlazor.Data.Models.Department", "Department")
+                        .WithMany("fileAndFolders")
+                        .HasForeignKey("DepartmentId");
+
+                    b.Navigation("Company");
+
+                    b.Navigation("Department");
+                });
+
             modelBuilder.Entity("ExcelManagement.DxBlazor.Data.Models.Person", b =>
                 {
                     b.HasOne("ExcelManagement.DxBlazor.Data.Models.Company", "Company")
@@ -416,11 +474,15 @@ namespace ExcelManagement.DxBlazor.Migrations
                     b.Navigation("Departments");
 
                     b.Navigation("People");
+
+                    b.Navigation("fileAndFolders");
                 });
 
             modelBuilder.Entity("ExcelManagement.DxBlazor.Data.Models.Department", b =>
                 {
                     b.Navigation("People");
+
+                    b.Navigation("fileAndFolders");
                 });
 
             modelBuilder.Entity("ExcelManagement.DxBlazor.Data.Models.Person", b =>

@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace ExcelManagement.DxBlazor.Migrations
 {
     /// <inheritdoc />
-    public partial class ExtendAspNetUserv1 : Migration
+    public partial class FilesAndFoldersEditv1 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -31,8 +31,8 @@ namespace ExcelManagement.DxBlazor.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CompanyName = table.Column<string>(type: "nvarchar(2000)", maxLength: 2000, nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", maxLength: 10000, nullable: false),
-                    CompanyLogoUrl = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Description = table.Column<string>(type: "nvarchar(max)", maxLength: 10000, nullable: true),
+                    CompanyLogoUrl = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -66,7 +66,7 @@ namespace ExcelManagement.DxBlazor.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     DepartmentName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", maxLength: 10000, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", maxLength: 10000, nullable: true),
                     CompanyId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
@@ -81,14 +81,45 @@ namespace ExcelManagement.DxBlazor.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "´FilesAndFolders",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    RelativePath = table.Column<string>(type: "nvarchar(2000)", maxLength: 2000, nullable: false),
+                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdateDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    dataType = table.Column<int>(type: "int", nullable: false),
+                    viewType = table.Column<int>(type: "int", nullable: false),
+                    editType = table.Column<int>(type: "int", nullable: false),
+                    CompanyId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    DepartmentId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_´FilesAndFolders", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_´FilesAndFolders_Companies_CompanyId",
+                        column: x => x.CompanyId,
+                        principalTable: "Companies",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_´FilesAndFolders_Departments_DepartmentId",
+                        column: x => x.DepartmentId,
+                        principalTable: "Departments",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "People",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     FirstName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
                     LastName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
-                    JobTitle = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
-                    Bio = table.Column<string>(type: "nvarchar(max)", maxLength: 10000, nullable: false),
+                    JobTitle = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    Bio = table.Column<string>(type: "nvarchar(max)", maxLength: 10000, nullable: true),
                     CompanyId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     DepartmentId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
                 },
@@ -226,6 +257,16 @@ namespace ExcelManagement.DxBlazor.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_´FilesAndFolders_CompanyId",
+                table: "´FilesAndFolders",
+                column: "CompanyId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_´FilesAndFolders_DepartmentId",
+                table: "´FilesAndFolders",
+                column: "DepartmentId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
                 column: "RoleId");
@@ -289,6 +330,9 @@ namespace ExcelManagement.DxBlazor.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "´FilesAndFolders");
+
             migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");
 

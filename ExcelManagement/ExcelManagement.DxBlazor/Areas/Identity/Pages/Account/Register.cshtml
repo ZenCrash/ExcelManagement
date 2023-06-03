@@ -1,4 +1,4 @@
-﻿@page
+﻿@*@page
 @model ExcelManagement.DxBlazor.Areas.Identity.Pages.Account.RegisterModel
 @{
     ViewData["Title"] = "Register";
@@ -34,18 +34,25 @@
                     <span asp-validation-for="Input.LastName" class="text-danger"></span>
                 </div>
                 <div class="form-floating" style="margin:10px">
-                    <select asp-for="Input.CompanyDTO.Id" asp-items="@Model.Companies" class="form-select" onchange="loadDepartments(this)">
+                    <select asp-for="Input.CompanyDTO.Id" asp-items="@Model.Companies" class="form-select" onchange="CompanyChanged(this)">
                         <option value="">-- Select Company --</option>
                     </select>
                     <label asp-for="Input.CompanyDTO.Id" class="form-label"></label>
                     <span asp-validation-for="Input.CompanyDTO.Id" class="text-danger"></span>
                 </div>
+
                 <div class="form-floating" style="margin:10px">
-                    <select asp-for="Input.DepartmentDTO.Id" asp-items="@Model.Departments" class="form-select" disabled>
+                    <select asp-for="Input.DepartmentDTO.Id" asp-items="@Model.Departments" class="form-select" disabled="IsDepartmentDisabled">
                         <option value="">-- Select Department --</option>
                     </select>
                     <label asp-for="Input.DepartmentDTO.Id" class="form-label"></label>
                     <span asp-validation-for="Input.DepartmentDTO.Id" class="text-danger"></span>
+                </div>
+
+                 <div class="form-floating" style="margin:10px">
+                    <input asp-for="Input.Role" class="form-control" autocomplete="current-password" aria-required="true" />
+                    <label asp-for="Input.Role" class="form-label"></label>
+                    <span asp-validation-for="Input.Role" class="text-danger"></span>
                 </div>
 
                 <div style="margin:10px">
@@ -58,4 +65,4 @@
             </div>
         </section>
     </div>
-</div>
+</div>*@

@@ -20,6 +20,7 @@ namespace ExcelManagement.DxBlazor.Areas.Identity.Pages.Account
         [BindProperty]
         public InputLoginModel Input { get; set; }
         public string ReturnUrl { get; set; }
+        public string FailedLogin { get; set; }
 
         public void OnGet()
         {
@@ -41,6 +42,10 @@ namespace ExcelManagement.DxBlazor.Areas.Identity.Pages.Account
                 if (result.Succeeded)
                 {
                     return LocalRedirect(ReturnUrl);
+                }
+                else
+                {
+                    FailedLogin = "Username or password was incorrect";
                 }
             }
 

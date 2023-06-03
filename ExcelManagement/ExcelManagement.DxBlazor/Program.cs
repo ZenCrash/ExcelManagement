@@ -40,9 +40,9 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
 
     options.SignIn.RequireConfirmedEmail = false;
 })
+    .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddSignInManager<SignInManager<ApplicationUser>>();
-
 
 builder.Services.AddDevExpressBlazor(options => {
     options.BootstrapVersion = DevExpress.Blazor.BootstrapVersion.v5;

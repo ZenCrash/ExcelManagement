@@ -15,19 +15,19 @@ namespace ExcelManagement.DxBlazor.Data.DbOption.Repository
         }
 
         //GetAll
-        public async Task<List<Company>> GetAllAsync()
+        public List<Company> GetAll()
         {
-            return await _dbContext.Companies.ToListAsync();
+            return _dbContext.Companies.ToList();
         }
 
         //Get
-        public async Task<Company?> GetAsync(Guid id)
+        public Company? Get(Guid id)
         {
-            return await _dbContext.Companies.FindAsync(id);
+            return _dbContext.Companies.Find(id);
         }
 
         //Create
-        public async Task<bool> CreateAsync(Company company)
+        public bool Create(Company company)
         {
             try
             {
@@ -42,7 +42,7 @@ namespace ExcelManagement.DxBlazor.Data.DbOption.Repository
         }
 
         //Update
-        public async Task<bool> UpdateAsync(Company company)
+        public bool Update(Company company)
         {
             try
             {
@@ -57,7 +57,7 @@ namespace ExcelManagement.DxBlazor.Data.DbOption.Repository
         }
 
         //Delete
-        public async Task<bool> DeleteAsync(Guid id)
+        public bool Delete(Guid id)
         {
             try
             {
@@ -77,9 +77,9 @@ namespace ExcelManagement.DxBlazor.Data.DbOption.Repository
         /* Logic */
 
         //Save
-        public async Task Save()
+        public void Save()
         {
-            await _dbContext.SaveChangesAsync();
+            _dbContext.SaveChanges();
         }
 
         //Dispose

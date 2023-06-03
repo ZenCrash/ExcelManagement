@@ -1,0 +1,20 @@
+﻿@page "/test2"
+<h3>Test Page 1</h3>
+<hr/>
+<AuthorizeView Roles="Admin">
+	<Authorized>
+		<p>You are logged in, and you are the role of an admin, and can see this page!</p>
+	</Authorized>
+	<NotAuthorized>
+		<p>You must login, and be an admin to view the conten on this page</p>
+	</NotAuthorized>
+</AuthorizeView>
+
+@code {
+	string testString { get; set; }
+
+	protected override async Task OnInitializedAsync()
+	{
+		testString = "Test String Value";
+	}
+}

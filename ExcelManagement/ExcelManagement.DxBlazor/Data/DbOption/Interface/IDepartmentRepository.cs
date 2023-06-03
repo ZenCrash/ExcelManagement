@@ -5,19 +5,19 @@ namespace ExcelManagement.DxBlazor.Data.DbOption.Interface
     public interface IDepartmentRepository
     {
         //GetAll
-        public Task<List<Department>> GetAllAsync();
-        public Task<List<Department>> GetAllByCompanyIdAsync(Guid id);
+        public List<Department> GetAll();
+        public List<Department> GetAllByCompanyId(Guid id);
 
         //Get
-        public Task<Department> GetAsync(Guid id);
+        public Department Get(Guid id);
 
         //Create
-        public Task<bool> CreateAsync(Department entity);
+        public bool Create(Department entity);
 
         //Update
-        public Task<bool> UpdateAsync(Department entity);
+        public bool Update(Department entity);
 
         //Delete
-        public Task<bool> DeleteAsync(Guid id);
+        public bool Delete(Guid id);
     }
 }

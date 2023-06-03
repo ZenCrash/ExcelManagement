@@ -13,5 +13,6 @@ namespace ExcelManagement.DxBlazor.Data.DTO
         public string? CompanyLogoUrl { get; set; }
         public ICollection<DepartmentDTO?>? DepartmentDTOList { get; set; }
         public ICollection<PersonDTO?>? PersonDTOList { get; set; }
+
     }
 }

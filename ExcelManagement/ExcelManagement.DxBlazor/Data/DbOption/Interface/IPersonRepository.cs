@@ -5,13 +5,13 @@ namespace ExcelManagement.DxBlazor.Data.DbOption.Interface
     public interface IPersonRepository
     {
         //GetAll
-        public Task<List<Person>> GetAllAsync();
+        public List<Person> GetAll();
 
         //Get
-        public Task<Person> GetAsync(Guid id);
+        public Person Get(Guid id);
 
         //Update
-        public Task<bool> UpdateAsync(Person entity);
+        public bool Update(Person entity);
 
     }
 }

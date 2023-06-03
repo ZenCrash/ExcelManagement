@@ -1,0 +1,147 @@
+﻿@using ExcelManagement.DxBlazor.Data.DbOption.Interface;
+@using ExcelManagement.DxBlazor.Data.DbOption.Repository;
+@using ExcelManagement.DxBlazor.Data.DTO;
+@using ExcelManagement.DxBlazor.Data.DTOMapper;
+@using ExcelManagement.DxBlazor.Data.Models;
+@using Microsoft.AspNetCore.Identity;
+@using Microsoft.AspNetCore.Mvc;
+@using Microsoft.AspNetCore.Mvc.RazorPages;
+@using Microsoft.AspNetCore.Mvc.Rendering;
+@using Microsoft.Identity.Client;
+@using System.ComponentModel.DataAnnotations;
+
+@inject ICompanyRepository CompanyRepository;
+@inject IDepartmentRepository DepartmentRepository;
+
+@page "/register2"
+
+<h3>Register2</h3>
+
+
+<div class="row" style="margin:50px">
+    <div class="col-md-4">
+        @if (CompanyDTOs != null && CompanyDTOs.Count > 0)
+        {
+            <EditForm Model="@Input" OnValidSubmit="OnPostAsync">
+                <DataAnnotationsValidator/>
+
+                @*Email*@
+                <div class="form-group" style="margin:10px">
+                    <label class="form-label" for="@Input.Email">Email:</label>
+                    <InputText class="form-control" id="@Input.Email" @bind-Value="@Input.Email" type="email" />
+                    <ValidationMessage For="@(() => Input.Email)" class="text-danger" />
+                </div>
+                @*Password*@
+                <div class="form-group" style="margin:10px">
+                    <label class="form-label" for="@Input.Password">Password:</label>
+                    <InputText class="form-control" id="@Input.Password" @bind-Value="@Input.Password" type="password" />
+                    <ValidationMessage For="@(() => Input.Password)" class="text-danger" />
+                </div>
+                @*First Name*@
+                <div class="form-group" style="margin:10px">
+                    <label class="form-label" for="@Input.FirstName">First Name:</label>
+                    <InputText class="form-control" id="@Input.FirstName" @bind-Value="@Input.FirstName" type="text" />
+                    <ValidationMessage For="@(() => Input.FirstName)" class="text-danger" />
+                </div>
+                @*Last Name*@
+                <div class="form-group" style="margin:10px">
+                    <label class="form-label" for="@Input.LastName">Last Name:</label>
+                    <InputText class="form-control" id="@Input.LastName" @bind-Value="@Input.LastName" />
+                    <ValidationMessage For="@(() => Input.LastName)" class="text-danger" />
+                </div>
+                @*Company*@
+                <div class="form-group" style="margin:10px">
+                    <label class="form-label" for="@Input.CompanyDTOId">Company:</label>
+                    <InputSelect class="form-select" id="@Input.CompanyDTOId" ValueExpression="@(() => Input.CompanyDTOId)" ValueChanged="@((Guid value) => OnCompanyChange(value))">
+                        @if(Input.CompanyDTOId == null)
+                        {
+                            <option selected value="">--Select Company--</option>
+                        }
+                        @foreach (var company in CompanyDTOs)
+                        {
+                            <option value="@company.Id">@company.CompanyName</option>
+                        }
+                    </InputSelect>
+                    <ValidationMessage For="@(() => Input.CompanyDTOId)" class="text-danger" />
+                </div>
+                @*Department*@
+                <div class="form-group" style="margin:10px">
+                    <label class="form-label" for="@Input.DepartmentDTOId">Department:</label>
+                    <InputSelect class="form-select" id="@Input.DepartmentDTOId" @bind-Value="Input.DepartmentDTOId" disabled="@CompanySelected">
+                    @if (CompanySelected)
+                    {
+                        <option value="None">-- None --</option>
+                    }
+                    else 
+                    {
+                        @foreach (var department in DepartmentDTOs)
+                        {
+                            <option value="@department.Id">@department.DepartmentName</option>
+                        }
+
+                    }
+                    </InputSelect>
+                    <ValidationMessage For="@(() => Input.DepartmentDTOId)" class="text-danger" />
+                </div>
+
+                <button type="submit">Submit</button>
+            </EditForm>
+        }
+        else
+        {
+            <p>No companies available.</p>
+        }
+    </div>
+</div>
+
+
+
+
+@code {
+    private InputRegisterModel Input { get; set; } = new();
+    private List<DepartmentDTO> DepartmentDTOs { get; set; } = new();
+    private List<CompanyDTO> CompanyDTOs { get; set; } = new();
+
+    private bool CompanySelected { get; set; } = true;
+
+
+    protected override void OnInitialized()
+    {
+        GetAllCompanies();
+    }
+
+
+    private async Task OnPostAsync()
+    {
+
+    }
+
+    //Logic
+    private async Task GetAllCompanies()
+    {
+        var companies = CompanyRepository.GetAll();
+        CompanyDTOs = CompanyMapper.MapCompanyToDTOList(companies).ToList();
+    }
+
+    private async Task OnCompanyChange(Guid companyId)
+    {
+        var departments = DepartmentRepository.GetAllByCompanyId(companyId);
+
+        if (departments == null || departments.Count == 0)
+        {
+            CompanySelected = true;
+        }
+
+        DepartmentDTOs = DepartmentMapper.MapDepartmentToDTOList(departments).ToList();
+
+        CompanySelected = false;
+        StateHasChanged();
+    }
+
+    public enum Role
+    {
+        Admin,
+        CompanyAdmin,
+        DepartmentAdmin,
+    }
+}

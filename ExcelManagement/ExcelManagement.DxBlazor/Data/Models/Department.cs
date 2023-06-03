@@ -22,6 +22,7 @@ namespace ExcelManagement.DxBlazor.Data.Models
         public virtual Company Company { get; set; }
 
         public ICollection<Person?>? People { get; set; }
+        public ICollection<FileAndFolder?>? fileAndFolders { get; set; }
 
     }
 }

@@ -15,19 +15,19 @@ namespace ExcelManagement.DxBlazor.Data.DbOption.Repository
         }
 
         //GetAll
-        public async Task<List<Person>> GetAllAsync()
+        public List<Person> GetAll()
         {
-            return await _dbContext.People.ToListAsync();
+            return _dbContext.People.ToList();
         }
 
         //Get
-        public async Task<Person?> GetAsync(Guid id)
+        public Person? Get(Guid id)
         {
-            return await _dbContext.People.FindAsync(id);
+            return _dbContext.People.Find(id);
         }
 
         //Update
-        public async Task<bool> UpdateAsync(Person person)
+        public bool Update(Person person)
         {
             try
             {
@@ -41,13 +41,12 @@ namespace ExcelManagement.DxBlazor.Data.DbOption.Repository
         }
 
 
-
         /* Logic */
 
         //Save
-        public async Task Save()
+        public void Save()
         {
-            await _dbContext.SaveChangesAsync();
+            _dbContext.SaveChanges();
         }
 
         //Dispose

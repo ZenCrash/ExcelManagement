@@ -21,9 +21,10 @@ namespace ExcelManagement.DxBlazor.Areas.Identity.Pages.Account
         [Required]
         [StringLength(256, MinimumLength = 2)]
         public string LastName { get; set; }
+
         [Required]
-        public CompanyDTO CompanyDTO { get; set; }
-        public DepartmentDTO? DepartmentDTO { get; set; }
+        public Guid CompanyDTOId { get; set; }
+        public Guid? DepartmentDTOId { get; set; }
 
     }
 }

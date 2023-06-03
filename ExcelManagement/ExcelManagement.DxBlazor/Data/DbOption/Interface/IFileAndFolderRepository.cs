@@ -2,19 +2,19 @@
 
 namespace ExcelManagement.DxBlazor.Data.DbOption.Interface
 {
-    public interface ICompanyRepository
+    public interface IFileAndFolderRepository
     {
         //GetAll
-        public List<Company> GetAll();
+        public List<FileAndFolder> GetAll();
 
         //Get
-        public Company Get(Guid id);
+        public FileAndFolder Get(Guid id);
 
         //Create
-        public bool Create(Company entity);
+        public bool Create(FileAndFolder entity);
 
         //Update
-        public bool Update(Company entity);
+        public bool Update(FileAndFolder entity);
 
         //Delete
         public bool Delete(Guid id);
