@@ -20,7 +20,7 @@
 
 @page "/register"
 
-<h3>Register2</h3>
+<h3>Register</h3>
 
 
 <div class="row" style="margin:50px">
@@ -60,14 +60,11 @@
                     <InputSelect class="form-select" id="@Input.CompanyDTOId" ValueExpression="@(() => Input.CompanyDTOId)" ValueChanged="@((Guid value) => OnCompanyChange(value))">
                         @if (CompanySelected)
                         {
-                            <option selected value="@null">--Select Company--</option>
+                            <option selected value="">--Select Company--</option>
                         }
-                        else
+                        @foreach (var company in CompanyDTOs)
                         {
-                            @foreach (var company in CompanyDTOs)
-                            {
-                                <option value="@company.Id">@company.CompanyName</option>
-                            }
+                            <option value="@company.Id">@company.CompanyName</option>
                         }
                     </InputSelect>
                     <ValidationMessage For="@(() => Input.CompanyDTOId)" class="text-danger" />
@@ -76,17 +73,17 @@
                 <div class="form-group" style="margin:10px">
                     <label class="form-label" for="@Input.DepartmentDTOId">Department:</label>
                     <InputSelect class="form-select" id="@Input.DepartmentDTOId" @bind-Value="Input.DepartmentDTOId" disabled="@CompanySelected">
-                        @if (CompanySelected)
+                        @if (CompanySelected || DepartmentDTOs == null || DepartmentDTOs.Count() == 0)
                         {
-                            <option value="@null">--None--</option>
+                            <option selected value="">--None--</option>
                         }
                         else
                         {
-                            @foreach (var department in DepartmentDTOs)
-                            {
-                                <option value="@department.Id">@department.DepartmentName</option>
-                            }
-
+                            <option selected value="">--Select Department-- (Optional)</option>
+                        }
+                        @foreach (var department in DepartmentDTOs)
+                        {
+                            <option value="@department.Id">@department.DepartmentName</option>
                         }
                     </InputSelect>
                     <ValidationMessage For="@(() => Input.DepartmentDTOId)" class="text-danger" />
@@ -95,13 +92,12 @@
                 <div class="form-group" style="margin:10px">
                     <label class="form-label" for="@Input.SelectedRole">Role:</label>
                     <InputSelect class="form-select" id="@Input.SelectedRole" @bind-Value="Input.SelectedRole">
-                        else
-                        {
+
+                        <option selected value="">--Select Role-- (Optional)</option>
+
                         @foreach (var roles in Input.Roles)
                         {
                             <option value="@roles.Key">@roles.Value</option>
-                        }
-
                         }
                     </InputSelect>
                     <ValidationMessage For="@(() => Input.SelectedRole)" class="text-danger" />
@@ -204,16 +200,24 @@
         var result = await UserManager.CreateAsync(identity, Input.Password);
 
         //Create new role
-
-        var role = new IdentityRole(Input.SelectedRole.ToString());
-        var addRoleResult = await RoleManager.CreateAsync(role);
-        var addUserRoleResult = await UserManager.AddToRoleAsync(identity, Input.SelectedRole.ToString());
-
-        //Signin
-        if (result.Succeeded && addRoleResult.Succeeded && addUserRoleResult.Succeeded)
+        if (Input.SelectedRole != null)
         {
-            await SignInManager.SignInAsync(identity, isPersistent: false);
-            navigationManager.NavigateTo("~/");
+            var role = new IdentityRole(Input.SelectedRole.ToString());
+            var addRoleResult = await RoleManager.CreateAsync(role);
+            var addUserRoleResult = await UserManager.AddToRoleAsync(identity, Input.SelectedRole.ToString());
+
+            //Signin
+            await SignInManager.PasswordSignInAsync(identity.UserName, identity.Email, false, lockoutOnFailure: false);
+            navigationManager.NavigateTo("/");
+        }
+        else
+        {
+            //Signin
+            if (result.Succeeded)
+            {
+                await SignInManager.PasswordSignInAsync(identity.UserName, identity.Email, false, lockoutOnFailure: false);
+                navigationManager.NavigateTo("/");
+            }
         }
     }
 
@@ -226,6 +230,9 @@
 
     private async Task OnCompanyChange(Guid companyId)
     {
+        Input.CompanyDTOId = companyId;
+        Input.DepartmentDTOId = null;
+
         var departments = DepartmentRepository.GetAllByCompanyId(companyId);
 
         if (departments == null || departments.Count == 0)
