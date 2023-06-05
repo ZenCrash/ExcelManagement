@@ -29,8 +29,8 @@
     <div class="col-md-4">
         @if (AccountRegistered)
         {
-            <p>Account create sucessfully!</p>
-            <p>Rediricting in 5 seconds.</p>
+            <h3>Account create sucessfully!</h3>
+            <h3>Rediricting in 5 seconds.</h3>
             <div class="spinner-border text-secondary" role="status">
                 <span class="sr-only"></span>
             </div>
@@ -246,7 +246,7 @@
             {
                 AccountRegistered = true;
                 StateHasChanged();
-                await Task.Delay(1000 * 3);
+                await Task.Delay(1000 * 2);
                 navigationManager.NavigateTo("/");
             }
         }
