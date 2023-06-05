@@ -13,7 +13,12 @@
 @inject ICompanyRepository CompanyRepository;
 @inject IDepartmentRepository DepartmentRepository;
 
-@page "/register2"
+@inject UserManager<ApplicationUser> UserManager
+@inject RoleManager<IdentityRole> RoleManager
+@inject SignInManager<ApplicationUser> SignInManager
+@inject NavigationManager navigationManager
+
+@page "/register"
 
 <h3>Register2</h3>
 
@@ -23,7 +28,7 @@
         @if (CompanyDTOs != null && CompanyDTOs.Count > 0)
         {
             <EditForm Model="@Input" OnValidSubmit="OnPostAsync">
-                <DataAnnotationsValidator/>
+                <DataAnnotationsValidator />
 
                 @*Email*@
                 <div class="form-group" style="margin:10px">
@@ -53,13 +58,16 @@
                 <div class="form-group" style="margin:10px">
                     <label class="form-label" for="@Input.CompanyDTOId">Company:</label>
                     <InputSelect class="form-select" id="@Input.CompanyDTOId" ValueExpression="@(() => Input.CompanyDTOId)" ValueChanged="@((Guid value) => OnCompanyChange(value))">
-                        @if(Input.CompanyDTOId == null)
+                        @if (CompanySelected)
                         {
-                            <option selected value="">--Select Company--</option>
+                            <option selected value="@null">--Select Company--</option>
                         }
-                        @foreach (var company in CompanyDTOs)
+                        else
                         {
-                            <option value="@company.Id">@company.CompanyName</option>
+                            @foreach (var company in CompanyDTOs)
+                            {
+                                <option value="@company.Id">@company.CompanyName</option>
+                            }
                         }
                     </InputSelect>
                     <ValidationMessage For="@(() => Input.CompanyDTOId)" class="text-danger" />
@@ -68,24 +76,48 @@
                 <div class="form-group" style="margin:10px">
                     <label class="form-label" for="@Input.DepartmentDTOId">Department:</label>
                     <InputSelect class="form-select" id="@Input.DepartmentDTOId" @bind-Value="Input.DepartmentDTOId" disabled="@CompanySelected">
-                    @if (CompanySelected)
-                    {
-                        <option value="None">-- None --</option>
-                    }
-                    else 
-                    {
-                        @foreach (var department in DepartmentDTOs)
+                        @if (CompanySelected)
                         {
-                            <option value="@department.Id">@department.DepartmentName</option>
+                            <option value="@null">--None--</option>
                         }
+                        else
+                        {
+                            @foreach (var department in DepartmentDTOs)
+                            {
+                                <option value="@department.Id">@department.DepartmentName</option>
+                            }
 
-                    }
+                        }
                     </InputSelect>
                     <ValidationMessage For="@(() => Input.DepartmentDTOId)" class="text-danger" />
+                </div>
+                @*Role*@
+                <div class="form-group" style="margin:10px">
+                    <label class="form-label" for="@Input.SelectedRole">Role:</label>
+                    <InputSelect class="form-select" id="@Input.SelectedRole" @bind-Value="Input.SelectedRole">
+                        else
+                        {
+                        @foreach (var roles in Input.Roles)
+                        {
+                            <option value="@roles.Key">@roles.Value</option>
+                        }
+
+                        }
+                    </InputSelect>
+                    <ValidationMessage For="@(() => Input.SelectedRole)" class="text-danger" />
                 </div>
 
                 <button type="submit">Submit</button>
             </EditForm>
+
+            <ul class="text-danger">
+                @foreach (var item in errorMessages)
+                {
+                    <li>
+                        <p>@item</p>
+                    </li>
+                }
+            </ul>
         }
         else
         {
@@ -98,12 +130,12 @@
 
 
 @code {
-    private InputRegisterModel Input { get; set; } = new();
+    private RegisterModel Input { get; set; } = new();
     private List<DepartmentDTO> DepartmentDTOs { get; set; } = new();
     private List<CompanyDTO> CompanyDTOs { get; set; } = new();
 
     private bool CompanySelected { get; set; } = true;
-
+    private List<string> errorMessages { get; set; } = new();
 
     protected override void OnInitialized()
     {
@@ -113,7 +145,76 @@
 
     private async Task OnPostAsync()
     {
+        errorMessages = new List<string>();
+        bool hasErrors = false;
 
+        //Does user exist in the system?
+        var userExists = await UserManager.FindByEmailAsync(Input.Email);
+        if (userExists != null)
+        {
+            string error = "Username/Email is already in use.";
+            errorMessages.Add(error);
+            hasErrors = true;
+        }
+
+        //Valid CompanyId
+        if (!CompanyDTOs.Exists(x => x.Id == Input.CompanyDTOId))
+        {
+            string error = "Company selected is not valid";
+            errorMessages.Add(error);
+            hasErrors = true;
+        }
+
+        //Valid DepartmentId
+        if (Input.DepartmentDTOId != null && !DepartmentDTOs.Exists(x => x.Id == Input.DepartmentDTOId))
+        {
+            string error = "Department selected is not valid";
+            errorMessages.Add(error);
+            hasErrors = true;
+        }
+        //Valid Role
+        if (Input.SelectedRole != null && !Enum.IsDefined(typeof(RegisterModel.Role), Input.SelectedRole))
+        {
+            string error = "Role selected is not valid";
+            errorMessages.Add(error);
+            hasErrors = true;
+        }
+
+        //if Errors
+        if (hasErrors)
+        {
+            StateHasChanged();
+            return;
+        }
+
+        //Create new user
+        var identity = new ApplicationUser
+            {
+                UserName = Input.Email,
+                Email = Input.Email,
+                Person = new Person
+                {
+                    Id = Guid.NewGuid(),
+                    FirstName = Input.FirstName,
+                    LastName = Input.LastName,
+                    CompanyId = Input.CompanyDTOId,
+                    DepartmentId = Input.DepartmentDTOId,
+                }
+            };
+        var result = await UserManager.CreateAsync(identity, Input.Password);
+
+        //Create new role
+
+        var role = new IdentityRole(Input.SelectedRole.ToString());
+        var addRoleResult = await RoleManager.CreateAsync(role);
+        var addUserRoleResult = await UserManager.AddToRoleAsync(identity, Input.SelectedRole.ToString());
+
+        //Signin
+        if (result.Succeeded && addRoleResult.Succeeded && addUserRoleResult.Succeeded)
+        {
+            await SignInManager.SignInAsync(identity, isPersistent: false);
+            navigationManager.NavigateTo("~/");
+        }
     }
 
     //Logic
@@ -138,10 +239,5 @@
         StateHasChanged();
     }
 
-    public enum Role
-    {
-        Admin,
-        CompanyAdmin,
-        DepartmentAdmin,
-    }
+
 }

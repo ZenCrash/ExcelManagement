@@ -19,6 +19,7 @@ namespace ExcelManagement.DxBlazor.Data.DTO
         [Required]
         public Guid CompanyId { get; set; }
         public CompanyDTO CompanyDTO { get; set; }
+        public Guid? DepartmentId { get; set; }
         public DepartmentDTO? DepartmentDTO { get; set; }
     }
 }

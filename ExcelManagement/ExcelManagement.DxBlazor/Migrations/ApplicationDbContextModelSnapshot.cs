@@ -184,7 +184,7 @@ namespace ExcelManagement.DxBlazor.Migrations
 
                     b.HasIndex("DepartmentId");
 
-                    b.ToTable("´FilesAndFolders");
+                    b.ToTable("FilesAndFolders");
                 });
 
             modelBuilder.Entity("ExcelManagement.DxBlazor.Data.Models.Person", b =>

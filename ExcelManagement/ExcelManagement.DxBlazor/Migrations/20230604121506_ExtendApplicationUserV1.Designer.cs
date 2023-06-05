@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ExcelManagement.DxBlazor.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230601140237_FilesAndFoldersEditv1")]
-    partial class FilesAndFoldersEditv1
+    [Migration("20230604121506_ExtendApplicationUserV1")]
+    partial class ExtendApplicationUserV1
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -187,7 +187,7 @@ namespace ExcelManagement.DxBlazor.Migrations
 
                     b.HasIndex("DepartmentId");
 
-                    b.ToTable("´FilesAndFolders");
+                    b.ToTable("FilesAndFolders");
                 });
 
             modelBuilder.Entity("ExcelManagement.DxBlazor.Data.Models.Person", b =>

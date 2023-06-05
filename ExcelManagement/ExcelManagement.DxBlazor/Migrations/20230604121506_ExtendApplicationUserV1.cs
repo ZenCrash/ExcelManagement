@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace ExcelManagement.DxBlazor.Migrations
 {
     /// <inheritdoc />
-    public partial class FilesAndFoldersEditv1 : Migration
+    public partial class ExtendApplicationUserV1 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -81,7 +81,7 @@ namespace ExcelManagement.DxBlazor.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "´FilesAndFolders",
+                name: "FilesAndFolders",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -97,15 +97,15 @@ namespace ExcelManagement.DxBlazor.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_´FilesAndFolders", x => x.Id);
+                    table.PrimaryKey("PK_FilesAndFolders", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_´FilesAndFolders_Companies_CompanyId",
+                        name: "FK_FilesAndFolders_Companies_CompanyId",
                         column: x => x.CompanyId,
                         principalTable: "Companies",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_´FilesAndFolders_Departments_DepartmentId",
+                        name: "FK_FilesAndFolders_Departments_DepartmentId",
                         column: x => x.DepartmentId,
                         principalTable: "Departments",
                         principalColumn: "Id");
@@ -257,16 +257,6 @@ namespace ExcelManagement.DxBlazor.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_´FilesAndFolders_CompanyId",
-                table: "´FilesAndFolders",
-                column: "CompanyId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_´FilesAndFolders_DepartmentId",
-                table: "´FilesAndFolders",
-                column: "DepartmentId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
                 column: "RoleId");
@@ -317,6 +307,16 @@ namespace ExcelManagement.DxBlazor.Migrations
                 column: "CompanyId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_FilesAndFolders_CompanyId",
+                table: "FilesAndFolders",
+                column: "CompanyId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_FilesAndFolders_DepartmentId",
+                table: "FilesAndFolders",
+                column: "DepartmentId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_People_CompanyId",
                 table: "People",
                 column: "CompanyId");
@@ -331,9 +331,6 @@ namespace ExcelManagement.DxBlazor.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "´FilesAndFolders");
-
-            migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");
 
             migrationBuilder.DropTable(
@@ -347,6 +344,9 @@ namespace ExcelManagement.DxBlazor.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUserTokens");
+
+            migrationBuilder.DropTable(
+                name: "FilesAndFolders");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");

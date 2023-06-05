@@ -34,6 +34,9 @@ namespace ExcelManagement.DxBlazor.Data.Models
         [ForeignKey(nameof(CompanyId))]
         public virtual Company Company { get; set; }
 
+        public Guid? DepartmentId { get; set; }
+
+        [ForeignKey(nameof(DepartmentId))]
         public virtual Department? Department { get; set; }
     }
 }

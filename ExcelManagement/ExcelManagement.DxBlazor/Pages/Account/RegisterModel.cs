@@ -1,11 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using ExcelManagement.DxBlazor.Data;
-using ExcelManagement.DxBlazor.Data.DTO;
-using ExcelManagement.DxBlazor.Data.Models;
 
-namespace ExcelManagement.DxBlazor.Areas.Identity.Pages.Account
+namespace ExcelManagement.DxBlazor.Pages.Account
 {
-    public class InputRegisterModel
+    public class RegisterModel
     {
         [Required]
         [EmailAddress]
@@ -25,6 +22,23 @@ namespace ExcelManagement.DxBlazor.Areas.Identity.Pages.Account
         [Required]
         public Guid CompanyDTOId { get; set; }
         public Guid? DepartmentDTOId { get; set; }
+        [Required]
+        public Role? SelectedRole { get; set; }
 
+        public enum Role
+        {
+            Admin,
+            CompanyAdmin,
+            DepartmentAdmin,
+        }
+
+        public Dictionary<Role, string> Roles { get; } =
+            new Dictionary<Role, string>()
+            {
+                { Role.Admin,"Admin" },
+                { Role.CompanyAdmin,"Company Admin" },
+                { Role.DepartmentAdmin,"Department Admin" },
+            };
     }
 }
+

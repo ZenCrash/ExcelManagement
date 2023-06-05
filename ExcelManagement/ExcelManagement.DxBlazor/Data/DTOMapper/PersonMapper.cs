@@ -16,6 +16,7 @@ namespace ExcelManagement.DxBlazor.Data.DTOMapper
                 JobTitle = person.JobTitle,
                 Bio = person.Bio,
                 CompanyId = person.CompanyId,
+                DepartmentId = person.DepartmentId,
 
                 CompanyDTO = CompanyMapper.MapToDTOEndpoint(person.Company),
                 DepartmentDTO = (person.Department == null) ? null : DepartmentMapper.MapToDTOEndpoint(person.Department),
@@ -35,6 +36,7 @@ namespace ExcelManagement.DxBlazor.Data.DTOMapper
                 JobTitle = person.JobTitle,
                 Bio = person.Bio,
                 CompanyId = person.CompanyId,
+                DepartmentId = person.DepartmentId,
             };
 
             return personDTO;
@@ -51,6 +53,7 @@ namespace ExcelManagement.DxBlazor.Data.DTOMapper
                 JobTitle = personDTO.JobTitle,
                 Bio = personDTO.Bio,
                 CompanyId = personDTO.CompanyId,
+                DepartmentId = personDTO.DepartmentId,
 
                 Company = CompanyMapper.MapToModelEndpoint(personDTO.CompanyDTO),
                 Department = (personDTO.DepartmentDTO == null) ? null : DepartmentMapper.MapToModelEndpoint(personDTO.DepartmentDTO),
@@ -70,6 +73,7 @@ namespace ExcelManagement.DxBlazor.Data.DTOMapper
                 JobTitle = personDTO.JobTitle,
                 Bio = personDTO.Bio,
                 CompanyId = personDTO.CompanyId,
+                DepartmentId = personDTO.DepartmentId,
             };
 
             return person;
