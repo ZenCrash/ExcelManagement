@@ -1,42 +1,37 @@
-﻿using DevExpress.Data.ODataLinq.Helpers;
-using DocumentFormat.OpenXml.ExtendedProperties;
+﻿using DocumentFormat.OpenXml.InkML;
 using ExcelManagement.DxBlazor.Data.DbOption.Interface;
 using ExcelManagement.DxBlazor.Data.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace ExcelManagement.DxBlazor.Data.DbOption.Repository
 {
-    public class DepartmentRepository : IDepartmentRepository, IDisposable
+    public class GroupRepository : IGroupRepository, IDisposable
     {
         private readonly ApplicationDbContext _dbContext;
 
-        public DepartmentRepository(DbContextOptions<ApplicationDbContext> options)
+        public GroupRepository(DbContextOptions<ApplicationDbContext> options)
         {
             _dbContext = new ApplicationDbContext(options);
         }
 
         //GetAll
-        public List<Department> GetAll()
+        public List<Group> GetAll()
         {
-            return _dbContext.Departments.ToList();
-        }
-        public List<Department> GetAllByCompanyId(Guid id)
-        {
-            return _dbContext.Departments.Where(x => x.Company.Id == id).ToList();
+            return _dbContext.Groups.ToList();
         }
 
         //Get
-        public Department? Get(Guid id)
+        public Group? Get(Guid id)
         {
-            return _dbContext.Departments.Find(id);
+            return _dbContext.Groups.Find(id);
         }
 
         //Create
-        public bool Create(Department department)
+        public bool Create(Group group)
         {
             try
             {
-                _dbContext.Departments.Add(department);
+                _dbContext.Groups.Add(group);
                 return true;
                 //Save changes must be run after this command to impliment changes
             }
@@ -47,12 +42,13 @@ namespace ExcelManagement.DxBlazor.Data.DbOption.Repository
         }
 
         //Update
-        public bool Update(Department department)
+        public bool Update(Group group)
         {
             try
             {
-                _dbContext.Entry(department).State = EntityState.Modified;
+                _dbContext.Entry(group).State = EntityState.Modified;
                 return true;
+                //Save changes must be run after this command to impliment changes
             }
             catch (Exception ex)
             {
@@ -60,10 +56,20 @@ namespace ExcelManagement.DxBlazor.Data.DbOption.Repository
             }
         }
 
-        //Delate
+        //Delete
         public bool Delete(Guid id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                Group group = _dbContext.Groups.Find(id);
+                _dbContext.Groups.Remove(group);
+                return true;
+                //Save changes must be run after this command to impliment changes
+            }
+            catch
+            {
+                return false;
+            }
         }
 
 
@@ -95,5 +101,6 @@ namespace ExcelManagement.DxBlazor.Data.DbOption.Repository
             Dispose(true);
             GC.SuppressFinalize(this);
         }
+
     }
 }

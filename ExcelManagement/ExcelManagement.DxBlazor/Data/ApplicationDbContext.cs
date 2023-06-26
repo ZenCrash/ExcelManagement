@@ -13,10 +13,10 @@ namespace ExcelManagement.DxBlazor.Data
         {
 
         }
-
-        public DbSet<Person> People { get; set; }
         public DbSet<Company> Companies { get; set; }
-        public DbSet<Department> Departments { get; set; }
+        public DbSet<Person> People { get; set; }
+        public DbSet<Role> Roles { get; set; }
+        public DbSet<Group> Groups { get; set; }
         public DbSet<FileAndFolder> FilesAndFolders { get; set; }
         
     }

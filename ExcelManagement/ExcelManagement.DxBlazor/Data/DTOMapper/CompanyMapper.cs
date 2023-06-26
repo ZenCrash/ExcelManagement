@@ -15,8 +15,11 @@ namespace ExcelManagement.DxBlazor.Data.DTOMapper
                 Description = company.Description,
                 CompanyLogoUrl = company.CompanyLogoUrl,
 
-                DepartmentDTOList = (company.Departments == null || company.Departments.Count() == 0) ? null : DepartmentMapper.MapDepartmentToDTOList(company.Departments),
-                PersonDTOList = (company.People == null || company.People.Count == 0) ? null : PersonMapper.MapPersonToDTOList(company.People),
+                PeopleDTOs = (company.People == null || company.People.Count == 0) ? null : PersonMapper.MapPersonToDTOList(company.People),
+                RoleDTOs = (company.Roles == null || company.Roles.Count == 0) ? null : RoleMapper.MapRoleToDTOList(company.Roles),
+                GroupDTOs = (company.Groups == null || company.Groups.Count == 0) ? null : GroupMapper.MapGroupToDTOList(company.Groups),
+                FilesAndFolderDTOs = (company.FilesAndFolders == null || company.FilesAndFolders.Count == 0) ? null : FileAndFolderMapper.MapFileAndFolderToDTOList(company.FilesAndFolders),
+                
             };
 
             return companyDTO;
@@ -46,8 +49,10 @@ namespace ExcelManagement.DxBlazor.Data.DTOMapper
                 Description = companyDTO.Description,
                 CompanyLogoUrl = companyDTO.CompanyLogoUrl,
 
-                Departments = (companyDTO.DepartmentDTOList == null || companyDTO.DepartmentDTOList.Count() == 0) ? null : DepartmentMapper.MapDepartmentToModelList(companyDTO.DepartmentDTOList),
-                People = (companyDTO.PersonDTOList == null || companyDTO.PersonDTOList.Count == 0) ? null : PersonMapper.MapPersonToModelList(companyDTO.PersonDTOList),
+                People = (companyDTO.PeopleDTOs == null || companyDTO.PeopleDTOs.Count == 0) ? null : PersonMapper.MapPersonToModelList(companyDTO.PeopleDTOs),
+                Roles = (companyDTO.RoleDTOs == null || companyDTO.RoleDTOs.Count == 0) ? null : RoleMapper.MapRoleToModelList(companyDTO.RoleDTOs),
+                Groups = (companyDTO.GroupDTOs == null || companyDTO.GroupDTOs.Count == 0) ? null : GroupMapper.MapGroupToModelList(companyDTO.GroupDTOs),
+                FilesAndFolders = (companyDTO.FilesAndFolderDTOs == null || companyDTO.FilesAndFolderDTOs.Count == 0) ? null : FileAndFolderMapper.MapFileAndFolderToModelList(companyDTO.FilesAndFolderDTOs),
             };
 
             return company;
@@ -62,9 +67,6 @@ namespace ExcelManagement.DxBlazor.Data.DTOMapper
                 CompanyName = companyDTO.CompanyName,
                 Description = companyDTO.Description,
                 CompanyLogoUrl = companyDTO.CompanyLogoUrl,
-
-                Departments = DepartmentMapper.MapDepartmentToModelList(companyDTO.DepartmentDTOList),
-                People = PersonMapper.MapPersonToModelList(companyDTO.PersonDTOList),
             };
 
             return company;
@@ -81,28 +83,28 @@ namespace ExcelManagement.DxBlazor.Data.DTOMapper
                 return null;
             }
 
-            var companyDTOList = new List<CompanyDTO>();
+            var companyDTOs = new List<CompanyDTO>();
 
             foreach (var company in companies)
             {
                 var companyDTO = MapToDTOEndpoint(company);
-                companyDTOList.Add(companyDTO);
+                companyDTOs.Add(companyDTO);
             }
 
-            return companyDTOList;
+            return companyDTOs;
         }
 
         //Map List<CommpanyDTO> to List<Company>
-        public static ICollection<Company> MapCompanyToModelList(ICollection<CompanyDTO> companyDTOList)
+        public static ICollection<Company> MapCompanyToModelList(ICollection<CompanyDTO> companyDTOs)
         {
-            if (companyDTOList == null || companyDTOList.Count == 0)
+            if (companyDTOs == null || companyDTOs.Count == 0)
             {
                 return null;
             }
 
             var companies = new List<Company>();
 
-            foreach (var companyDTO in companyDTOList)
+            foreach (var companyDTO in companyDTOs)
             {
                 var company = MapToModelEndpoint(companyDTO);
                 companies.Add(company);

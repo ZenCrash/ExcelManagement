@@ -1,35 +1,29 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ExcelManagement.DxBlazor.Data.Models
 {
-    [Table("FilesAndFolders")]
-    public class FileAndFolder
+    [Table("Roles")]
+    public class Role
     {
         [Key]
         public Guid Id { get; set; }
 
-        [Required]
-        [MaxLength(512)]
-        public string ItemName { get; set; }
-
         [MaxLength(4000)]
         public string Description { get; set; }
 
-        [Required]
+        [Url]
         [MaxLength(4000)]
-        public string RelativeFilePath { get; set; }
+        public string RoleLogoUrl { get; set; }
 
         [Required]
         public DateTime CreatedDate { get; set; }
 
-        [Required]
-        [MaxLength(256)]
-        public string DataType { get; set; }
-
-        //relationships
+        // Relationships
 
         //to 1
+        [ForeignKey("ApplicationRole")]
+        public ApplicationRole ApplicationRole { get; set; }
 
         [ForeignKey("Company")]
         public Guid? CompanyId { get; set; }
@@ -43,8 +37,5 @@ namespace ExcelManagement.DxBlazor.Data.Models
         public Guid? UpdatedByPersonId { get; set; }
         public Person UpdatedByPerson { get; set; }
 
-        //to *
-        public ICollection<Group> Groups { get; set; }
-        public ICollection<Person> People { get; set; }
     }
 }

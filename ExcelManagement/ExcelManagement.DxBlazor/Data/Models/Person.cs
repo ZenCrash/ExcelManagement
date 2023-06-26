@@ -9,34 +9,54 @@ namespace ExcelManagement.DxBlazor.Data.Models
     public class Person
     {
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
-        [Required]
-        public virtual ApplicationUser ApplicationUser { get; set; }
 
         [Required]
         [StringLength(256, MinimumLength = 2)]
         public string FirstName { get; set; }
+
         [Required]
         [StringLength(256, MinimumLength = 2)]
         public string LastName { get; set; }
+
         [StringLength(256)]
         public string? JobTitle { get; set; }
-        [StringLength(10000)]
+
+        [StringLength(4000)]
         public string? Bio { get; set; }
 
-
-        //FKs - 1 to *
+        [Url]
+        [MaxLength(4000)]
+        public string? ProfileImageUrl { get; set; }
 
         [Required]
-        public Guid CompanyId { get; set; }
+        public DateTime CreatedDate { get; set; }
 
-        [ForeignKey(nameof(CompanyId))]
+        [Required]
+        public DateTime UpdatedDate { get; set; }
+
+        //Relations
+
+        //to 1
+        [ForeignKey("ApplicationUser")]
+        public ApplicationUser ApplicationUser { get; set; }
+
+        [ForeignKey("Company")]
+        public Guid? CompanyId { get; set; }
         public virtual Company Company { get; set; }
 
-        public Guid? DepartmentId { get; set; }
+        [ForeignKey("Person")]
+        public Guid? CreatedByPersonId { get; set; }
+        public Person CreatedByPerson { get; set; }
 
-        [ForeignKey(nameof(DepartmentId))]
-        public virtual Department? Department { get; set; }
+        [ForeignKey("Person")]
+        public Guid? UpdatedByPersonId { get; set; }
+        public Person UpdatedByPerson { get; set; }
+
+        //to many
+        public ICollection<Role> Roles { get; set; }
+        public ICollection<Group> Groups { get; set; }
+        public ICollection<FileAndFolder> FilesAndFolders { get; set; }
+
     }
 }

@@ -1,12 +1,13 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using ExcelManagement.DxBlazor.Data.Models;
+using ExcelManagement.DxBlazor.Data.DTO;
+using ExcelManagement.DxBlazor.Data.DTOMapper;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 
-namespace ExcelManagement.DxBlazor.Data.Models
+namespace ExcelManagement.DxBlazor.Data.DTO
 {
-    [Table("FilesAndFolders")]
-    public class FileAndFolder
+    public class FileAndFolderDTO
     {
-        [Key]
         public Guid Id { get; set; }
 
         [Required]
@@ -30,21 +31,17 @@ namespace ExcelManagement.DxBlazor.Data.Models
         //relationships
 
         //to 1
-
-        [ForeignKey("Company")]
         public Guid? CompanyId { get; set; }
-        public virtual Company Company { get; set; }
+        public virtual CompanyDTO CompanyDTO { get; set; }
 
-        [ForeignKey("Person")]
         public Guid? CreatedByPersonId { get; set; }
-        public Person CreatedByPerson { get; set; }
+        public PersonDTO? CreatedByPersonDTO { get; set; }
 
-        [ForeignKey("Person")]
         public Guid? UpdatedByPersonId { get; set; }
-        public Person UpdatedByPerson { get; set; }
+        public PersonDTO? UpdatedByPersonDTO { get; set; }
 
         //to *
-        public ICollection<Group> Groups { get; set; }
-        public ICollection<Person> People { get; set; }
+        public ICollection<GroupDTO?>? GroupDTOs { get; set; }
+        public ICollection<PersonDTO?>? PeopleDTOs { get; set; }
     }
 }

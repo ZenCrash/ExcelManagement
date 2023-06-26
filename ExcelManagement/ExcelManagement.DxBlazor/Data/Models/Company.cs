@@ -7,20 +7,24 @@ namespace ExcelManagement.DxBlazor.Data.Models
     public class Company
     {
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
+
         [Required]
         [StringLength(2000)]
         public string CompanyName { get; set; }
-        [StringLength(10000)]
+
+        [MaxLength(4000)]
         public string? Description { get; set; }
+
         [Url]
+        [MaxLength(4000)]
         public string? CompanyLogoUrl { get; set; }
 
-        //FKs 
-        public ICollection<Department?>? Departments { get; set; }
-        public ICollection<Person?>? People { get; set; }
-        public ICollection<FileAndFolder?>? fileAndFolders { get; set; }
+        //Relationships
+        public ICollection<Person> People { get; set; }
+        public ICollection<Role> Roles { get; set; }
+        public ICollection<Group> Groups { get; set; }
+        public ICollection<FileAndFolder> FilesAndFolders { get; set; }
 
     }
 }

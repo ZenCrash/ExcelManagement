@@ -10,7 +10,6 @@ namespace ExcelManagement.DxBlazor.Data.Models
         [Required]
         [ForeignKey("Person")]
         public Guid PersonId { get; set; }
-        [Required]
         public Person Person { get; set; }
     }
 }

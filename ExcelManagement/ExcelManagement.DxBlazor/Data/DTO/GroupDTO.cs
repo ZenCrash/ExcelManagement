@@ -1,39 +1,30 @@
 ﻿using ExcelManagement.DxBlazor.Data.Models;
-using System.ComponentModel.DataAnnotations;
+using ExcelManagement.DxBlazor.Data.DTO;
+using ExcelManagement.DxBlazor.Data.DTOMapper;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
 
 namespace ExcelManagement.DxBlazor.Data.DTO
 {
-    public class PersonDTO
+    public class GroupDTO
     {
         public Guid Id { get; set; }
 
         [Required]
-        [StringLength(256, MinimumLength = 2)]
-        public string FirstName { get; set; }
+        [MaxLength(512)]
+        public string GroupName { get; set; }
 
-        [Required]
-        [StringLength(256, MinimumLength = 2)]
-        public string LastName { get; set; }
-
-        [StringLength(256)]
-        public string? JobTitle { get; set; }
-
-        [StringLength(4000)]
-        public string? Bio { get; set; }
+        [MaxLength(4000)]
+        public string Description { get; set; }
 
         [Url]
         [MaxLength(4000)]
-        public string? ProfileImageUrl { get; set; }
+        public string? GroupLogoUrl { get; set; }
 
         [Required]
         public DateTime CreatedDate { get; set; }
 
-        [Required]
-        public DateTime UpdatedDate { get; set; }
-
-        //Relations
-
+        // Relationships
         //to 1
         public Guid? CompanyId { get; set; }
         public virtual CompanyDTO CompanyDTO { get; set; }
@@ -44,9 +35,8 @@ namespace ExcelManagement.DxBlazor.Data.DTO
         public Guid? UpdatedByPersonId { get; set; }
         public PersonDTO? UpdatedByPersonDTO { get; set; }
 
-        //to many
-        public ICollection<RoleDTO?>? RoleDTOs { get; set; }
-        public ICollection<GroupDTO?>? GroupDTOs { get; set; }
+        //to *
         public ICollection<FileAndFolderDTO?>? FilesAndFolderDTOs { get; set; }
+        public ICollection<PersonDTO?>? PeopleDTOs { get; set; }
     }
 }

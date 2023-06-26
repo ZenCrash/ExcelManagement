@@ -1,4 +1,5 @@
-﻿using ExcelManagement.DxBlazor.Data.DTO;
+﻿using DocumentFormat.OpenXml.ExtendedProperties;
+using ExcelManagement.DxBlazor.Data.DTO;
 using ExcelManagement.DxBlazor.Data.Models;
 
 namespace ExcelManagement.DxBlazor.Data.DTOMapper
@@ -15,11 +16,21 @@ namespace ExcelManagement.DxBlazor.Data.DTOMapper
                 LastName = person.LastName,
                 JobTitle = person.JobTitle,
                 Bio = person.Bio,
+                ProfileImageUrl = person.ProfileImageUrl,
+                CreatedDate = person.CreatedDate,
+                UpdatedDate = person.UpdatedDate,
+
                 CompanyId = person.CompanyId,
-                DepartmentId = person.DepartmentId,
+                CreatedByPersonId = person.CreatedByPersonId,
+                UpdatedByPersonId = person.UpdatedByPersonId,
 
                 CompanyDTO = CompanyMapper.MapToDTOEndpoint(person.Company),
-                DepartmentDTO = (person.Department == null) ? null : DepartmentMapper.MapToDTOEndpoint(person.Department),
+                CreatedByPersonDTO = PersonMapper.MapToDTOEndpoint(person.CreatedByPerson),
+                UpdatedByPersonDTO = PersonMapper.MapToDTOEndpoint(person.UpdatedByPerson),
+
+                RoleDTOs = (person.Roles == null || person.Roles.Count == 0) ? null : RoleMapper.MapRoleToDTOList(person.Roles),
+                GroupDTOs = (person.Groups == null || person.Groups.Count == 0) ? null : GroupMapper.MapGroupToDTOList(person.Groups),
+                FilesAndFolderDTOs = (person.FilesAndFolders == null || person.FilesAndFolders.Count == 0) ? null : FileAndFolderMapper.MapFileAndFolderToDTOList(person.FilesAndFolders),
             };
 
             return personDTO;
@@ -35,8 +46,13 @@ namespace ExcelManagement.DxBlazor.Data.DTOMapper
                 LastName = person.LastName,
                 JobTitle = person.JobTitle,
                 Bio = person.Bio,
+                ProfileImageUrl = person.ProfileImageUrl,
+                CreatedDate = person.CreatedDate,
+                UpdatedDate = person.UpdatedDate,
+
                 CompanyId = person.CompanyId,
-                DepartmentId = person.DepartmentId,
+                CreatedByPersonId = person.CreatedByPersonId,
+                UpdatedByPersonId = person.UpdatedByPersonId,
             };
 
             return personDTO;
@@ -52,11 +68,21 @@ namespace ExcelManagement.DxBlazor.Data.DTOMapper
                 LastName = personDTO.LastName,
                 JobTitle = personDTO.JobTitle,
                 Bio = personDTO.Bio,
+                ProfileImageUrl = personDTO.ProfileImageUrl,
+                CreatedDate = personDTO.CreatedDate,
+                UpdatedDate = personDTO.UpdatedDate,
+
                 CompanyId = personDTO.CompanyId,
-                DepartmentId = personDTO.DepartmentId,
+                CreatedByPersonId = personDTO.CreatedByPersonId,
+                UpdatedByPersonId = personDTO.UpdatedByPersonId,
 
                 Company = CompanyMapper.MapToModelEndpoint(personDTO.CompanyDTO),
-                Department = (personDTO.DepartmentDTO == null) ? null : DepartmentMapper.MapToModelEndpoint(personDTO.DepartmentDTO),
+                CreatedByPerson = PersonMapper.MapToModelEndpoint(personDTO.CreatedByPersonDTO),
+                UpdatedByPerson = PersonMapper.MapToModelEndpoint(personDTO.UpdatedByPersonDTO),
+
+                Roles = (personDTO.RoleDTOs == null || personDTO.RoleDTOs.Count == 0) ? null : RoleMapper.MapRoleToModelList(personDTO.RoleDTOs),
+                Groups = (personDTO.GroupDTOs == null || personDTO.GroupDTOs.Count == 0) ? null : GroupMapper.MapGroupToModelList(personDTO.GroupDTOs),
+                FilesAndFolders = (personDTO.FilesAndFolderDTOs == null || personDTO.FilesAndFolderDTOs.Count == 0) ? null : FileAndFolderMapper.MapFileAndFolderToModelList(personDTO.FilesAndFolderDTOs),
             };
 
             return person;
@@ -72,8 +98,13 @@ namespace ExcelManagement.DxBlazor.Data.DTOMapper
                 LastName = personDTO.LastName,
                 JobTitle = personDTO.JobTitle,
                 Bio = personDTO.Bio,
+                ProfileImageUrl = personDTO.ProfileImageUrl,
+                CreatedDate = personDTO.CreatedDate,
+                UpdatedDate = personDTO.UpdatedDate,
+
                 CompanyId = personDTO.CompanyId,
-                DepartmentId = personDTO.DepartmentId,
+                CreatedByPersonId = personDTO.CreatedByPersonId,
+                UpdatedByPersonId = personDTO.UpdatedByPersonId,
             };
 
             return person;
@@ -89,15 +120,15 @@ namespace ExcelManagement.DxBlazor.Data.DTOMapper
                 return null;
             }
 
-            var personDTOList = new List<PersonDTO>();
+            var personDTOs = new List<PersonDTO>();
 
             foreach (var person in people)
             {
                 var personDTO = MapToDTOEndpoint(person);
-                personDTOList.Add(personDTO);
+                personDTOs.Add(personDTO);
             }
 
-            return personDTOList;
+            return personDTOs;
         }
 
         //Map List<PersonDTO> to List<Person>
