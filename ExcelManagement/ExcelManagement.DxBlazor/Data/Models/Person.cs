@@ -38,25 +38,40 @@ namespace ExcelManagement.DxBlazor.Data.Models
         //Relations
 
         //to 1
-        [ForeignKey("ApplicationUser")]
-        public ApplicationUser ApplicationUser { get; set; }
-
-        [ForeignKey("Company")]
-        public Guid? CompanyId { get; set; }
-        public virtual Company Company { get; set; }
-
-        [ForeignKey("Person")]
-        public Guid? CreatedByPersonId { get; set; }
-        public Person CreatedByPerson { get; set; }
-
-        [ForeignKey("Person")]
-        public Guid? UpdatedByPersonId { get; set; }
-        public Person UpdatedByPerson { get; set; }
+        [Required]
+        public Company Company { get; set; }
 
         //to many
+        [InverseProperty("RoleMembers")]
         public ICollection<Role> Roles { get; set; }
+
         public ICollection<Group> Groups { get; set; }
-        public ICollection<FileAndFolder> FilesAndFolders { get; set; }
+
+        [InverseProperty("FileAndFolderMembers")]
+        public ICollection<FileAndFolder> FileAndFolderMember { get; set; }
+
+        //Inverse propertys
+
+        //Filesandfolders
+        [InverseProperty("CreatedByPerson")]
+        public ICollection<FileAndFolder> FilesAndFoldersCreated { get; set; } = new List<FileAndFolder>();
+
+        [InverseProperty("UpdatedByPerson")]
+        public ICollection<FileAndFolder> FilesAndFoldersUpdated { get; set; } = new List<FileAndFolder>();
+
+        //Roles
+        [InverseProperty("CreatedByPerson")]
+        public ICollection<Role> RolesCreated { get; set; } = new List<Role>();
+
+        [InverseProperty("UpdatedByPerson")]
+        public ICollection<Role> RolesUpdated { get; set; } = new List<Role>();
+
+        //Groups
+        [InverseProperty("CreatedByPerson")]
+        public ICollection<Group> GroupsCreated { get; set; } = new List<Group>();
+
+        [InverseProperty("UpdatedByPerson")]
+        public ICollection<Group> GroupsUpdated { get; set; } = new List<Group>();
 
     }
 }

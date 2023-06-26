@@ -8,17 +8,14 @@ namespace ExcelManagement.DxBlazor.Data.Logic
         public string MainDirectory { get; init; } = @"..\ExcelDocuments";
 
         private readonly CompanyRepository _companyRepository;
-        private readonly DepartmentRepository _departmentRepository;
 
-        public FolderLogic(CompanyRepository companyRepository, DepartmentRepository departmentRepository) 
+        public FolderLogic(CompanyRepository companyRepository) 
         {
             _companyRepository = companyRepository;
-            _departmentRepository = departmentRepository;
         }
-        public async Task CreateFoldersByCompanyandDepartment(CompanyRepository companyRepository, DepartmentRepository departmentRepository)
+        public async Task CreateFoldersByCompanyandDepartment(CompanyRepository companyRepository)
         {
             var companies = _companyRepository.GetAll();
-            var departments = _departmentRepository.GetAll();
 
             foreach (var company in companies)
             {
@@ -28,11 +25,6 @@ namespace ExcelManagement.DxBlazor.Data.Logic
                     Directory.CreateDirectory(folderPath);
 
                 }
-            }
-
-            async Task CreateFolderByDepartment(DepartmentRepository departmentRepository)
-            {
-
             }
         }
 

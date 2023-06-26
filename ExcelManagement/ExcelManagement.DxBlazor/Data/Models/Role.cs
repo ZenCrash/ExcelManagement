@@ -22,20 +22,11 @@ namespace ExcelManagement.DxBlazor.Data.Models
         // Relationships
 
         //to 1
-        [ForeignKey("ApplicationRole")]
-        public ApplicationRole ApplicationRole { get; set; }
 
-        [ForeignKey("Company")]
-        public Guid? CompanyId { get; set; }
-        public virtual Company Company { get; set; }
-
-        [ForeignKey("Person")]
-        public Guid? CreatedByPersonId { get; set; }
-        public Person CreatedByPerson { get; set; }
-
-        [ForeignKey("Person")]
-        public Guid? UpdatedByPersonId { get; set; }
-        public Person UpdatedByPerson { get; set; }
-
+        [Required]
+        public Company Company { get; set; }
+        public Person? CreatedByPerson { get; set; }
+        public Person? UpdatedByPerson { get; set; }
+        public ICollection<Person> RoleMembers { get; set; }
     }
 }

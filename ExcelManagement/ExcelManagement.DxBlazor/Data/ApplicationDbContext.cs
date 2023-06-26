@@ -18,6 +18,6 @@ namespace ExcelManagement.DxBlazor.Data
         public DbSet<Role> Roles { get; set; }
         public DbSet<Group> Groups { get; set; }
         public DbSet<FileAndFolder> FilesAndFolders { get; set; }
-        
+
     }
 }

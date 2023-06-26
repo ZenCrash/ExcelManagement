@@ -14,17 +14,21 @@ namespace ExcelManagement.DxBlazor.Data.Models
         public string CompanyName { get; set; }
 
         [MaxLength(4000)]
-        public string? Description { get; set; }
+        public string Description { get; set; }
 
         [Url]
         [MaxLength(4000)]
-        public string? CompanyLogoUrl { get; set; }
+        public string CompanyLogoUrl { get; set; }
 
         //Relationships
-        public ICollection<Person> People { get; set; }
-        public ICollection<Role> Roles { get; set; }
-        public ICollection<Group> Groups { get; set; }
-        public ICollection<FileAndFolder> FilesAndFolders { get; set; }
+        [InverseProperty("Company")]
+        public ICollection<Person> People { get; set; } = new List<Person>();
+        [InverseProperty("Company")]
+        public ICollection<Role> Roles { get; set; } = new List<Role>();
+        [InverseProperty("Company")]
+        public ICollection<Group> Groups { get; set; } = new List<Group>();
+        [InverseProperty("Company")]
+        public ICollection<FileAndFolder> FilesAndFolders { get; set; } = new List<FileAndFolder>();
 
     }
 }

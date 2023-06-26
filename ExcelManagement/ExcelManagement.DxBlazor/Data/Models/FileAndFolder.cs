@@ -30,21 +30,13 @@ namespace ExcelManagement.DxBlazor.Data.Models
         //relationships
 
         //to 1
-
-        [ForeignKey("Company")]
-        public Guid? CompanyId { get; set; }
-        public virtual Company Company { get; set; }
-
-        [ForeignKey("Person")]
-        public Guid? CreatedByPersonId { get; set; }
-        public Person CreatedByPerson { get; set; }
-
-        [ForeignKey("Person")]
-        public Guid? UpdatedByPersonId { get; set; }
-        public Person UpdatedByPerson { get; set; }
+        [Required]
+        public Company Company { get; set; }
+        public Person? CreatedByPerson { get; set; }
+        public Person? UpdatedByPerson { get; set; }
 
         //to *
-        public ICollection<Group> Groups { get; set; }
-        public ICollection<Person> People { get; set; }
+        public ICollection<Group> Groups { get; set; } = new List<Group>();
+        public ICollection<Person> FileAndFolderMembers { get; set; } = new List<Person>();
     }
 }
