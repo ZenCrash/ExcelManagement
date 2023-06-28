@@ -35,28 +35,26 @@ namespace ExcelManagement.DxBlazor.Data.DTO
         /* Relationships */
 
         //to 1
-        public Guid? MemberCompanyId { get; set; }
         [Required]
-        public Company MemberCompany { get; set; }
-
-        public Person PersonCreatedBy { get; set; }
-        public Person PersonUpdatedBy { get; set; }
+        public CompanyDTO MemberCompanyDTO { get; set; }
+        public PersonDTO PersonCreatedByDTO { get; set; }
+        public PersonDTO PersonUpdatedByDTO { get; set; }
 
         //to *
-        public ICollection<Role> Roles { get; set; } = new List<Role>();
-        public ICollection<Group> Groups { get; set; } = new List<Group>();
-        public ICollection<FileAndFolder> FileAndFolders { get; set; } = new List<FileAndFolder>(); //NotMapped
+        public ICollection<RoleDTO> RoleDTOs { get; set; } = new List<RoleDTO>();
+        public ICollection<GroupDTO> GroupDTOs { get; set; } = new List<GroupDTO>();
+        public ICollection<FileAndFolderDTO> FileAndFolderDTOs { get; set; } = new List<FileAndFolderDTO>(); //NotMapped
 
         //CreatedBy / UpdatedBy
-        public ICollection<Person> CreatedPersons { get; set; } = new List<Person>();
-        public ICollection<Person> UpdatedPersons { get; set; } = new List<Person>();
-        public ICollection<Company> CreatedCompanys { get; set; } = new List<Company>();
-        public ICollection<Company> UpdatedCompanys { get; set; } = new List<Company>();
-        public ICollection<Role> CreatedRoles { get; set; } = new List<Role>();
-        public ICollection<Role> UpdatedRoles { get; set; } = new List<Role>();
-        public ICollection<Group> CreatedGroups { get; set; } = new List<Group>();
-        public ICollection<Group> UpdatedGroups { get; set; } = new List<Group>();
-        public ICollection<FileAndFolder> CreatedFileAndFolders { get; set; } = new List<FileAndFolder>();
-        public ICollection<FileAndFolder> UpdatedFileAndFolders { get; set; } = new List<FileAndFolder>();
+        public ICollection<PersonDTO> CreatedPersonDTOs { get; set; } = new List<PersonDTO>();
+        public ICollection<PersonDTO> UpdatedPersonDTOs { get; set; } = new List<PersonDTO>();
+        public ICollection<CompanyDTO> CreatedCompanyDTOs { get; set; } = new List<CompanyDTO>();
+        public ICollection<CompanyDTO> UpdatedCompanyDTOs { get; set; } = new List<CompanyDTO>();
+        public ICollection<RoleDTO> CreatedRoleDTOs { get; set; } = new List<RoleDTO>();
+        public ICollection<RoleDTO> UpdatedRoleDTOs { get; set; } = new List<RoleDTO>();
+        public ICollection<GroupDTO> CreatedGroupDTOs { get; set; } = new List<GroupDTO>();
+        public ICollection<GroupDTO> UpdatedGroupDTOs { get; set; } = new List<GroupDTO>();
+        public ICollection<FileAndFolderDTO> CreatedFileAndFolderDTOs { get; set; } = new List<FileAndFolderDTO>();
+        public ICollection<FileAndFolderDTO> UpdatedFileAndFolderDTOs { get; set; } = new List<FileAndFolderDTO>();
     }
 }

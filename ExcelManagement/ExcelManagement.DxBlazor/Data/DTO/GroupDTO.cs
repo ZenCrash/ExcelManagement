@@ -29,20 +29,17 @@ namespace ExcelManagement.DxBlazor.Data.DTO
         /* Relationships */
 
         //to 1
-        public Guid? CompanyId { get; set; }
         [Required]
-        public Company Company { get; set; }
+        public CompanyDTO CompanyDTO { get; set; }
 
         //CreatedBy / UpdatedBy
-        public Guid? GroupCreatedById { get; set; }
-        public Person GroupCreatedBy { get; set; }
+        public PersonDTO GroupCreatedByDTO { get; set; }
 
-        public Guid? GroupUpdatedById { get; set; }
-        public Person GroupUpdatedBy { get; set; }
+        public PersonDTO GroupUpdatedByDTO { get; set; }
 
         //to *
-        public ICollection<Group> Groups { get; set; } = new List<Group>();
-        public ICollection<FileAndFolder> FileAndFolders { get; set; } = new List<FileAndFolder>();
-        public ICollection<Person> Persons { get; set; } = new List<Person>(); //NotMapped
+        public ICollection<GroupDTO> GroupDTOs { get; set; } = new List<GroupDTO>();
+        public ICollection<FileAndFolderDTO> FileAndFolderDTOs { get; set; } = new List<FileAndFolderDTO>();
+        public ICollection<PersonDTO> PersonDTOs { get; set; } = new List<PersonDTO>(); //NotMapped
     }
 }
