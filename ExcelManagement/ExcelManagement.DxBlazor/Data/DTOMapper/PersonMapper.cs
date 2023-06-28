@@ -91,8 +91,8 @@ namespace ExcelManagement.DxBlazor.Data.DTOMapper
                 UpdatedRoles = (personDTO.UpdatedRoleDTOs == null || personDTO.UpdatedRoleDTOs.Count == 0) ? null : RoleMapper.MapRoleToModelList(personDTO.UpdatedRoleDTOs),
                 CreatedGroups = (personDTO.CreatedGroupDTOs == null || personDTO.CreatedGroupDTOs.Count == 0) ? null : GroupMapper.MapGroupToModelList(personDTO.CreatedGroupDTOs),
                 UpdatedGroups = (personDTO.UpdatedGroupDTOs == null || personDTO.UpdatedGroupDTOs.Count == 0) ? null : GroupMapper.MapGroupToModelList(personDTO.UpdatedGroupDTOs),
-                CreatedFileAndFolders = (personDTO.CreatedFileAndFolderDTOs == null || personDTO.CreatedFileAndFolderDTOs.Count == 0) ? null : MapFileAndFolderToModelList.MapRoleToModelList(personDTO.CreatedFileAndFolderDTOs),
-                UpdatedFileAndFolders = (personDTO.UpdatedFileAndFolderDTOs == null || personDTO.UpdatedFileAndFolderDTOs.Count == 0) ? null : MapFileAndFolderToModelList.MapRoleToModelList(personDTO.UpdatedFileAndFolderDTOs),
+                CreatedFileAndFolders = (personDTO.CreatedFileAndFolderDTOs == null || personDTO.CreatedFileAndFolderDTOs.Count == 0) ? null : FileAndFolderMapper.MapFileAndFolderToModelList(personDTO.CreatedFileAndFolderDTOs),
+                UpdatedFileAndFolders = (personDTO.UpdatedFileAndFolderDTOs == null || personDTO.UpdatedFileAndFolderDTOs.Count == 0) ? null : FileAndFolderMapper.MapFileAndFolderToModelList(personDTO.UpdatedFileAndFolderDTOs),
             };
 
             return person;

@@ -59,7 +59,7 @@ namespace ExcelManagement.DxBlazor.Data.DTOMapper
                 RoleUpdatedBy = PersonMapper.MapToModelEndpoint(roleDTO.RoleUpdatedByDTO),
 
                 FileAndFolders = (roleDTO.FileAndFolderDTOs == null || roleDTO.FileAndFolderDTOs.Count == 0) ? null : FileAndFolderMapper.MapFileAndFolderToModelList(roleDTO.FileAndFolderDTOs),
-                Persons = (roleDTO.PersonDTOs == null || roleDTO.PersonDTOs.Count == 0) ? null : PersonMapper.MapPersonToModelList(roleDTO.Persons),
+                Persons = (roleDTO.PersonDTOs == null || roleDTO.PersonDTOs.Count == 0) ? null : PersonMapper.MapPersonToModelList(roleDTO.PersonDTOs),
             };
 
             return role;

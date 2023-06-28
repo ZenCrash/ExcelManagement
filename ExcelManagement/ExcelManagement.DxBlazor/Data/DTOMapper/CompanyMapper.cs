@@ -17,10 +17,10 @@ namespace ExcelManagement.DxBlazor.Data.DTOMapper
                 CreatedDate = company.CreatedDate,
                 UpdatedDate = company.UpdatedDate,
 
-                 = (company.People == null || company.People.Count == 0) ? null : PersonMapper.MapPersonToDTOList(company.People),
                 RoleDTOs = (company.Roles == null || company.Roles.Count == 0) ? null : RoleMapper.MapRoleToDTOList(company.Roles),
                 GroupDTOs = (company.Groups == null || company.Groups.Count == 0) ? null : GroupMapper.MapGroupToDTOList(company.Groups),
-                FilesAndFolderDTOs = (company.FilesAndFolders == null || company.FilesAndFolders.Count == 0) ? null : FileAndFolderMapper.MapFileAndFolderToDTOList(company.FilesAndFolders),
+                CompanyMemberDTOs = (company.CompanyMembers == null || company.CompanyMembers.Count == 0) ? null : PersonMapper.MapPersonToDTOList(company.CompanyMembers),
+                FileAndFolderDTOs = (company.FileAndFolders == null || company.FileAndFolders.Count == 0) ? null : FileAndFolderMapper.MapFileAndFolderToDTOList(company.FileAndFolders),
 
             };
 
@@ -32,10 +32,12 @@ namespace ExcelManagement.DxBlazor.Data.DTOMapper
         {
             CompanyDTO companyDTO = new CompanyDTO
             {
-                Id = company.Id,
+                CompanyId = company.CompanyId,
                 CompanyName = company.CompanyName,
                 Description = company.Description,
-                CompanyLogoUrl = company.CompanyLogoUrl
+                CompanyLogoUrl = company.CompanyLogoUrl,
+                CreatedDate = company.CreatedDate,
+                UpdatedDate = company.UpdatedDate,
             };
 
             return companyDTO;
@@ -46,15 +48,17 @@ namespace ExcelManagement.DxBlazor.Data.DTOMapper
         {
             Company company = new Company
             {
-                Id = companyDTO.Id,
+                CompanyId = companyDTO.CompanyId,
                 CompanyName = companyDTO.CompanyName,
                 Description = companyDTO.Description,
                 CompanyLogoUrl = companyDTO.CompanyLogoUrl,
+                CreatedDate = companyDTO.CreatedDate,
+                UpdatedDate = companyDTO.UpdatedDate,
 
-                People = (companyDTO.PeopleDTOs == null || companyDTO.PeopleDTOs.Count == 0) ? null : PersonMapper.MapPersonToModelList(companyDTO.PeopleDTOs),
                 Roles = (companyDTO.RoleDTOs == null || companyDTO.RoleDTOs.Count == 0) ? null : RoleMapper.MapRoleToModelList(companyDTO.RoleDTOs),
                 Groups = (companyDTO.GroupDTOs == null || companyDTO.GroupDTOs.Count == 0) ? null : GroupMapper.MapGroupToModelList(companyDTO.GroupDTOs),
-                FilesAndFolders = (companyDTO.FilesAndFolderDTOs == null || companyDTO.FilesAndFolderDTOs.Count == 0) ? null : FileAndFolderMapper.MapFileAndFolderToModelList(companyDTO.FilesAndFolderDTOs),
+                CompanyMembers = (companyDTO.CompanyMemberDTOs == null || companyDTO.CompanyMemberDTOs.Count == 0) ? null : PersonMapper.MapPersonToModelList(companyDTO.CompanyMemberDTOs),
+                FileAndFolders = (companyDTO.FileAndFolderDTOs == null || companyDTO.FileAndFolderDTOs.Count == 0) ? null : FileAndFolderMapper.MapFileAndFolderToModelList(companyDTO.FileAndFolderDTOs),
             };
 
             return company;
@@ -65,10 +69,12 @@ namespace ExcelManagement.DxBlazor.Data.DTOMapper
         {
             Company company = new Company
             {
-                Id = companyDTO.Id,
+                CompanyId = companyDTO.CompanyId,
                 CompanyName = companyDTO.CompanyName,
                 Description = companyDTO.Description,
                 CompanyLogoUrl = companyDTO.CompanyLogoUrl,
+                CreatedDate = companyDTO.CreatedDate,
+                UpdatedDate = companyDTO.UpdatedDate,
             };
 
             return company;
