@@ -20,6 +20,11 @@ namespace ExcelManagement.DxBlazor.Data.DbOption.Repository
             return _dbContext.Groups.ToList();
         }
 
+        public List<Group> GetAllByCompanyId(Guid companyId)
+        {
+            return _dbContext.Groups.Where(p => p.CompanyId == companyId).ToList();
+        }
+
         //Get
         public Group? Get(Guid id)
         {

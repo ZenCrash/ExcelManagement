@@ -20,8 +20,8 @@ namespace ExcelManagement.DxBlazor.Pages.Account
         public string LastName { get; set; }
 
         [Required]
-        public Guid CompanyDTOId { get; set; }
-        public Guid? DepartmentDTOId { get; set; }
+        public Guid MemberCompanyId { get; set; }
+        public Guid? MemberGroupId { get; set; }
         [Required]
         public Role? SelectedRole { get; set; }
 

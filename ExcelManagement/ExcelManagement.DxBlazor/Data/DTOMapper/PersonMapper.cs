@@ -19,6 +19,7 @@ namespace ExcelManagement.DxBlazor.Data.DTOMapper
                 CreatedDate = person.CreatedDate,
                 UpdatedDate = person.UpdatedDate,
 
+                MemberCompanyId = person.MemberCompanyId,
                 MemberCompanyDTO = CompanyMapper.MapToDTOEndpoint(person.MemberCompany),
                 PersonCreatedByDTO = PersonMapper.MapToDTOEndpoint(person.PersonCreatedBy),
                 PersonUpdatedByDTO = PersonMapper.MapToDTOEndpoint(person.PersonUpdatedBy),
@@ -56,6 +57,8 @@ namespace ExcelManagement.DxBlazor.Data.DTOMapper
                 ProfileImageUrl = person.ProfileImageUrl,
                 CreatedDate = person.CreatedDate,
                 UpdatedDate = person.UpdatedDate,
+
+                MemberCompanyId = person.MemberCompanyId,
             };
 
             return personDTO;
@@ -74,6 +77,7 @@ namespace ExcelManagement.DxBlazor.Data.DTOMapper
                 ProfileImageUrl = personDTO.ProfileImageUrl,
                 CreatedDate = personDTO.CreatedDate,
                 UpdatedDate = personDTO.UpdatedDate,
+                MemberCompanyId = personDTO.MemberCompanyId,
 
                 MemberCompany = CompanyMapper.MapToModelEndpoint(personDTO.MemberCompanyDTO),
                 PersonCreatedBy = PersonMapper.MapToModelEndpoint(personDTO.PersonCreatedByDTO),
@@ -111,6 +115,8 @@ namespace ExcelManagement.DxBlazor.Data.DTOMapper
                 ProfileImageUrl = personDTO.ProfileImageUrl,
                 CreatedDate = personDTO.CreatedDate,
                 UpdatedDate = personDTO.UpdatedDate,
+
+                MemberCompanyId = personDTO.MemberCompanyId,
             };
 
             return person;

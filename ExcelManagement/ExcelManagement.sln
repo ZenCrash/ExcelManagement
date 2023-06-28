@@ -19,8 +19,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExcelManagement.Testing", "
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SqlScripts", "SqlScripts", "{F349FBE7-C7A3-4AAD-920F-521787B333BE}"
 	ProjectSection(SolutionItems) = preProject
-		Database.Create.With.Tables.sql = Database.Create.With.Tables.sql
 		Database.Delete.With.Tables.sql.sql = Database.Delete.With.Tables.sql.sql
+		Database.Create.TestData.sql = Database.Create.TestData.sql
 	EndProjectSection
 EndProject
 Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "BluestarDatabase", "BluestarDatabase\BluestarDatabase.sqlproj", "{982AEE11-3CC4-4BBF-A208-8ABB19CA6EE9}"

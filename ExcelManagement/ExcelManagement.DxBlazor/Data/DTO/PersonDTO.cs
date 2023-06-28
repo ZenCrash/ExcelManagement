@@ -35,6 +35,7 @@ namespace ExcelManagement.DxBlazor.Data.DTO
         /* Relationships */
 
         //to 1
+        public Guid? MemberCompanyId { get; set; }
         [Required]
         public CompanyDTO MemberCompanyDTO { get; set; }
         public PersonDTO PersonCreatedByDTO { get; set; }

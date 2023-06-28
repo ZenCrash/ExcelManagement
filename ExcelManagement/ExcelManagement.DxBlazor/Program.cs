@@ -53,6 +53,7 @@ builder.Services.AddSingleton<WeatherForecastService>();
 //Scoped Services
 builder.Services.AddScoped<AuthenticationStateProvider, IdentityValidationProvider<ApplicationUser>>();
 builder.Services.AddScoped<ICompanyRepository, CompanyRepository>();
+builder.Services.AddScoped<IGroupRepository, GroupRepository>();
 
 
 builder.WebHost.UseWebRoot("wwwroot");
