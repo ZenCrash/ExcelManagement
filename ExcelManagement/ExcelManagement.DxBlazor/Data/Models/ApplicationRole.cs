@@ -9,6 +9,7 @@ namespace ExcelManagement.DxBlazor.Data.Models
         /* Relationships */
 
         //to 1
+        [Required]
         public Role Role { get; set; }
     }
 }

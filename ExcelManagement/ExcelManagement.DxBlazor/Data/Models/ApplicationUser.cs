@@ -10,6 +10,7 @@ namespace ExcelManagement.DxBlazor.Data.Models
         /* Relationships */
 
         //to 1
+        [Required]
         public Person Person { get; set; }
     }
 }

@@ -13,20 +13,20 @@ namespace ExcelManagement.DxBlazor.Data.Logic
         {
             _companyRepository = companyRepository;
         }
-        public async Task CreateFoldersByCompanyandDepartment(CompanyRepository companyRepository)
-        {
-            var companies = _companyRepository.GetAll();
+        //public async Task CreateFoldersByCompanyandDepartment(CompanyRepository companyRepository)
+        //{
+        //    var companies = _companyRepository.GetAll();
 
-            foreach (var company in companies)
-            {
-                string folderPath = Path.Combine(MainDirectory, company.Id.ToString());
-                if (!Directory.Exists(folderPath))
-                {
-                    Directory.CreateDirectory(folderPath);
+        //    foreach (var company in companies)
+        //    {
+        //        string folderPath = Path.Combine(MainDirectory, company.Id.ToString());
+        //        if (!Directory.Exists(folderPath))
+        //        {
+        //            Directory.CreateDirectory(folderPath);
 
-                }
-            }
-        }
+        //        }
+        //    }
+        //}
 
         
     }

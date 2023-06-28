@@ -1,32 +1,42 @@
-﻿//using ExcelManagement.DxBlazor.Data.Models;
-//using System.ComponentModel.DataAnnotations.Schema;
-//using System.ComponentModel.DataAnnotations;
+﻿using ExcelManagement.DxBlazor.Data.Models;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
 
-//namespace ExcelManagement.DxBlazor.Data.DTO
-//{
-//    public class RoleDTO
-//    {
-//        public Guid Id { get; set; }
+namespace ExcelManagement.DxBlazor.Data.DTO
+{
+    public class RoleDTO
+    {
+        public Guid RoleId { get; set; }
 
-//        [MaxLength(4000)]
-//        public string Description { get; set; }
+        [MaxLength(4000)]
+        public string Description { get; set; }
 
-//        [Url]
-//        [MaxLength(4000)]
-//        public string? RoleLogoUrl { get; set; }
+        [Url]
+        [MaxLength(4000)]
+        public string RoleLogoUrl { get; set; }
 
-//        [Required]
-//        public DateTime CreatedDate { get; set; }
-//        // Relationships
+        [Required]
+        public DateTime CreatedDate { get; set; }
 
-//        //to 1
-//        public Guid? CompanyId { get; set; }
-//        public virtual CompanyDTO CompanyDTO { get; set; }
+        [Required]
+        public DateTime UpdatedDate { get; set; }
 
-//        public Guid? CreatedByPersonId { get; set; }
-//        public PersonDTO? CreatedByPersonDTO { get; set; }
+        /* Relationships */
 
-//        public Guid? UpdatedByPersonId { get; set; }
-//        public PersonDTO? UpdatedByPersonDTO { get; set; }
-//    }
-//}
+        //to 1
+        public Guid? CompanyId { get; set; }
+        [Required]
+        public Company Company { get; set; }
+
+        //CreatedBy / UpdatedBy
+        public Guid? RoleCreatedById { get; set; }
+        public Person RoleCreatedBy { get; set; }
+
+        public Guid? RoleUpdatedById { get; set; }
+        public Person RoleUpdatedBy { get; set; }
+
+        //to *
+        public ICollection<FileAndFolder> FileAndFolders { get; set; } = new List<FileAndFolder>(); //NotMapped
+        public ICollection<Person> Persons { get; set; } = new List<Person>(); //NotMapped
+    }
+}

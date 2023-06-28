@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using DevExpress.XtraPrinting;
 
 namespace ExcelManagement.DxBlazor.Data.Models
 {
@@ -7,7 +8,7 @@ namespace ExcelManagement.DxBlazor.Data.Models
     public class FileAndFolder
     {
         [Key]
-        public Guid Id { get; set; }
+        public Guid FilesAndFolderId { get; set; }
 
         [Required]
         [MaxLength(512)]
@@ -24,29 +25,32 @@ namespace ExcelManagement.DxBlazor.Data.Models
         public DateTime CreatedDate { get; set; }
 
         [Required]
+        public DateTime UpdatedDate { get; set; }
+
+        [Required]
         [MaxLength(256)]
         public string DataType { get; set; }
 
         /* Relationships */
 
         //to 1
-        public Guid CompanyId { get; set; }
         [ForeignKey("CompanyId")]
+        public Guid? CompanyId { get; set; }
+        [Required]
         public Company Company { get; set; }
 
-        //to *
-        public ICollection<Role> Roles { get; set; } = new List<Role>();
-        public ICollection<Group> Groups { get; set; } = new List<Group>();
-
-        [InverseProperty("PersonFileAndFolders")]
-        public virtual ICollection<Person> FileAndFolderMembers { get; set; } = new List<Person>();
-
-        [ForeignKey("FileAndFolderCreatedBy")]
+        //CreatedBy / UpdatedBy
         public Guid? FileAndFolderCreatedById { get; set; }
         public Person FileAndFolderCreatedBy { get; set; }
 
-        [ForeignKey("FileAndFolderUpdatedBy")]
         public Guid? FileAndFolderUpdatedById { get; set; }
         public Person FileAndFolderUpdatedBy { get; set; }
+
+        //to *
+        public virtual ICollection<Role> Roles { get; set; } = new List<Role>();
+        [NotMapped]
+        public virtual ICollection<Group> Groups { get; set; } = new List<Group>();
+        public virtual ICollection<Person> Persons { get; set; } = new List<Person>();
+
     }
 }

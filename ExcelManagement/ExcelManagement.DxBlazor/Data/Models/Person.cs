@@ -10,7 +10,7 @@ namespace ExcelManagement.DxBlazor.Data.Models
     {
         [Key]
         [ForeignKey("ApplicationUser")]
-        public Guid ApplicationUserId { get; set; }
+        public string PersonId { get; set; }
 
         [Required]
         [StringLength(256, MinimumLength = 2)]
@@ -39,45 +39,49 @@ namespace ExcelManagement.DxBlazor.Data.Models
         /* Relationships */
 
         //to 1
-        public Guid CompanyId { get; set; }
-        [ForeignKey("CompanyId")]
-        public Company PersonCompany { get; set; }
-
-        //to *
-        [InverseProperty("RoleMembers")]
-        public ICollection<Role> PersonRoles { get; set; } = new List <Role>();
-        [InverseProperty("GroupMembers")]
-        public ICollection<Group> PersonGroups { get; set; } = new List <Group>();
-        [InverseProperty("FileAndFolderMembers")]
-        public virtual ICollection<FileAndFolder> PersonFileAndFolders { get; set; } = new List<FileAndFolder>();
+        public Guid? MemberCompanyId { get; set; }
+        [Required]
+        public Company MemberCompany { get; set; }
 
         //CreatedBy / UpdatedBy
+        [ForeignKey("PersonCreatedBy")]
+        public string? PersonCreatedById { get; set; }
+        public Person PersonCreatedBy { get; set; }
+
+        [ForeignKey("PersonUpdatedBy")]
+        public string? PersonUpdatedById { get; set; }
+        public Person PersonUpdatedBy { get; set; }
+
+        //to *
+        public virtual ICollection<Role> Roles { get; set; } = new List <Role>();
+        public virtual ICollection<Group> Groups { get; set; } = new List <Group>();
+        [NotMapped]
+        public virtual ICollection<FileAndFolder> FileAndFolders { get; set; } = new List<FileAndFolder>();
+
+        //CreatedBy / UpdatedBy
+        [InverseProperty("PersonCreatedBy")]
+        public ICollection<Person> CreatedPersons { get; set; } = new List<Person>();
+        [InverseProperty("PersonUpdatedBy")]
+        public ICollection<Person> UpdatedPersons { get; set; } = new List<Person>();
+
         [InverseProperty("CompanyCreatedBy")]
-        public virtual ICollection<Company> CreatedCompanys { get; set; } = new List<Company>();
+        public ICollection<Company> CreatedCompanys { get; set; } = new List<Company>();
         [InverseProperty("CompanyUpdatedBy")]
-        public virtual ICollection<Company> UpdatedCompanys { get; set; } = new List<Company>();
+        public ICollection<Company> UpdatedCompanys { get; set; } = new List<Company>();
 
         [InverseProperty("RoleCreatedBy")]
-        public virtual ICollection<Role> CreatedRoles { get; set; } = new List<Role>();
+        public ICollection<Role> CreatedRoles { get; set; } = new List<Role>();
         [InverseProperty("RoleUpdatedBy")]
-        public virtual ICollection<Role> UpdatedRoles { get; set; } = new List<Role>();
+        public ICollection<Role> UpdatedRoles { get; set; } = new List<Role>();
 
         [InverseProperty("GroupCreatedBy")]
-        public virtual ICollection<Group> CreatedGroups { get; set; } = new List<Group>();
+        public ICollection<Group> CreatedGroups { get; set; } = new List<Group>();
         [InverseProperty("GroupUpdatedBy")]
-        public virtual ICollection<Group> UpdatedGroups { get; set; } = new List<Group>();
+        public ICollection<Group> UpdatedGroups { get; set; } = new List<Group>();
 
         [InverseProperty("FileAndFolderCreatedBy")]
-        public virtual ICollection<FileAndFolder> CreatedFileAndFolders { get; set; } = new List<FileAndFolder>();
+        public ICollection<FileAndFolder> CreatedFileAndFolders { get; set; } = new List<FileAndFolder>();
         [InverseProperty("FileAndFolderUpdatedBy")]
-        public virtual ICollection<FileAndFolder> UpdatedFileAndFolders { get; set; } = new List<FileAndFolder>();
-
-        //Selfrefrence
-        //[ForeignKey("UpdatedBy")]
-        //public int? UpdatedById { get; set; }
-        //public virtual Person UpdatedBy { get; set; }
-
-        //// Collection of Persons that were updated by this Person
-        //public virtual ICollection<Person> UpdatedPersons { get; set; }
+        public ICollection<FileAndFolder> UpdatedFileAndFolders { get; set; } = new List<FileAndFolder>();
     }
 }

@@ -7,7 +7,7 @@ namespace ExcelManagement.DxBlazor.Data.Models
     public class Company
     {
         [Key]
-        public Guid Id { get; set; }
+        public Guid CompanyId { get; set; }
 
         [Required]
         [StringLength(2000)]
@@ -19,30 +19,26 @@ namespace ExcelManagement.DxBlazor.Data.Models
         [Url]
         [MaxLength(4000)]
         public string CompanyLogoUrl { get; set; }
+        [Required]
+        public DateTime CreatedDate { get; set; }
+        [Required]
+        public DateTime UpdatedDate { get; set; }
 
         /* Relationships */
 
-        //to 1
-        [ForeignKey("CompanyCreatedBy")]
+        //CreatedBy / UpdatedBy
         public Guid? CompanyCreatedById { get; set; }
         public Person CompanyCreatedBy { get; set; }
 
-        [ForeignKey("CompanyUpdatedBy")]
         public Guid? CompanyUpdatedById { get; set; }
         public Person CompanyUpdatedBy { get; set; }
 
         //to *
-        public ICollection<Role> Roles { get; set; } = new List<Role>();
-        public ICollection<Group> Groups { get; set; } = new List<Group>();
+        public virtual ICollection<Role> Roles { get; set; } = new List<Role>();
+        public virtual ICollection<Group> Groups { get; set; } = new List<Group>();
+        public virtual ICollection<FileAndFolder> FileAndFolders { get; set; } = new List<FileAndFolder>();
 
-        [InverseProperty("PersonCompany")]
-        public virtual ICollection<Person> Persons { get; set; } = new List<Person>();
-
-
-        //[InverseProperty("Company")]
-        //public ICollection<Group> Groups { get; set; } = new List<Group>();
-        //[InverseProperty("Company")]
-        //public ICollection<FileAndFolder> FilesAndFolders { get; set; } = new List<FileAndFolder>();
-
+        [InverseProperty("MemberCompany")]
+        public virtual ICollection<Person> CompanyMembers { get; set; } = new List<Person>();
     }
 }

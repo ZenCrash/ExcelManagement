@@ -9,7 +9,7 @@ namespace ExcelManagement.DxBlazor.Data.Models
     public class Group
     {
         [Key]
-        public Guid Id { get; set; }
+        public Guid GroupId { get; set; }
 
         [Required]
         [MaxLength(512)]
@@ -25,33 +25,30 @@ namespace ExcelManagement.DxBlazor.Data.Models
         [Required]
         public DateTime CreatedDate { get; set; }
 
+        [Required]
+        public DateTime UpdatedDate { get; set; }
+
         /* Relationships */
 
         //Self Eefrence
 
         //to 1
-        public Guid CompanyId { get; set; }
         [ForeignKey("CompanyId")]
+        public Guid? CompanyId { get; set; }
+        [Required]
         public Company Company { get; set; }
 
-        [ForeignKey("GroupCreatedBy")]
+        //CreatedBy / UpdatedBy
         public Guid? GroupCreatedById { get; set; }
         public Person GroupCreatedBy { get; set; }
 
-        [ForeignKey("GroupUpdatedBy")]
         public Guid? GroupUpdatedById { get; set; }
         public Person GroupUpdatedBy { get; set; }
 
         //to *
+        public virtual ICollection<Group> Groups { get; set; } = new List<Group>();
         public virtual ICollection<FileAndFolder> FileAndFolders { get; set; } = new List<FileAndFolder>();
-
-        [InverseProperty("PersonGroups")]
-        public virtual ICollection<Person> GroupMembers { get; set; } = new List<Person>();
-
-        //public ICollection<FileAndFolder> FilesAndFolders { get; set; } = new List<FileAndFolder>();
-
-        //[InverseProperty("Groups")]
-        //public ICollection<Person> GroupMembers { get; set; } = new List<Person>();
-
+        [NotMapped]
+        public virtual ICollection<Person> Persons { get; set; } = new List<Person>();
     }
 }
