@@ -17,13 +17,13 @@ namespace ExcelManagement.DxBlazor.Data.DbOption.Repository
         //GetAll
         public List<Person> GetAll()
         {
-            return _dbContext.People.ToList();
+            return _dbContext.Persons.ToList();
         }
 
         //Get
         public Person? Get(Guid id)
         {
-            return _dbContext.People.Find(id);
+            return _dbContext.Persons.Find(id);
         }
 
         //Update

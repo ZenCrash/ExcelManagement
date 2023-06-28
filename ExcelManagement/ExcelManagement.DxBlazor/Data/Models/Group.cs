@@ -25,18 +25,33 @@ namespace ExcelManagement.DxBlazor.Data.Models
         [Required]
         public DateTime CreatedDate { get; set; }
 
-        // Relationships
+        /* Relationships */
+
+        //Self Eefrence
+
         //to 1
-        [Required]
+        public Guid CompanyId { get; set; }
+        [ForeignKey("CompanyId")]
         public Company Company { get; set; }
-        public Person? CreatedByPerson { get; set; }
-        public Person? UpdatedByPerson { get; set; }
+
+        [ForeignKey("GroupCreatedBy")]
+        public Guid? GroupCreatedById { get; set; }
+        public Person GroupCreatedBy { get; set; }
+
+        [ForeignKey("GroupUpdatedBy")]
+        public Guid? GroupUpdatedById { get; set; }
+        public Person GroupUpdatedBy { get; set; }
 
         //to *
-        public ICollection<FileAndFolder> FilesAndFolders { get; set; } = new List<FileAndFolder>();
+        public virtual ICollection<FileAndFolder> FileAndFolders { get; set; } = new List<FileAndFolder>();
 
-        [InverseProperty("Groups")]
-        public ICollection<Person> GroupMembers { get; set; } = new List<Person>();
+        [InverseProperty("PersonGroups")]
+        public virtual ICollection<Person> GroupMembers { get; set; } = new List<Person>();
+
+        //public ICollection<FileAndFolder> FilesAndFolders { get; set; } = new List<FileAndFolder>();
+
+        //[InverseProperty("Groups")]
+        //public ICollection<Person> GroupMembers { get; set; } = new List<Person>();
 
     }
 }

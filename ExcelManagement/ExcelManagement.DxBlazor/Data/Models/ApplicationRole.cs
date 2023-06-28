@@ -6,9 +6,9 @@ namespace ExcelManagement.DxBlazor.Data.Models
 {
     public class ApplicationRole : IdentityRole
     {
-        [Required]
-        [ForeignKey("Role")]
-        public Guid RoleId { get; set; }
+        /* Relationships */
+
+        //to 1
         public Role Role { get; set; }
     }
 }

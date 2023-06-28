@@ -17,13 +17,13 @@ namespace ExcelManagement.DxBlazor.Data.DbOption.Repository
         //GetAll
         public List<FileAndFolder> GetAll()
         {
-            return _dbContext.FilesAndFolders.ToList();
+            return _dbContext.FileAndFolders.ToList();
         }
 
         //Get
         public FileAndFolder? Get(Guid id)
         {
-            return _dbContext.FilesAndFolders.Find(id);
+            return _dbContext.FileAndFolders.Find(id);
         }
 
         //Create
@@ -31,7 +31,7 @@ namespace ExcelManagement.DxBlazor.Data.DbOption.Repository
         {
             try
             {
-                _dbContext.FilesAndFolders.Add(fileAndFolder);
+                _dbContext.FileAndFolders.Add(fileAndFolder);
                 return true;
                 //Save changes must be run after this command to impliment changes
             }
@@ -61,8 +61,8 @@ namespace ExcelManagement.DxBlazor.Data.DbOption.Repository
         {
             try
             {
-                FileAndFolder fileAndFolder = _dbContext.FilesAndFolders.Find(id);
-                _dbContext.FilesAndFolders.Remove(fileAndFolder);
+                FileAndFolder fileAndFolder = _dbContext.FileAndFolders.Find(id);
+                _dbContext.FileAndFolders.Remove(fileAndFolder);
                 return true;
                 //Save changes must be run after this command to impliment changes
             }

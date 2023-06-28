@@ -17,13 +17,13 @@ namespace ExcelManagement.DxBlazor.Data.DbOption.Repository
         //GetAll
         public List<Company> GetAll()
         {
-            return _dbContext.Companies.ToList();
+            return _dbContext.Companys.ToList();
         }
 
         //Get
         public Company? Get(Guid id)
         {
-            return _dbContext.Companies.Find(id);
+            return _dbContext.Companys.Find(id);
         }
 
         //Create
@@ -31,7 +31,7 @@ namespace ExcelManagement.DxBlazor.Data.DbOption.Repository
         {
             try
             {
-                _dbContext.Companies.Add(company);
+                _dbContext.Companys.Add(company);
                 return true;
                 //Save changes must be run after this command to impliment changes
             }
@@ -61,8 +61,8 @@ namespace ExcelManagement.DxBlazor.Data.DbOption.Repository
         {
             try
             {
-                Company company = _dbContext.Companies.Find(id);
-                _dbContext.Companies.Remove(company);
+                Company company = _dbContext.Companys.Find(id);
+                _dbContext.Companys.Remove(company);
                 return true;
                 //Save changes must be run after this command to impliment changes
             }

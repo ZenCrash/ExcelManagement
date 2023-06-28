@@ -27,16 +27,26 @@ namespace ExcelManagement.DxBlazor.Data.Models
         [MaxLength(256)]
         public string DataType { get; set; }
 
-        //relationships
+        /* Relationships */
 
         //to 1
-        [Required]
+        public Guid CompanyId { get; set; }
+        [ForeignKey("CompanyId")]
         public Company Company { get; set; }
-        public Person? CreatedByPerson { get; set; }
-        public Person? UpdatedByPerson { get; set; }
 
         //to *
+        public ICollection<Role> Roles { get; set; } = new List<Role>();
         public ICollection<Group> Groups { get; set; } = new List<Group>();
-        public ICollection<Person> FileAndFolderMembers { get; set; } = new List<Person>();
+
+        [InverseProperty("PersonFileAndFolders")]
+        public virtual ICollection<Person> FileAndFolderMembers { get; set; } = new List<Person>();
+
+        [ForeignKey("FileAndFolderCreatedBy")]
+        public Guid? FileAndFolderCreatedById { get; set; }
+        public Person FileAndFolderCreatedBy { get; set; }
+
+        [ForeignKey("FileAndFolderUpdatedBy")]
+        public Guid? FileAndFolderUpdatedById { get; set; }
+        public Person FileAndFolderUpdatedBy { get; set; }
     }
 }

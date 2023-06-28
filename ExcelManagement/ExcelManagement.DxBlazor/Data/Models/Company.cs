@@ -20,15 +20,29 @@ namespace ExcelManagement.DxBlazor.Data.Models
         [MaxLength(4000)]
         public string CompanyLogoUrl { get; set; }
 
-        //Relationships
-        [InverseProperty("Company")]
-        public ICollection<Person> People { get; set; } = new List<Person>();
-        [InverseProperty("Company")]
+        /* Relationships */
+
+        //to 1
+        [ForeignKey("CompanyCreatedBy")]
+        public Guid? CompanyCreatedById { get; set; }
+        public Person CompanyCreatedBy { get; set; }
+
+        [ForeignKey("CompanyUpdatedBy")]
+        public Guid? CompanyUpdatedById { get; set; }
+        public Person CompanyUpdatedBy { get; set; }
+
+        //to *
         public ICollection<Role> Roles { get; set; } = new List<Role>();
-        [InverseProperty("Company")]
         public ICollection<Group> Groups { get; set; } = new List<Group>();
-        [InverseProperty("Company")]
-        public ICollection<FileAndFolder> FilesAndFolders { get; set; } = new List<FileAndFolder>();
+
+        [InverseProperty("PersonCompany")]
+        public virtual ICollection<Person> Persons { get; set; } = new List<Person>();
+
+
+        //[InverseProperty("Company")]
+        //public ICollection<Group> Groups { get; set; } = new List<Group>();
+        //[InverseProperty("Company")]
+        //public ICollection<FileAndFolder> FilesAndFolders { get; set; } = new List<FileAndFolder>();
 
     }
 }

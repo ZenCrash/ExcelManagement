@@ -7,9 +7,9 @@ namespace ExcelManagement.DxBlazor.Data.Models
 {
     public class ApplicationUser : IdentityUser
     {
-        [Required]
-        [ForeignKey("Person")]
-        public Guid PersonId { get; set; }
+        /* Relationships */
+
+        //to 1
         public Person Person { get; set; }
     }
 }
