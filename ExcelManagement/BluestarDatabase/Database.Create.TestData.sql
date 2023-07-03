@@ -6,8 +6,8 @@ IF EXISTS (SELECT * FROM sys.databases WHERE name = 'BluestarDatabase')
 		USE [BluestarDatabase]
 
 		--local variables
-		SET @CompanyId1 = NEWID();
-		SET @CompanyId2 = NEWID();
+		DECLARE @CompanyId1 uniqueidentifier = NEWID();
+		DECLARE @CompanyId2 uniqueidentifier = NEWID();
 
 		--insert Companys
 		insert into Companies ([CompanyId], [CompanyName], [Description], [CompanyLogoUrl], [CreatedDate], [UpdatedDate]) 
@@ -17,12 +17,11 @@ IF EXISTS (SELECT * FROM sys.databases WHERE name = 'BluestarDatabase')
 
 		BEGIN
 			insert into Companies ([CompanyId], [CompanyName], [Description], [CompanyLogoUrl], [CreatedDate], [UpdatedDate])
-			values (NEWID(), 'pdm technology Group', 'pdm technology Group - DescriptionText', 'www.google.com', GETDATE(), GETDATE());
+			values (@CompanyId1, 'pdm technology Group', 'pdm technology Group - DescriptionText', 'www.google.com', GETDATE(), GETDATE());
 		END
 		BEGIN
 			insert into Companies ([CompanyId], [CompanyName], [Description], [CompanyLogoUrl], [CreatedDate], [UpdatedDate]) 
-			values (NEWID(), 'Alvon Dynamics', 'Alvon Dynamics - DescriptionText', 'www.google.com', GETDATE(), GETDATE());
-			SET @CompanyId2 = SCOPE_IDENTITY()
+			values (@CompanyId2, 'Alvon Dynamics', 'Alvon Dynamics - DescriptionText', 'www.google.com', GETDATE(), GETDATE());
 		END
 
 		--insert Groups
