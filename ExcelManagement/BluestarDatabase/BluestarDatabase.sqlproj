@@ -60,5 +60,6 @@
   <ItemGroup>
     <None Include="SqlSchemaCompare3.scmp" />
     <None Include="Database.Create.TestData.sql" />
+    <None Include="Database.Drop.And.Create.sql" />
   </ItemGroup>
 </Project>
