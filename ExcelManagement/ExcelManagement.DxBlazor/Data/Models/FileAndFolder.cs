@@ -40,10 +40,10 @@ namespace ExcelManagement.DxBlazor.Data.Models
         public Company Company { get; set; }
 
         //CreatedBy / UpdatedBy
-        public Guid? FileAndFolderCreatedById { get; set; }
+        public string? FileAndFolderCreatedById { get; set; }
         public Person FileAndFolderCreatedBy { get; set; }
 
-        public Guid? FileAndFolderUpdatedById { get; set; }
+        public string? FileAndFolderUpdatedById { get; set; }
         public Person FileAndFolderUpdatedBy { get; set; }
 
         //to *

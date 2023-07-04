@@ -149,10 +149,8 @@ namespace ExcelManagement.DxBlazor.Migrations
                     CompanyLogoUrl = table.Column<string>(type: "nvarchar(4000)", maxLength: 4000, nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    CompanyCreatedById = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    CompanyCreatedByPersonId = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    CompanyUpdatedById = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    CompanyUpdatedByPersonId = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                    CompanyCreatedById = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    CompanyUpdatedById = table.Column<string>(type: "nvarchar(450)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -171,10 +169,8 @@ namespace ExcelManagement.DxBlazor.Migrations
                     UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     DataType = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
                     CompanyId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    FileAndFolderCreatedById = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    FileAndFolderCreatedByPersonId = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    FileAndFolderUpdatedById = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    FileAndFolderUpdatedByPersonId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    FileAndFolderCreatedById = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    FileAndFolderUpdatedById = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     GroupId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
                 },
                 constraints: table =>
@@ -242,10 +238,8 @@ namespace ExcelManagement.DxBlazor.Migrations
                     CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CompanyId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    GroupCreatedById = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    GroupCreatedByPersonId = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    GroupUpdatedById = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    GroupUpdatedByPersonId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    GroupCreatedById = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    GroupUpdatedById = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     GroupId1 = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     PersonId = table.Column<string>(type: "nvarchar(450)", nullable: true)
                 },
@@ -264,13 +258,13 @@ namespace ExcelManagement.DxBlazor.Migrations
                         principalTable: "Groups",
                         principalColumn: "GroupId");
                     table.ForeignKey(
-                        name: "FK_Groups_People_GroupCreatedByPersonId",
-                        column: x => x.GroupCreatedByPersonId,
+                        name: "FK_Groups_People_GroupCreatedById",
+                        column: x => x.GroupCreatedById,
                         principalTable: "People",
                         principalColumn: "PersonId");
                     table.ForeignKey(
-                        name: "FK_Groups_People_GroupUpdatedByPersonId",
-                        column: x => x.GroupUpdatedByPersonId,
+                        name: "FK_Groups_People_GroupUpdatedById",
+                        column: x => x.GroupUpdatedById,
                         principalTable: "People",
                         principalColumn: "PersonId");
                     table.ForeignKey(
@@ -284,16 +278,14 @@ namespace ExcelManagement.DxBlazor.Migrations
                 name: "Roles",
                 columns: table => new
                 {
-                    RoleId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    RoleId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(4000)", maxLength: 4000, nullable: false),
                     RoleLogoUrl = table.Column<string>(type: "nvarchar(4000)", maxLength: 4000, nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CompanyId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    RoleCreatedById = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    RoleCreatedByPersonId = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    RoleUpdatedById = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    RoleUpdatedByPersonId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    RoleCreatedById = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    RoleUpdatedById = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     FileAndFolderFilesAndFolderId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     PersonId = table.Column<string>(type: "nvarchar(450)", nullable: true)
                 },
@@ -317,13 +309,13 @@ namespace ExcelManagement.DxBlazor.Migrations
                         principalTable: "People",
                         principalColumn: "PersonId");
                     table.ForeignKey(
-                        name: "FK_Roles_People_RoleCreatedByPersonId",
-                        column: x => x.RoleCreatedByPersonId,
+                        name: "FK_Roles_People_RoleCreatedById",
+                        column: x => x.RoleCreatedById,
                         principalTable: "People",
                         principalColumn: "PersonId");
                     table.ForeignKey(
-                        name: "FK_Roles_People_RoleUpdatedByPersonId",
-                        column: x => x.RoleUpdatedByPersonId,
+                        name: "FK_Roles_People_RoleUpdatedById",
+                        column: x => x.RoleUpdatedById,
                         principalTable: "People",
                         principalColumn: "PersonId");
                 });
@@ -373,14 +365,14 @@ namespace ExcelManagement.DxBlazor.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Companies_CompanyCreatedByPersonId",
+                name: "IX_Companies_CompanyCreatedById",
                 table: "Companies",
-                column: "CompanyCreatedByPersonId");
+                column: "CompanyCreatedById");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Companies_CompanyUpdatedByPersonId",
+                name: "IX_Companies_CompanyUpdatedById",
                 table: "Companies",
-                column: "CompanyUpdatedByPersonId");
+                column: "CompanyUpdatedById");
 
             migrationBuilder.CreateIndex(
                 name: "IX_FilesAndFolders_CompanyId",
@@ -388,14 +380,14 @@ namespace ExcelManagement.DxBlazor.Migrations
                 column: "CompanyId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_FilesAndFolders_FileAndFolderCreatedByPersonId",
+                name: "IX_FilesAndFolders_FileAndFolderCreatedById",
                 table: "FilesAndFolders",
-                column: "FileAndFolderCreatedByPersonId");
+                column: "FileAndFolderCreatedById");
 
             migrationBuilder.CreateIndex(
-                name: "IX_FilesAndFolders_FileAndFolderUpdatedByPersonId",
+                name: "IX_FilesAndFolders_FileAndFolderUpdatedById",
                 table: "FilesAndFolders",
-                column: "FileAndFolderUpdatedByPersonId");
+                column: "FileAndFolderUpdatedById");
 
             migrationBuilder.CreateIndex(
                 name: "IX_FilesAndFolders_GroupId",
@@ -408,9 +400,9 @@ namespace ExcelManagement.DxBlazor.Migrations
                 column: "CompanyId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Groups_GroupCreatedByPersonId",
+                name: "IX_Groups_GroupCreatedById",
                 table: "Groups",
-                column: "GroupCreatedByPersonId");
+                column: "GroupCreatedById");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Groups_GroupId1",
@@ -418,9 +410,9 @@ namespace ExcelManagement.DxBlazor.Migrations
                 column: "GroupId1");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Groups_GroupUpdatedByPersonId",
+                name: "IX_Groups_GroupUpdatedById",
                 table: "Groups",
-                column: "GroupUpdatedByPersonId");
+                column: "GroupUpdatedById");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Groups_PersonId",
@@ -463,14 +455,14 @@ namespace ExcelManagement.DxBlazor.Migrations
                 column: "PersonId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Roles_RoleCreatedByPersonId",
+                name: "IX_Roles_RoleCreatedById",
                 table: "Roles",
-                column: "RoleCreatedByPersonId");
+                column: "RoleCreatedById");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Roles_RoleUpdatedByPersonId",
+                name: "IX_Roles_RoleUpdatedById",
                 table: "Roles",
-                column: "RoleUpdatedByPersonId");
+                column: "RoleUpdatedById");
 
             migrationBuilder.AddForeignKey(
                 name: "FK_AspNetUserClaims_AspNetUsers_UserId",
@@ -505,16 +497,16 @@ namespace ExcelManagement.DxBlazor.Migrations
                 onDelete: ReferentialAction.Cascade);
 
             migrationBuilder.AddForeignKey(
-                name: "FK_Companies_People_CompanyCreatedByPersonId",
+                name: "FK_Companies_People_CompanyCreatedById",
                 table: "Companies",
-                column: "CompanyCreatedByPersonId",
+                column: "CompanyCreatedById",
                 principalTable: "People",
                 principalColumn: "PersonId");
 
             migrationBuilder.AddForeignKey(
-                name: "FK_Companies_People_CompanyUpdatedByPersonId",
+                name: "FK_Companies_People_CompanyUpdatedById",
                 table: "Companies",
-                column: "CompanyUpdatedByPersonId",
+                column: "CompanyUpdatedById",
                 principalTable: "People",
                 principalColumn: "PersonId");
 
@@ -526,16 +518,16 @@ namespace ExcelManagement.DxBlazor.Migrations
                 principalColumn: "GroupId");
 
             migrationBuilder.AddForeignKey(
-                name: "FK_FilesAndFolders_People_FileAndFolderCreatedByPersonId",
+                name: "FK_FilesAndFolders_People_FileAndFolderCreatedById",
                 table: "FilesAndFolders",
-                column: "FileAndFolderCreatedByPersonId",
+                column: "FileAndFolderCreatedById",
                 principalTable: "People",
                 principalColumn: "PersonId");
 
             migrationBuilder.AddForeignKey(
-                name: "FK_FilesAndFolders_People_FileAndFolderUpdatedByPersonId",
+                name: "FK_FilesAndFolders_People_FileAndFolderUpdatedById",
                 table: "FilesAndFolders",
-                column: "FileAndFolderUpdatedByPersonId",
+                column: "FileAndFolderUpdatedById",
                 principalTable: "People",
                 principalColumn: "PersonId");
         }
@@ -544,27 +536,27 @@ namespace ExcelManagement.DxBlazor.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropForeignKey(
-                name: "FK_Companies_People_CompanyCreatedByPersonId",
+                name: "FK_Companies_People_CompanyCreatedById",
                 table: "Companies");
 
             migrationBuilder.DropForeignKey(
-                name: "FK_Companies_People_CompanyUpdatedByPersonId",
+                name: "FK_Companies_People_CompanyUpdatedById",
                 table: "Companies");
 
             migrationBuilder.DropForeignKey(
-                name: "FK_FilesAndFolders_People_FileAndFolderCreatedByPersonId",
+                name: "FK_FilesAndFolders_People_FileAndFolderCreatedById",
                 table: "FilesAndFolders");
 
             migrationBuilder.DropForeignKey(
-                name: "FK_FilesAndFolders_People_FileAndFolderUpdatedByPersonId",
+                name: "FK_FilesAndFolders_People_FileAndFolderUpdatedById",
                 table: "FilesAndFolders");
 
             migrationBuilder.DropForeignKey(
-                name: "FK_Groups_People_GroupCreatedByPersonId",
+                name: "FK_Groups_People_GroupCreatedById",
                 table: "Groups");
 
             migrationBuilder.DropForeignKey(
-                name: "FK_Groups_People_GroupUpdatedByPersonId",
+                name: "FK_Groups_People_GroupUpdatedById",
                 table: "Groups");
 
             migrationBuilder.DropForeignKey(

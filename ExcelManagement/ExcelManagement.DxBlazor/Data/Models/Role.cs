@@ -8,7 +8,7 @@ namespace ExcelManagement.DxBlazor.Data.Models
     {
         [Key]
         [ForeignKey("ApplicationRole")]
-        public Guid RoleId { get; set; }
+        public string RoleId { get; set; }
 
         [MaxLength(4000)]
         public string Description { get; set; }
@@ -32,10 +32,10 @@ namespace ExcelManagement.DxBlazor.Data.Models
         public Company Company { get; set; }
 
         //CreatedBy / UpdatedBy
-        public Guid? RoleCreatedById { get; set; }
+        public string? RoleCreatedById { get; set; }
         public Person RoleCreatedBy { get; set; }
 
-        public Guid? RoleUpdatedById { get; set; }
+        public string? RoleUpdatedById { get; set; }
         public Person RoleUpdatedBy { get; set; }
 
         //to *
