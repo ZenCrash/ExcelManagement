@@ -27,10 +27,10 @@ namespace ExcelManagement.DxBlazor.Data.Models
         /* Relationships */
 
         //CreatedBy / UpdatedBy
-        public Guid? CompanyCreatedById { get; set; }
+        public string? CompanyCreatedById { get; set; }
         public Person CompanyCreatedBy { get; set; }
 
-        public Guid? CompanyUpdatedById { get; set; }
+        public string? CompanyUpdatedById { get; set; }
         public Person CompanyUpdatedBy { get; set; }
 
         //to *

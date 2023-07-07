@@ -6,7 +6,7 @@ namespace ExcelManagement.DxBlazor.Data.DTO
 {
     public class RoleDTO
     {
-        public Guid RoleId { get; set; }
+        public string RoleId { get; set; }
 
         [MaxLength(4000)]
         public string Description { get; set; }

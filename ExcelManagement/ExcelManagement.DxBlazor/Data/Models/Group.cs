@@ -39,10 +39,10 @@ namespace ExcelManagement.DxBlazor.Data.Models
         public Company Company { get; set; }
 
         //CreatedBy / UpdatedBy
-        public Guid? GroupCreatedById { get; set; }
+        public string? GroupCreatedById { get; set; }
         public Person GroupCreatedBy { get; set; }
 
-        public Guid? GroupUpdatedById { get; set; }
+        public string? GroupUpdatedById { get; set; }
         public Person GroupUpdatedBy { get; set; }
 
         //to *

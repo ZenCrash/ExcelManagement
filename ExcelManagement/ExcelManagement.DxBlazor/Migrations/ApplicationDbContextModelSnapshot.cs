@@ -99,10 +99,7 @@ namespace ExcelManagement.DxBlazor.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("CompanyCreatedById")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("CompanyCreatedByPersonId")
+                    b.Property<string>("CompanyCreatedById")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("CompanyLogoUrl")
@@ -115,10 +112,7 @@ namespace ExcelManagement.DxBlazor.Migrations
                         .HasMaxLength(2000)
                         .HasColumnType("nvarchar(2000)");
 
-                    b.Property<Guid?>("CompanyUpdatedById")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("CompanyUpdatedByPersonId")
+                    b.Property<string>("CompanyUpdatedById")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("CreatedDate")
@@ -134,9 +128,9 @@ namespace ExcelManagement.DxBlazor.Migrations
 
                     b.HasKey("CompanyId");
 
-                    b.HasIndex("CompanyCreatedByPersonId");
+                    b.HasIndex("CompanyCreatedById");
 
-                    b.HasIndex("CompanyUpdatedByPersonId");
+                    b.HasIndex("CompanyUpdatedById");
 
                     b.ToTable("Companies");
                 });
@@ -164,16 +158,10 @@ namespace ExcelManagement.DxBlazor.Migrations
                         .HasMaxLength(4000)
                         .HasColumnType("nvarchar(4000)");
 
-                    b.Property<Guid?>("FileAndFolderCreatedById")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("FileAndFolderCreatedByPersonId")
+                    b.Property<string>("FileAndFolderCreatedById")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<Guid?>("FileAndFolderUpdatedById")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("FileAndFolderUpdatedByPersonId")
+                    b.Property<string>("FileAndFolderUpdatedById")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<Guid?>("GroupId")
@@ -196,9 +184,9 @@ namespace ExcelManagement.DxBlazor.Migrations
 
                     b.HasIndex("CompanyId");
 
-                    b.HasIndex("FileAndFolderCreatedByPersonId");
+                    b.HasIndex("FileAndFolderCreatedById");
 
-                    b.HasIndex("FileAndFolderUpdatedByPersonId");
+                    b.HasIndex("FileAndFolderUpdatedById");
 
                     b.HasIndex("GroupId");
 
@@ -223,10 +211,7 @@ namespace ExcelManagement.DxBlazor.Migrations
                         .HasMaxLength(4000)
                         .HasColumnType("nvarchar(4000)");
 
-                    b.Property<Guid?>("GroupCreatedById")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("GroupCreatedByPersonId")
+                    b.Property<string>("GroupCreatedById")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<Guid?>("GroupId1")
@@ -242,10 +227,7 @@ namespace ExcelManagement.DxBlazor.Migrations
                         .HasMaxLength(512)
                         .HasColumnType("nvarchar(512)");
 
-                    b.Property<Guid?>("GroupUpdatedById")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("GroupUpdatedByPersonId")
+                    b.Property<string>("GroupUpdatedById")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("PersonId")
@@ -258,11 +240,11 @@ namespace ExcelManagement.DxBlazor.Migrations
 
                     b.HasIndex("CompanyId");
 
-                    b.HasIndex("GroupCreatedByPersonId");
+                    b.HasIndex("GroupCreatedById");
 
                     b.HasIndex("GroupId1");
 
-                    b.HasIndex("GroupUpdatedByPersonId");
+                    b.HasIndex("GroupUpdatedById");
 
                     b.HasIndex("PersonId");
 
@@ -330,9 +312,8 @@ namespace ExcelManagement.DxBlazor.Migrations
 
             modelBuilder.Entity("ExcelManagement.DxBlazor.Data.Models.Role", b =>
                 {
-                    b.Property<Guid>("RoleId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<string>("RoleId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<Guid?>("CompanyId")
                         .IsRequired()
@@ -352,10 +333,7 @@ namespace ExcelManagement.DxBlazor.Migrations
                     b.Property<string>("PersonId")
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<Guid?>("RoleCreatedById")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("RoleCreatedByPersonId")
+                    b.Property<string>("RoleCreatedById")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("RoleLogoUrl")
@@ -363,10 +341,7 @@ namespace ExcelManagement.DxBlazor.Migrations
                         .HasMaxLength(4000)
                         .HasColumnType("nvarchar(4000)");
 
-                    b.Property<Guid?>("RoleUpdatedById")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("RoleUpdatedByPersonId")
+                    b.Property<string>("RoleUpdatedById")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<DateTime>("UpdatedDate")
@@ -380,9 +355,9 @@ namespace ExcelManagement.DxBlazor.Migrations
 
                     b.HasIndex("PersonId");
 
-                    b.HasIndex("RoleCreatedByPersonId");
+                    b.HasIndex("RoleCreatedById");
 
-                    b.HasIndex("RoleUpdatedByPersonId");
+                    b.HasIndex("RoleUpdatedById");
 
                     b.ToTable("Roles");
                 });
@@ -535,11 +510,11 @@ namespace ExcelManagement.DxBlazor.Migrations
                 {
                     b.HasOne("ExcelManagement.DxBlazor.Data.Models.Person", "CompanyCreatedBy")
                         .WithMany("CreatedCompanys")
-                        .HasForeignKey("CompanyCreatedByPersonId");
+                        .HasForeignKey("CompanyCreatedById");
 
                     b.HasOne("ExcelManagement.DxBlazor.Data.Models.Person", "CompanyUpdatedBy")
                         .WithMany("UpdatedCompanys")
-                        .HasForeignKey("CompanyUpdatedByPersonId");
+                        .HasForeignKey("CompanyUpdatedById");
 
                     b.Navigation("CompanyCreatedBy");
 
@@ -556,11 +531,11 @@ namespace ExcelManagement.DxBlazor.Migrations
 
                     b.HasOne("ExcelManagement.DxBlazor.Data.Models.Person", "FileAndFolderCreatedBy")
                         .WithMany("CreatedFileAndFolders")
-                        .HasForeignKey("FileAndFolderCreatedByPersonId");
+                        .HasForeignKey("FileAndFolderCreatedById");
 
                     b.HasOne("ExcelManagement.DxBlazor.Data.Models.Person", "FileAndFolderUpdatedBy")
                         .WithMany("UpdatedFileAndFolders")
-                        .HasForeignKey("FileAndFolderUpdatedByPersonId");
+                        .HasForeignKey("FileAndFolderUpdatedById");
 
                     b.HasOne("ExcelManagement.DxBlazor.Data.Models.Group", null)
                         .WithMany("FileAndFolders")
@@ -583,7 +558,7 @@ namespace ExcelManagement.DxBlazor.Migrations
 
                     b.HasOne("ExcelManagement.DxBlazor.Data.Models.Person", "GroupCreatedBy")
                         .WithMany("CreatedGroups")
-                        .HasForeignKey("GroupCreatedByPersonId");
+                        .HasForeignKey("GroupCreatedById");
 
                     b.HasOne("ExcelManagement.DxBlazor.Data.Models.Group", null)
                         .WithMany("Groups")
@@ -591,7 +566,7 @@ namespace ExcelManagement.DxBlazor.Migrations
 
                     b.HasOne("ExcelManagement.DxBlazor.Data.Models.Person", "GroupUpdatedBy")
                         .WithMany("UpdatedGroups")
-                        .HasForeignKey("GroupUpdatedByPersonId");
+                        .HasForeignKey("GroupUpdatedById");
 
                     b.HasOne("ExcelManagement.DxBlazor.Data.Models.Person", null)
                         .WithMany("Groups")
@@ -649,11 +624,11 @@ namespace ExcelManagement.DxBlazor.Migrations
 
                     b.HasOne("ExcelManagement.DxBlazor.Data.Models.Person", "RoleCreatedBy")
                         .WithMany("CreatedRoles")
-                        .HasForeignKey("RoleCreatedByPersonId");
+                        .HasForeignKey("RoleCreatedById");
 
                     b.HasOne("ExcelManagement.DxBlazor.Data.Models.Person", "RoleUpdatedBy")
                         .WithMany("UpdatedRoles")
-                        .HasForeignKey("RoleUpdatedByPersonId");
+                        .HasForeignKey("RoleUpdatedById");
 
                     b.Navigation("Company");
 
