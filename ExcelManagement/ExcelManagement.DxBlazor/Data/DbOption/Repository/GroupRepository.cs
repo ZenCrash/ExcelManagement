@@ -20,13 +20,13 @@ namespace ExcelManagement.DxBlazor.Data.DbOption.Repository
             return _dbContext.Groups.ToList();
         }
 
-        public List<Group> GetAllByCompanyId(Guid id)
+        public List<Group> GetAllByCompanyId(int id)
         {
             return _dbContext.Groups.Where(p => p.Id == id).ToList();
         }
 
         //Get
-        public Group? Get(Guid id)
+        public Group? Get(int id)
         {
             return _dbContext.Groups.Find(id);
         }
@@ -62,7 +62,7 @@ namespace ExcelManagement.DxBlazor.Data.DbOption.Repository
         }
 
         //Delete
-        public bool Delete(Guid id)
+        public bool Delete(int id)
         {
             try
             {

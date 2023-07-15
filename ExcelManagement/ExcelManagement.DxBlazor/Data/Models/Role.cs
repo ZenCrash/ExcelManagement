@@ -7,8 +7,7 @@ namespace ExcelManagement.DxBlazor.Data.Models
     public class Role
     {
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public Guid Id { get; set; }
+        public int Id { get; set; }
 
         [MaxLength(4000)]
         public string Description { get; set; }
@@ -30,11 +29,11 @@ namespace ExcelManagement.DxBlazor.Data.Models
         public Company Company { get; set; }
 
         //CreatedBy / UpdatedBy
-        public Person CreatedBy { get; set; }
-        public Person UpdatedBy { get; set; }
+        public Person? CreatedBy { get; set; }
+        public Person? UpdatedBy { get; set; }
 
         //to *
-        public virtual ICollection<FileAndFolder> FileAndFolders { get; set; } = new List<FileAndFolder>();
-        public virtual ICollection<Person> People { get; set; } = new List<Person>();
+        //public virtual ICollection<FileAndFolder> FileAndFolders { get; set; } = new List<FileAndFolder>();
+        //public virtual ICollection<Person> People { get; set; } = new List<Person>();
     }
 }

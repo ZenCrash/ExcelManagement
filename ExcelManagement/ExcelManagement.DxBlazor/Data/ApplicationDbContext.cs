@@ -26,82 +26,90 @@ namespace ExcelManagement.DxBlazor.Data
             /* Company */
             modelBuilder.Entity<Company>() //self refrence
                 .HasOne(p => p.CreatedBy)
-                .WithMany(p => p.CreatedCompanys)
-                .OnDelete(DeleteBehavior.SetNull);
+                .WithMany(p => p.CreatedCompanys);
             modelBuilder.Entity<Company>() //self refrence
                 .HasOne(p => p.UpdatedBy)
-                .WithMany(p => p.UpdatedCompanys)
-                .OnDelete(DeleteBehavior.SetNull);
+                .WithMany(p => p.UpdatedCompanys);
 
             /* Person */
             modelBuilder.Entity<Person>()
                 .HasOne(p => p.Company)
-                .WithMany(c => c.People)
-                .OnDelete(DeleteBehavior.Cascade);
+                .WithMany(c => c.People);
             modelBuilder.Entity<Person>() //self refrence
                 .HasOne(p => p.CreatedBy)
-                .WithMany(p => p.CreatedPeople)
-                .OnDelete(DeleteBehavior.SetNull);
+                .WithMany(p => p.CreatedPeople);
             modelBuilder.Entity<Person>() //self refrence
                 .HasOne(p => p.UpdatedBy)
-                .WithMany(p => p.UpdatedPeople)
-                .OnDelete(DeleteBehavior.SetNull);
+                .WithMany(p => p.UpdatedPeople);
 
             /* Role */
             modelBuilder.Entity<Role>()
                 .HasOne(r => r.Company)
-                .WithMany(c => c.Roles)
-                .OnDelete(DeleteBehavior.Cascade);
+                .WithMany(c => c.Roles);
             modelBuilder.Entity<Role>()
                 .HasOne(r => r.CreatedBy)
-                .WithMany(p => p.CreatedRoles)
-                .OnDelete(DeleteBehavior.SetNull);
+                .WithMany(p => p.CreatedRoles);
             modelBuilder.Entity<Role>()
                 .HasOne(r => r.UpdatedBy)
-                .WithMany(p => p.UpdatedRoles)
-                .OnDelete(DeleteBehavior.SetNull);
+                .WithMany(p => p.UpdatedRoles);
 
             /* Group */
             modelBuilder.Entity<Group>()
                 .HasOne(g => g.Company)
-                .WithMany(c => c.Groups)
-                .OnDelete(DeleteBehavior.Cascade);
+                .WithMany(c => c.Groups);
             modelBuilder.Entity<Group>()
                 .HasOne(g => g.CreatedBy)
-                .WithMany(p => p.CreatedGroups)
-                .OnDelete(DeleteBehavior.SetNull);
+                .WithMany(p => p.CreatedGroups);
             modelBuilder.Entity<Group>()
                 .HasOne(g => g.UpdatedBy)
-                .WithMany(p => p.UpdatedGroups)
-                .OnDelete(DeleteBehavior.SetNull);
+                .WithMany(p => p.UpdatedGroups);
 
             /* FileAndFolder */
             modelBuilder.Entity<FileAndFolder>()
                 .HasOne(f => f.Company)
-                .WithMany(c => c.FileAndFolders)
-                .OnDelete(DeleteBehavior.Cascade);
+                .WithMany(c => c.FileAndFolders);
             modelBuilder.Entity<FileAndFolder>()
                 .HasOne(f => f.CreatedBy)
-                .WithMany(p => p.CreatedFileAndFolders)
-                .OnDelete(DeleteBehavior.SetNull);
+                .WithMany(p => p.CreatedFileAndFolders);
             modelBuilder.Entity<FileAndFolder>()
                 .HasOne(f => f.UpdatedBy)
-                .WithMany(p => p.UpdatedFileAndFolders)
-                .OnDelete(DeleteBehavior.SetNull);
+                .WithMany(p => p.UpdatedFileAndFolders);
 
             /* Brigde Tables */
-            modelBuilder.Entity<Person>()
-                .HasMany(p => p.Roles)
-                .WithMany(r => r.People);
-            modelBuilder.Entity<Person>()
-                .HasMany(p => p.FileAndFolders)
-                .WithMany(r => r.People);
-            modelBuilder.Entity<Role>()
-                .HasMany(g => g.FileAndFolders)
-                .WithMany(p => p.Roles);
-            modelBuilder.Entity<Group>()
-                .HasMany(g => g.FileAndFolders)
-                .WithMany(p => p.Groups);
+            //modelBuilder.Entity<Person>()
+            //    .HasMany(p => p.Roles)
+            //    .WithMany(r => r.People)
+            //    .UsingEntity(j => j.ToTable("PeopleRoles"));
+            //modelBuilder.Entity<Person>()
+            //    .HasMany(p => p.Groups)
+            //    .WithMany(g => g.People)
+            //    .UsingEntity(j => j.ToTable("PeopleGroups"));
+
+            //modelBuilder.Entity<Person>()
+            //    .HasMany(p => p.FileAndFolders)
+            //    .WithMany()
+            //    .UsingEntity(j => j.ToTable("FileAndFoldersPeople"));
+            //modelBuilder.Entity<Role>()
+            //    .HasMany(g => g.FileAndFolders)
+            //    .WithMany()
+            //    .UsingEntity(j => j.ToTable("FileAndFoldersRoles"));
+            //modelBuilder.Entity<Group>()
+            //    .HasMany(g => g.FileAndFolders)
+            //    .WithMany()
+            //    .UsingEntity(j => j.ToTable("FileAndFoldersGroups"));
+
+            //modelBuilder.Entity<FileAndFolder>()
+            //    .HasMany(r => r.People)
+            //    .WithMany(p => p.FileAndFolders)
+            //    .UsingEntity(j => j.ToTable("FileAndFoldersPeople"));
+            //modelBuilder.Entity<FileAndFolder>()
+            //    .HasMany(p => p.Roles)
+            //    .WithMany(g => g.FileAndFolders)
+            //    .UsingEntity(j => j.ToTable("FileAndFoldersRoles"));
+            //modelBuilder.Entity<FileAndFolder>()
+            //    .HasMany(p => p.Groups)
+            //    .WithMany(g => g.FileAndFolders)
+            //    .UsingEntity(j => j.ToTable("FileAndFoldersGroups"));
         }
     }
 }

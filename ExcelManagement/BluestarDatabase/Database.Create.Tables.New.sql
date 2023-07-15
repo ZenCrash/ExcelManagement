@@ -32,8 +32,8 @@ CREATE TABLE People(
 	[UpdatedDate] [datetime] NOT NULL,
 
 	[Company_Id] [INT] NOT NULL,
-	[Created_By] [INT] NOT NULL,
-	[Update_By] [INT] NOT NULL,
+	[Created_By] [INT] NULL,
+	[Update_By] [INT] NULL,
 
 	PRIMARY KEY([Id]),
 	FOREIGN KEY([Created_By]) REFERENCES People([Id]),
@@ -49,8 +49,8 @@ CREATE TABLE Roles(
 	[CreatedDate] [datetime] NOT NULL,
 	[UpdatedDate] [datetime] NOT NULL,
 
-	[Created_By] [INT] NOT NULL,
-	[Update_By] [INT] NOT NULL,
+	[Created_By] [INT] NULL,
+	[Update_By] [INT] NULL,
 	[Company_Id] [INT] NOT NULL,
 
 	PRIMARY KEY([Id]),
@@ -68,8 +68,8 @@ CREATE TABLE Groups(
 	[CreatedDate] [datetime] NOT NULL,
 	[UpdatedDate] [datetime] NOT NULL,
 
-	[Created_By] [INT] NOT NULL,
-	[Update_By] [INT] NOT NULL,
+	[Created_By] [INT] NULL,
+	[Update_By] [INT] NULL,
 	[Company_Id] [INT] NOT NULL,
 
 	PRIMARY KEY([Id]),
@@ -88,8 +88,8 @@ CREATE TABLE FileAndFolders(
 	[UpdatedDate] [datetime] NOT NULL,
 	[DataType] [nvarchar] NOT NULL,
 
-	[Created_By] [INT] NOT NULL,
-	[Update_By] [INT] NOT NULL,
+	[Created_By] [INT] NULL,
+	[Update_By] [INT] NULL,
 	[Company_Id] [INT] NOT NULL,
 
 	PRIMARY KEY([Id]),
@@ -100,23 +100,14 @@ CREATE TABLE FileAndFolders(
 GO
 
 --Brigde Tables
-Create Table GroupingGroups (
-	[Parent_Group_Id] [INT] NOT NULL,
-	[Child_Group_Id] [INT] NOT NULL,
-
-	PRIMARY KEY([Parent_Group_Id], [Child_Group_Id]),
-	FOREIGN KEY([Parent_Group_Id]) REFERENCES Groups([Id]),
-	FOREIGN KEY([Child_Group_Id]) REFERENCES Groups([Id])
-);
-GO
 
 CREATE TABLE PeopleRoles(
 	[Person_Id] [INT] NOT NULL,
 	[Role_Id] [INT] NOT NULL,
 
 	PRIMARY KEY([Person_Id], [Role_Id]),
-	FOREIGN KEY([Person_Id]) REFERENCES People([Id]),
-	FOREIGN KEY([Role_Id]) REFERENCES Roles([Id])
+	FOREIGN KEY([Person_Id]) REFERENCES People([Id]) ON DELETE CASCADE,
+	FOREIGN KEY([Role_Id]) REFERENCES Roles([Id]) ON DELETE CASCADE
 );
 GO
 
@@ -124,8 +115,8 @@ CREATE TABLE PeopleGroup(
 	[Person_Id] [INT] NOT NULL,
 	[Group_Id] [INT] NOT NULL,
 	PRIMARY KEY([Person_Id], [Group_Id]),
-	FOREIGN KEY([Person_Id]) REFERENCES People([Id]),
-	FOREIGN KEY([Group_Id]) REFERENCES Groups([Id])
+	FOREIGN KEY([Person_Id]) REFERENCES People([Id]) ON DELETE CASCADE,
+	FOREIGN KEY([Group_Id]) REFERENCES Groups([Id]) ON DELETE CASCADE
 );
 GO
 
@@ -133,8 +124,8 @@ CREATE TABLE FileAndFolderGroup(
 	[Group_Id] [INT] NOT NULL,
 	[FileAndFolder_Id] [INT] NOT NULL,
 	PRIMARY KEY([Group_Id], [FileAndFolder_Id]),
-	FOREIGN KEY([Group_Id]) REFERENCES Groups([Id]),
-	FOREIGN KEY([FileAndFolder_Id]) REFERENCES FileAndFolders([Id])
+	FOREIGN KEY([Group_Id]) REFERENCES Groups([Id]) ON DELETE CASCADE,
+	FOREIGN KEY([FileAndFolder_Id]) REFERENCES FileAndFolders([Id]) ON DELETE CASCADE
 );
 GO
 
@@ -142,8 +133,8 @@ CREATE TABLE FileAndFolderPeople(
 	[Person_Id] [INT] NOT NULL,
 	[FileAndFolder_Id] [INT] NOT NULL,
 	PRIMARY KEY([Person_Id], [FileAndFolder_Id]),
-	FOREIGN KEY([Person_Id]) REFERENCES People([Id]),
-	FOREIGN KEY([FileAndFolder_Id]) REFERENCES FileAndFolders([Id])
+	FOREIGN KEY([Person_Id]) REFERENCES People([Id]) ON DELETE CASCADE,
+	FOREIGN KEY([FileAndFolder_Id]) REFERENCES FileAndFolders([Id]) ON DELETE CASCADE
 );
 GO
 
@@ -151,7 +142,7 @@ CREATE TABLE FileAndFolderRoles(
 	[Role_Id] [INT] NOT NULL,
 	[FileAndFolder_Id] [INT] NOT NULL,
 	PRIMARY KEY([Role_Id], [FileAndFolder_Id]),
-	FOREIGN KEY([Role_Id]) REFERENCES Roles(Id),
-	FOREIGN KEY([FileAndFolder_Id]) REFERENCES FileAndFolders(Id)
+	FOREIGN KEY([Role_Id]) REFERENCES Roles(Id) ON DELETE CASCADE,
+	FOREIGN KEY([FileAndFolder_Id]) REFERENCES FileAndFolders(Id) ON DELETE CASCADE
 );
 GO

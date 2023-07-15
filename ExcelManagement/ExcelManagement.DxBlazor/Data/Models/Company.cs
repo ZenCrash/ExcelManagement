@@ -7,8 +7,7 @@ namespace ExcelManagement.DxBlazor.Data.Models
     public class Company
     {
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public Guid Id { get; set; }
+        public int Id { get; set; }
 
         [Required]
         [StringLength(2000)]
@@ -28,8 +27,8 @@ namespace ExcelManagement.DxBlazor.Data.Models
         /* Relationships */
 
         //CreatedBy / UpdatedBy
-        public Person CreatedBy { get; set; }
-        public Person UpdatedBy { get; set; }
+        public Person? CreatedBy { get; set; }
+        public Person? UpdatedBy { get; set; }
 
         //to *
         public virtual ICollection<Role> Roles { get; set; } = new List<Role>();

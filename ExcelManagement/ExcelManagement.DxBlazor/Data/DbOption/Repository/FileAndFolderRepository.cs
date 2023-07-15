@@ -21,7 +21,7 @@ namespace ExcelManagement.DxBlazor.Data.DbOption.Repository
         }
 
         //Get
-        public FileAndFolder? Get(Guid id)
+        public FileAndFolder? Get(int id)
         {
             return _dbContext.FileAndFolders.Find(id);
         }
@@ -57,7 +57,7 @@ namespace ExcelManagement.DxBlazor.Data.DbOption.Repository
         }
 
         //Delete
-        public bool Delete(Guid id)
+        public bool Delete(int id)
         {
             try
             {
