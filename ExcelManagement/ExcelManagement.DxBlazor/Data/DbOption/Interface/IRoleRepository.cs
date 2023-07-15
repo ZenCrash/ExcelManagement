@@ -8,7 +8,7 @@ namespace ExcelManagement.DxBlazor.Data.DbOption.Interface
         public List<Role> GetAll();
 
         //Get
-        public Role Get(int id);
+        public Role Get(Guid id);
 
         //Update
         public bool Update(Role entity);

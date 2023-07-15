@@ -8,7 +8,7 @@ namespace ExcelManagement.DxBlazor.Data.DbOption.Interface
         public List<Person> GetAll();
 
         //Get
-        public Person Get(int id);
+        public Person Get(Guid id);
 
         //Update
         public bool Update(Person entity);

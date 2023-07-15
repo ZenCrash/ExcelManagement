@@ -7,7 +7,8 @@ namespace ExcelManagement.DxBlazor.Data.Models
     public class Role
     {
         [Key]
-        public int Id { get; set; }
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public Guid Id { get; set; }
 
         [MaxLength(4000)]
         public string Description { get; set; }

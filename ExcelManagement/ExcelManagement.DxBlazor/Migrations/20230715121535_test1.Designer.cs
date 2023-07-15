@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ExcelManagement.DxBlazor.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230715120422_test1")]
+    [Migration("20230715121535_test1")]
     partial class test1
     {
         /// <inheritdoc />
@@ -61,8 +61,8 @@ namespace ExcelManagement.DxBlazor.Migrations
                     b.Property<string>("PasswordHash")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("PersonId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("PersonId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("PhoneNumber")
                         .HasColumnType("nvarchar(max)");
@@ -97,11 +97,9 @@ namespace ExcelManagement.DxBlazor.Migrations
 
             modelBuilder.Entity("ExcelManagement.DxBlazor.Data.Models.Company", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("CompanyLogoUrl")
                         .IsRequired()
@@ -113,8 +111,8 @@ namespace ExcelManagement.DxBlazor.Migrations
                         .HasMaxLength(2000)
                         .HasColumnType("nvarchar(2000)");
 
-                    b.Property<int>("CreatedById")
-                        .HasColumnType("int");
+                    b.Property<Guid>("CreatedById")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
@@ -124,8 +122,8 @@ namespace ExcelManagement.DxBlazor.Migrations
                         .HasMaxLength(4000)
                         .HasColumnType("nvarchar(4000)");
 
-                    b.Property<int>("UpdatedById")
-                        .HasColumnType("int");
+                    b.Property<Guid>("UpdatedById")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("UpdatedDate")
                         .HasColumnType("datetime2");
@@ -141,17 +139,15 @@ namespace ExcelManagement.DxBlazor.Migrations
 
             modelBuilder.Entity("ExcelManagement.DxBlazor.Data.Models.FileAndFolder", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("uniqueidentifier");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    b.Property<Guid>("CompanyId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("CompanyId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("CreatedById")
-                        .HasColumnType("int");
+                    b.Property<Guid>("CreatedById")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
@@ -176,8 +172,8 @@ namespace ExcelManagement.DxBlazor.Migrations
                         .HasMaxLength(4000)
                         .HasColumnType("nvarchar(4000)");
 
-                    b.Property<int>("UpdatedById")
-                        .HasColumnType("int");
+                    b.Property<Guid>("UpdatedById")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("UpdatedDate")
                         .HasColumnType("datetime2");
@@ -195,17 +191,15 @@ namespace ExcelManagement.DxBlazor.Migrations
 
             modelBuilder.Entity("ExcelManagement.DxBlazor.Data.Models.Group", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("uniqueidentifier");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    b.Property<Guid>("CompanyId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("CompanyId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("CreatedById")
-                        .HasColumnType("int");
+                    b.Property<Guid>("CreatedById")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
@@ -215,8 +209,8 @@ namespace ExcelManagement.DxBlazor.Migrations
                         .HasMaxLength(4000)
                         .HasColumnType("nvarchar(4000)");
 
-                    b.Property<int?>("GroupId")
-                        .HasColumnType("int");
+                    b.Property<Guid?>("GroupId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("GroupLogoUrl")
                         .IsRequired()
@@ -228,8 +222,8 @@ namespace ExcelManagement.DxBlazor.Migrations
                         .HasMaxLength(512)
                         .HasColumnType("nvarchar(512)");
 
-                    b.Property<int>("UpdatedById")
-                        .HasColumnType("int");
+                    b.Property<Guid>("UpdatedById")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("UpdatedDate")
                         .HasColumnType("datetime2");
@@ -249,21 +243,19 @@ namespace ExcelManagement.DxBlazor.Migrations
 
             modelBuilder.Entity("ExcelManagement.DxBlazor.Data.Models.Person", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Bio")
                         .HasMaxLength(4000)
                         .HasColumnType("nvarchar(4000)");
 
-                    b.Property<int>("CompanyId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("CompanyId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("CreatedById")
-                        .HasColumnType("int");
+                    b.Property<Guid>("CreatedById")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
@@ -286,8 +278,8 @@ namespace ExcelManagement.DxBlazor.Migrations
                         .HasMaxLength(4000)
                         .HasColumnType("nvarchar(4000)");
 
-                    b.Property<int>("UpdatedById")
-                        .HasColumnType("int");
+                    b.Property<Guid>("UpdatedById")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("UpdatedDate")
                         .HasColumnType("datetime2");
@@ -305,17 +297,15 @@ namespace ExcelManagement.DxBlazor.Migrations
 
             modelBuilder.Entity("ExcelManagement.DxBlazor.Data.Models.Role", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("uniqueidentifier");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    b.Property<Guid>("CompanyId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("CompanyId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("CreatedById")
-                        .HasColumnType("int");
+                    b.Property<Guid>("CreatedById")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
@@ -330,8 +320,8 @@ namespace ExcelManagement.DxBlazor.Migrations
                         .HasMaxLength(4000)
                         .HasColumnType("nvarchar(4000)");
 
-                    b.Property<int>("UpdatedById")
-                        .HasColumnType("int");
+                    b.Property<Guid>("UpdatedById")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("UpdatedDate")
                         .HasColumnType("datetime2");
@@ -349,11 +339,11 @@ namespace ExcelManagement.DxBlazor.Migrations
 
             modelBuilder.Entity("FileAndFolderGroup", b =>
                 {
-                    b.Property<int>("FileAndFoldersId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("FileAndFoldersId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("GroupsId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("GroupsId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("FileAndFoldersId", "GroupsId");
 
@@ -364,11 +354,11 @@ namespace ExcelManagement.DxBlazor.Migrations
 
             modelBuilder.Entity("FileAndFolderPerson", b =>
                 {
-                    b.Property<int>("FileAndFoldersId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("FileAndFoldersId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("PeopleId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("PeopleId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("FileAndFoldersId", "PeopleId");
 
@@ -379,11 +369,11 @@ namespace ExcelManagement.DxBlazor.Migrations
 
             modelBuilder.Entity("FileAndFolderRole", b =>
                 {
-                    b.Property<int>("FileAndFoldersId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("FileAndFoldersId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("RolesId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("RolesId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("FileAndFoldersId", "RolesId");
 
@@ -394,11 +384,11 @@ namespace ExcelManagement.DxBlazor.Migrations
 
             modelBuilder.Entity("GroupPerson", b =>
                 {
-                    b.Property<int>("GroupsId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("GroupsId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("PeopleId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("PeopleId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("GroupsId", "PeopleId");
 
@@ -542,11 +532,11 @@ namespace ExcelManagement.DxBlazor.Migrations
 
             modelBuilder.Entity("PersonRole", b =>
                 {
-                    b.Property<int>("PeopleId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("PeopleId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("RolesId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("RolesId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("PeopleId", "RolesId");
 

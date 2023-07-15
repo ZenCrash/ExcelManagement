@@ -8,7 +8,7 @@ namespace ExcelManagement.DxBlazor.Data.DbOption.Interface
         public List<FileAndFolder> GetAll();
 
         //Get
-        public FileAndFolder Get(int id);
+        public FileAndFolder Get(Guid id);
 
         //Create
         public bool Create(FileAndFolder entity);
@@ -17,6 +17,6 @@ namespace ExcelManagement.DxBlazor.Data.DbOption.Interface
         public bool Update(FileAndFolder entity);
 
         //Delete
-        public bool Delete(int id);
+        public bool Delete(Guid id);
     }
 }

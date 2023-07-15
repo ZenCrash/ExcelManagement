@@ -9,7 +9,8 @@ namespace ExcelManagement.DxBlazor.Data.Models
     public class Group
     {
         [Key]
-        public int Id { get; set; }
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public Guid Id { get; set; }
 
         [Required]
         [MaxLength(512)]

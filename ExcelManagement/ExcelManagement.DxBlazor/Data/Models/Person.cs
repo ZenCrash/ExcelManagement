@@ -9,7 +9,8 @@ namespace ExcelManagement.DxBlazor.Data.Models
     public class Person
     {
         [Key]
-        public int Id { get; set; }
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public Guid Id { get; set; }
 
         [Required]
         [StringLength(256, MinimumLength = 2)]

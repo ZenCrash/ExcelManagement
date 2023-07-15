@@ -21,7 +21,7 @@ namespace ExcelManagement.DxBlazor.Data.DbOption.Repository
         }
 
         //Get
-        public Person? Get(int id)
+        public Person? Get(Guid id)
         {
             return _dbContext.People.Find(id);
         }
