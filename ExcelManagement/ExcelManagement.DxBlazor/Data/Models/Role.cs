@@ -33,7 +33,7 @@ namespace ExcelManagement.DxBlazor.Data.Models
         public Person? UpdatedBy { get; set; }
 
         //to *
-        //public virtual ICollection<FileAndFolder> FileAndFolders { get; set; } = new List<FileAndFolder>();
         //public virtual ICollection<Person> People { get; set; } = new List<Person>();
+        //public virtual ICollection<FileAndFolder> FileAndFolders { get; set; } = new List<FileAndFolder>();
     }
 }
