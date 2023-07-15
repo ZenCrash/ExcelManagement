@@ -7,7 +7,7 @@ namespace ExcelManagement.DxBlazor.Data.DTO
 {
     public class GroupDTO
     {
-        public Guid GroupId { get; set; }
+        public Guid Id { get; set; }
 
         [Required]
         [MaxLength(512)]
@@ -28,18 +28,19 @@ namespace ExcelManagement.DxBlazor.Data.DTO
 
         /* Relationships */
 
+        //Self Eefrence
+
         //to 1
         [Required]
         public CompanyDTO CompanyDTO { get; set; }
 
         //CreatedBy / UpdatedBy
-        public PersonDTO GroupCreatedByDTO { get; set; }
-
-        public PersonDTO GroupUpdatedByDTO { get; set; }
+        public PersonDTO? CreatedByDTO { get; set; }
+        public PersonDTO? UpdatedByDTO { get; set; }
 
         //to *
-        public ICollection<GroupDTO> GroupDTOs { get; set; } = new List<GroupDTO>();
-        public ICollection<FileAndFolderDTO> FileAndFolderDTOs { get; set; } = new List<FileAndFolderDTO>();
-        public ICollection<PersonDTO> PersonDTOs { get; set; } = new List<PersonDTO>(); //NotMapped
+        public virtual ICollection<GroupDTO> GroupDTOs { get; set; } = new List<GroupDTO>();
+        public virtual ICollection<FileAndFolderDTO> FileAndFolderDTOs { get; set; } = new List<FileAndFolderDTO>();
+        public virtual ICollection<PersonDTO> PersonDTOs { get; set; } = new List<PersonDTO>();
     }
 }

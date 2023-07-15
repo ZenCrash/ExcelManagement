@@ -8,7 +8,8 @@ namespace ExcelManagement.DxBlazor.Data.Models
     public class FileAndFolder
     {
         [Key]
-        public int Id { get; set; }
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public Guid Id { get; set; }
 
         [Required]
         [MaxLength(512)]
@@ -29,7 +30,7 @@ namespace ExcelManagement.DxBlazor.Data.Models
 
         [Required]
         [MaxLength(256)]
-        public string DataType { get; set; }
+        public DataFileType DataType { get; set; }
 
         /* Relationships */
 
@@ -42,9 +43,18 @@ namespace ExcelManagement.DxBlazor.Data.Models
         public Person? UpdatedBy { get; set; }
 
         //to *
-        //public virtual ICollection<Role> Roles { get; set; } = new List<Role>();
-        //public virtual ICollection<Group> Groups { get; set; } = new List<Group>();
-        //public virtual ICollection<Person> People { get; set; } = new List<Person>();
+        public virtual ICollection<FileAndFolder> FileAndFolders { get; set; } = new List<FileAndFolder>();
+        public virtual ICollection<Role> Roles { get; set; } = new List<Role>();
+        public virtual ICollection<Group> Groups { get; set; } = new List<Group>();
+        public virtual ICollection<Person> Persons { get; set; } = new List<Person>();
 
+        /* DataTypes */
+        public enum DataFileType
+        {
+            Folder,
+            Xlsx,
+            FileA,
+            FileB,
+        }
     }
 }

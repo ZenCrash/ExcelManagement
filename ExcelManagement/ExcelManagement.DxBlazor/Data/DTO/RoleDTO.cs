@@ -6,7 +6,11 @@ namespace ExcelManagement.DxBlazor.Data.DTO
 {
     public class RoleDTO
     {
-        public string RoleId { get; set; }
+        public Guid Id { get; set; }
+
+        [Required]
+        [StringLength(256, MinimumLength = 2)]
+        public string RoleName { get; set; }
 
         [MaxLength(4000)]
         public string Description { get; set; }
@@ -24,15 +28,16 @@ namespace ExcelManagement.DxBlazor.Data.DTO
         /* Relationships */
 
         //to 1
+
         [Required]
         public CompanyDTO CompanyDTO { get; set; }
 
         //CreatedBy / UpdatedBy
-        public PersonDTO RoleCreatedByDTO { get; set; }
-        public PersonDTO RoleUpdatedByDTO { get; set; }
+        public PersonDTO? CreatedByDTO { get; set; }
+        public PersonDTO? UpdatedByDTO { get; set; }
 
         //to *
-        public ICollection<FileAndFolderDTO> FileAndFolderDTOs { get; set; } = new List<FileAndFolderDTO>(); //NotMapped
-        public ICollection<PersonDTO> PersonDTOs { get; set; } = new List<PersonDTO>(); //NotMapped
+        public virtual ICollection<PersonDTO> PersonDTOs { get; set; } = new List<PersonDTO>();
+        public virtual ICollection<FileAndFolderDTO> FileAndFolderDTOs { get; set; } = new List<FileAndFolderDTO>();
     }
 }

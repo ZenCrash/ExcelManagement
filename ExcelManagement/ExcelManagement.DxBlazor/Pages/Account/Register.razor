@@ -77,7 +77,7 @@
                             }
                             @foreach (var company in CompanyDTOs)
                             {
-                                <option value="@company.CompanyId">@company.CompanyName</option>
+                                <option value="@company.Id">@company.CompanyName</option>
                             }
                         </InputSelect>
                         <ValidationMessage For="@(() => Input.MemberCompanyId)" class="text-danger" />

@@ -6,7 +6,7 @@ namespace ExcelManagement.DxBlazor.Data.DTO
 {
     public class PersonDTO
     {
-        public string PersonId { get; set; }
+        public Guid Id { get; set; }
 
         [Required]
         [StringLength(256, MinimumLength = 2)]
@@ -35,26 +35,32 @@ namespace ExcelManagement.DxBlazor.Data.DTO
         /* Relationships */
 
         //to 1
-        public Guid? MemberCompanyId { get; set; }
+
         [Required]
-        public CompanyDTO MemberCompanyDTO { get; set; }
-        public PersonDTO PersonCreatedByDTO { get; set; }
-        public PersonDTO PersonUpdatedByDTO { get; set; }
+        public CompanyDTO CompanyDTO { get; set; }
+
+        //CreatedBy / UpdatedBy
+        public PersonDTO? CreatedByDTO { get; set; }
+        public PersonDTO? UpdatedByDTO { get; set; }
 
         //to *
-        public ICollection<RoleDTO> RoleDTOs { get; set; } = new List<RoleDTO>();
-        public ICollection<GroupDTO> GroupDTOs { get; set; } = new List<GroupDTO>();
-        public ICollection<FileAndFolderDTO> FileAndFolderDTOs { get; set; } = new List<FileAndFolderDTO>(); //NotMapped
+        public virtual ICollection<RoleDTO> RoleDTOs { get; set; } = new List<RoleDTO>();
+        public virtual ICollection<GroupDTO> GroupDTOs { get; set; } = new List<GroupDTO>();
+        public virtual ICollection<FileAndFolderDTO> FileAndFolderDTOs { get; set; } = new List<FileAndFolderDTO>();
 
         //CreatedBy / UpdatedBy
         public ICollection<PersonDTO> CreatedPersonDTOs { get; set; } = new List<PersonDTO>();
         public ICollection<PersonDTO> UpdatedPersonDTOs { get; set; } = new List<PersonDTO>();
+
         public ICollection<CompanyDTO> CreatedCompanyDTOs { get; set; } = new List<CompanyDTO>();
         public ICollection<CompanyDTO> UpdatedCompanyDTOs { get; set; } = new List<CompanyDTO>();
+
         public ICollection<RoleDTO> CreatedRoleDTOs { get; set; } = new List<RoleDTO>();
         public ICollection<RoleDTO> UpdatedRoleDTOs { get; set; } = new List<RoleDTO>();
+
         public ICollection<GroupDTO> CreatedGroupDTOs { get; set; } = new List<GroupDTO>();
         public ICollection<GroupDTO> UpdatedGroupDTOs { get; set; } = new List<GroupDTO>();
+
         public ICollection<FileAndFolderDTO> CreatedFileAndFolderDTOs { get; set; } = new List<FileAndFolderDTO>();
         public ICollection<FileAndFolderDTO> UpdatedFileAndFolderDTOs { get; set; } = new List<FileAndFolderDTO>();
     }

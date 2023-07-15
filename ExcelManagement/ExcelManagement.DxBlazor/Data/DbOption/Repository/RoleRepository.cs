@@ -20,7 +20,7 @@ namespace ExcelManagement.DxBlazor.Data.DbOption.Repository
         }
 
         //Get
-        public Role? Get(int id)
+        public Role? Get(Guid id)
         {
             return _dbContext.Roles.Find(id);
         }

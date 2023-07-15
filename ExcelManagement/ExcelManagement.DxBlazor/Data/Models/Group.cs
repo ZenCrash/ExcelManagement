@@ -9,7 +9,8 @@ namespace ExcelManagement.DxBlazor.Data.Models
     public class Group
     {
         [Key]
-        public int Id { get; set; }
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public Guid Id { get; set; }
 
         [Required]
         [MaxLength(512)]
@@ -41,8 +42,8 @@ namespace ExcelManagement.DxBlazor.Data.Models
         public Person? UpdatedBy { get; set; }
 
         //to *
-        //public virtual ICollection<Group> Groups { get; set; } = new List<Group>();
-        //public virtual ICollection<FileAndFolder> FileAndFolders { get; set; } = new List<FileAndFolder>();
-        //public virtual ICollection<Person> People { get; set; } = new List<Person>();
+        public virtual ICollection<Group> Groups { get; set; } = new List<Group>();
+        public virtual ICollection<FileAndFolder> FileAndFolders { get; set; } = new List<FileAndFolder>();
+        public virtual ICollection<Person> Persons { get; set; } = new List<Person>();
     }
 }

@@ -9,7 +9,8 @@ namespace ExcelManagement.DxBlazor.Data.Models
     public class Person
     {
         [Key]
-        public int Id { get; set; }
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public Guid Id { get; set; }
 
         [Required]
         [StringLength(256, MinimumLength = 2)]
@@ -38,6 +39,8 @@ namespace ExcelManagement.DxBlazor.Data.Models
         /* Relationships */
 
         //to 1
+        public ApplicationUser ApplicationUser { get; set; }
+
         [Required]
         public Company Company { get; set; }
 
@@ -46,13 +49,13 @@ namespace ExcelManagement.DxBlazor.Data.Models
         public Person? UpdatedBy { get; set; }
 
         //to *
-        //public virtual ICollection<Role> Roles { get; set; } = new List <Role>();
-        //public virtual ICollection<Group> Groups { get; set; } = new List <Group>();
-        //public virtual ICollection<FileAndFolder> FileAndFolders { get; set; } = new List<FileAndFolder>();
+        public virtual ICollection<Role> Roles { get; set; } = new List<Role>();
+        public virtual ICollection<Group> Groups { get; set; } = new List<Group>();
+        public virtual ICollection<FileAndFolder> FileAndFolders { get; set; } = new List<FileAndFolder>();
 
         //CreatedBy / UpdatedBy
-        public ICollection<Person> CreatedPeople { get; set; } = new List<Person>();
-        public ICollection<Person> UpdatedPeople { get; set; } = new List<Person>();
+        public ICollection<Person> CreatedPersons { get; set; } = new List<Person>();
+        public ICollection<Person> UpdatedPersons { get; set; } = new List<Person>();
 
         public ICollection<Company> CreatedCompanys { get; set; } = new List<Company>();
         public ICollection<Company> UpdatedCompanys { get; set; } = new List<Company>();
