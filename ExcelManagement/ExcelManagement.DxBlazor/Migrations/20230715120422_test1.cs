@@ -98,7 +98,7 @@ namespace ExcelManagement.DxBlazor.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    PersonId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    PersonId = table.Column<int>(type: "int", nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -143,52 +143,27 @@ namespace ExcelManagement.DxBlazor.Migrations
                 name: "Companies",
                 columns: table => new
                 {
-                    CompanyId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     CompanyName = table.Column<string>(type: "nvarchar(2000)", maxLength: 2000, nullable: false),
                     Description = table.Column<string>(type: "nvarchar(4000)", maxLength: 4000, nullable: false),
                     CompanyLogoUrl = table.Column<string>(type: "nvarchar(4000)", maxLength: 4000, nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    CompanyCreatedById = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    CompanyUpdatedById = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                    CreatedById = table.Column<int>(type: "int", nullable: false),
+                    UpdatedById = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Companies", x => x.CompanyId);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "FilesAndFolders",
-                columns: table => new
-                {
-                    FilesAndFolderId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    ItemName = table.Column<string>(type: "nvarchar(512)", maxLength: 512, nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(4000)", maxLength: 4000, nullable: false),
-                    RelativeFilePath = table.Column<string>(type: "nvarchar(4000)", maxLength: 4000, nullable: false),
-                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    DataType = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
-                    CompanyId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    FileAndFolderCreatedById = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    FileAndFolderUpdatedById = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    GroupId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_FilesAndFolders", x => x.FilesAndFolderId);
-                    table.ForeignKey(
-                        name: "FK_FilesAndFolders_Companies_CompanyId",
-                        column: x => x.CompanyId,
-                        principalTable: "Companies",
-                        principalColumn: "CompanyId",
-                        onDelete: ReferentialAction.Cascade);
+                    table.PrimaryKey("PK_Companies", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
                 name: "People",
                 columns: table => new
                 {
-                    PersonId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     FirstName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
                     LastName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
                     JobTitle = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -196,128 +171,271 @@ namespace ExcelManagement.DxBlazor.Migrations
                     ProfileImageUrl = table.Column<string>(type: "nvarchar(4000)", maxLength: 4000, nullable: true),
                     CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    MemberCompanyId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    PersonCreatedById = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    PersonUpdatedById = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    FileAndFolderFilesAndFolderId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                    CompanyId = table.Column<int>(type: "int", nullable: false),
+                    CreatedById = table.Column<int>(type: "int", nullable: false),
+                    UpdatedById = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_People", x => x.PersonId);
+                    table.PrimaryKey("PK_People", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_People_Companies_MemberCompanyId",
-                        column: x => x.MemberCompanyId,
+                        name: "FK_People_Companies_CompanyId",
+                        column: x => x.CompanyId,
                         principalTable: "Companies",
-                        principalColumn: "CompanyId",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_People_FilesAndFolders_FileAndFolderFilesAndFolderId",
-                        column: x => x.FileAndFolderFilesAndFolderId,
-                        principalTable: "FilesAndFolders",
-                        principalColumn: "FilesAndFolderId");
-                    table.ForeignKey(
-                        name: "FK_People_People_PersonCreatedById",
-                        column: x => x.PersonCreatedById,
+                        name: "FK_People_People_CreatedById",
+                        column: x => x.CreatedById,
                         principalTable: "People",
-                        principalColumn: "PersonId");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.SetNull);
                     table.ForeignKey(
-                        name: "FK_People_People_PersonUpdatedById",
-                        column: x => x.PersonUpdatedById,
+                        name: "FK_People_People_UpdatedById",
+                        column: x => x.UpdatedById,
                         principalTable: "People",
-                        principalColumn: "PersonId");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.SetNull);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "FilesAndFolders",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ItemName = table.Column<string>(type: "nvarchar(512)", maxLength: 512, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(4000)", maxLength: 4000, nullable: false),
+                    RelativeFilePath = table.Column<string>(type: "nvarchar(4000)", maxLength: 4000, nullable: false),
+                    CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    DataType = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
+                    CompanyId = table.Column<int>(type: "int", nullable: false),
+                    CreatedById = table.Column<int>(type: "int", nullable: false),
+                    UpdatedById = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_FilesAndFolders", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_FilesAndFolders_Companies_CompanyId",
+                        column: x => x.CompanyId,
+                        principalTable: "Companies",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_FilesAndFolders_People_CreatedById",
+                        column: x => x.CreatedById,
+                        principalTable: "People",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.SetNull);
+                    table.ForeignKey(
+                        name: "FK_FilesAndFolders_People_UpdatedById",
+                        column: x => x.UpdatedById,
+                        principalTable: "People",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.SetNull);
                 });
 
             migrationBuilder.CreateTable(
                 name: "Groups",
                 columns: table => new
                 {
-                    GroupId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     GroupName = table.Column<string>(type: "nvarchar(512)", maxLength: 512, nullable: false),
                     Description = table.Column<string>(type: "nvarchar(4000)", maxLength: 4000, nullable: false),
                     GroupLogoUrl = table.Column<string>(type: "nvarchar(4000)", maxLength: 4000, nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    CompanyId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    GroupCreatedById = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    GroupUpdatedById = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    GroupId1 = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    PersonId = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                    CompanyId = table.Column<int>(type: "int", nullable: false),
+                    CreatedById = table.Column<int>(type: "int", nullable: false),
+                    UpdatedById = table.Column<int>(type: "int", nullable: false),
+                    GroupId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Groups", x => x.GroupId);
+                    table.PrimaryKey("PK_Groups", x => x.Id);
                     table.ForeignKey(
                         name: "FK_Groups_Companies_CompanyId",
                         column: x => x.CompanyId,
                         principalTable: "Companies",
-                        principalColumn: "CompanyId",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Groups_Groups_GroupId1",
-                        column: x => x.GroupId1,
+                        name: "FK_Groups_Groups_GroupId",
+                        column: x => x.GroupId,
                         principalTable: "Groups",
-                        principalColumn: "GroupId");
+                        principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_Groups_People_GroupCreatedById",
-                        column: x => x.GroupCreatedById,
+                        name: "FK_Groups_People_CreatedById",
+                        column: x => x.CreatedById,
                         principalTable: "People",
-                        principalColumn: "PersonId");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.SetNull);
                     table.ForeignKey(
-                        name: "FK_Groups_People_GroupUpdatedById",
-                        column: x => x.GroupUpdatedById,
+                        name: "FK_Groups_People_UpdatedById",
+                        column: x => x.UpdatedById,
                         principalTable: "People",
-                        principalColumn: "PersonId");
-                    table.ForeignKey(
-                        name: "FK_Groups_People_PersonId",
-                        column: x => x.PersonId,
-                        principalTable: "People",
-                        principalColumn: "PersonId");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.SetNull);
                 });
 
             migrationBuilder.CreateTable(
                 name: "Roles",
                 columns: table => new
                 {
-                    RoleId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     Description = table.Column<string>(type: "nvarchar(4000)", maxLength: 4000, nullable: false),
                     RoleLogoUrl = table.Column<string>(type: "nvarchar(4000)", maxLength: 4000, nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    CompanyId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    RoleCreatedById = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    RoleUpdatedById = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    FileAndFolderFilesAndFolderId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    PersonId = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                    CompanyId = table.Column<int>(type: "int", nullable: false),
+                    CreatedById = table.Column<int>(type: "int", nullable: false),
+                    UpdatedById = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Roles", x => x.RoleId);
+                    table.PrimaryKey("PK_Roles", x => x.Id);
                     table.ForeignKey(
                         name: "FK_Roles_Companies_CompanyId",
                         column: x => x.CompanyId,
                         principalTable: "Companies",
-                        principalColumn: "CompanyId",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Roles_FilesAndFolders_FileAndFolderFilesAndFolderId",
-                        column: x => x.FileAndFolderFilesAndFolderId,
+                        name: "FK_Roles_People_CreatedById",
+                        column: x => x.CreatedById,
+                        principalTable: "People",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.SetNull);
+                    table.ForeignKey(
+                        name: "FK_Roles_People_UpdatedById",
+                        column: x => x.UpdatedById,
+                        principalTable: "People",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.SetNull);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "FileAndFolderPerson",
+                columns: table => new
+                {
+                    FileAndFoldersId = table.Column<int>(type: "int", nullable: false),
+                    PeopleId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_FileAndFolderPerson", x => new { x.FileAndFoldersId, x.PeopleId });
+                    table.ForeignKey(
+                        name: "FK_FileAndFolderPerson_FilesAndFolders_FileAndFoldersId",
+                        column: x => x.FileAndFoldersId,
                         principalTable: "FilesAndFolders",
-                        principalColumn: "FilesAndFolderId");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Roles_People_PersonId",
-                        column: x => x.PersonId,
+                        name: "FK_FileAndFolderPerson_People_PeopleId",
+                        column: x => x.PeopleId,
                         principalTable: "People",
-                        principalColumn: "PersonId");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "FileAndFolderGroup",
+                columns: table => new
+                {
+                    FileAndFoldersId = table.Column<int>(type: "int", nullable: false),
+                    GroupsId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_FileAndFolderGroup", x => new { x.FileAndFoldersId, x.GroupsId });
                     table.ForeignKey(
-                        name: "FK_Roles_People_RoleCreatedById",
-                        column: x => x.RoleCreatedById,
-                        principalTable: "People",
-                        principalColumn: "PersonId");
+                        name: "FK_FileAndFolderGroup_FilesAndFolders_FileAndFoldersId",
+                        column: x => x.FileAndFoldersId,
+                        principalTable: "FilesAndFolders",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Roles_People_RoleUpdatedById",
-                        column: x => x.RoleUpdatedById,
+                        name: "FK_FileAndFolderGroup_Groups_GroupsId",
+                        column: x => x.GroupsId,
+                        principalTable: "Groups",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "GroupPerson",
+                columns: table => new
+                {
+                    GroupsId = table.Column<int>(type: "int", nullable: false),
+                    PeopleId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_GroupPerson", x => new { x.GroupsId, x.PeopleId });
+                    table.ForeignKey(
+                        name: "FK_GroupPerson_Groups_GroupsId",
+                        column: x => x.GroupsId,
+                        principalTable: "Groups",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_GroupPerson_People_PeopleId",
+                        column: x => x.PeopleId,
                         principalTable: "People",
-                        principalColumn: "PersonId");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "FileAndFolderRole",
+                columns: table => new
+                {
+                    FileAndFoldersId = table.Column<int>(type: "int", nullable: false),
+                    RolesId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_FileAndFolderRole", x => new { x.FileAndFoldersId, x.RolesId });
+                    table.ForeignKey(
+                        name: "FK_FileAndFolderRole_FilesAndFolders_FileAndFoldersId",
+                        column: x => x.FileAndFoldersId,
+                        principalTable: "FilesAndFolders",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_FileAndFolderRole_Roles_RolesId",
+                        column: x => x.RolesId,
+                        principalTable: "Roles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "PersonRole",
+                columns: table => new
+                {
+                    PeopleId = table.Column<int>(type: "int", nullable: false),
+                    RolesId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PersonRole", x => new { x.PeopleId, x.RolesId });
+                    table.ForeignKey(
+                        name: "FK_PersonRole_People_PeopleId",
+                        column: x => x.PeopleId,
+                        principalTable: "People",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_PersonRole_Roles_RolesId",
+                        column: x => x.RolesId,
+                        principalTable: "Roles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
@@ -365,14 +483,29 @@ namespace ExcelManagement.DxBlazor.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Companies_CompanyCreatedById",
+                name: "IX_Companies_CreatedById",
                 table: "Companies",
-                column: "CompanyCreatedById");
+                column: "CreatedById");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Companies_CompanyUpdatedById",
+                name: "IX_Companies_UpdatedById",
                 table: "Companies",
-                column: "CompanyUpdatedById");
+                column: "UpdatedById");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_FileAndFolderGroup_GroupsId",
+                table: "FileAndFolderGroup",
+                column: "GroupsId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_FileAndFolderPerson_PeopleId",
+                table: "FileAndFolderPerson",
+                column: "PeopleId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_FileAndFolderRole_RolesId",
+                table: "FileAndFolderRole",
+                column: "RolesId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_FilesAndFolders_CompanyId",
@@ -380,19 +513,19 @@ namespace ExcelManagement.DxBlazor.Migrations
                 column: "CompanyId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_FilesAndFolders_FileAndFolderCreatedById",
+                name: "IX_FilesAndFolders_CreatedById",
                 table: "FilesAndFolders",
-                column: "FileAndFolderCreatedById");
+                column: "CreatedById");
 
             migrationBuilder.CreateIndex(
-                name: "IX_FilesAndFolders_FileAndFolderUpdatedById",
+                name: "IX_FilesAndFolders_UpdatedById",
                 table: "FilesAndFolders",
-                column: "FileAndFolderUpdatedById");
+                column: "UpdatedById");
 
             migrationBuilder.CreateIndex(
-                name: "IX_FilesAndFolders_GroupId",
-                table: "FilesAndFolders",
-                column: "GroupId");
+                name: "IX_GroupPerson_PeopleId",
+                table: "GroupPerson",
+                column: "PeopleId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Groups_CompanyId",
@@ -400,44 +533,39 @@ namespace ExcelManagement.DxBlazor.Migrations
                 column: "CompanyId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Groups_GroupCreatedById",
+                name: "IX_Groups_CreatedById",
                 table: "Groups",
-                column: "GroupCreatedById");
+                column: "CreatedById");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Groups_GroupId1",
+                name: "IX_Groups_GroupId",
                 table: "Groups",
-                column: "GroupId1");
+                column: "GroupId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Groups_GroupUpdatedById",
+                name: "IX_Groups_UpdatedById",
                 table: "Groups",
-                column: "GroupUpdatedById");
+                column: "UpdatedById");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Groups_PersonId",
-                table: "Groups",
-                column: "PersonId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_People_FileAndFolderFilesAndFolderId",
+                name: "IX_People_CompanyId",
                 table: "People",
-                column: "FileAndFolderFilesAndFolderId");
+                column: "CompanyId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_People_MemberCompanyId",
+                name: "IX_People_CreatedById",
                 table: "People",
-                column: "MemberCompanyId");
+                column: "CreatedById");
 
             migrationBuilder.CreateIndex(
-                name: "IX_People_PersonCreatedById",
+                name: "IX_People_UpdatedById",
                 table: "People",
-                column: "PersonCreatedById");
+                column: "UpdatedById");
 
             migrationBuilder.CreateIndex(
-                name: "IX_People_PersonUpdatedById",
-                table: "People",
-                column: "PersonUpdatedById");
+                name: "IX_PersonRole_RolesId",
+                table: "PersonRole",
+                column: "RolesId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Roles_CompanyId",
@@ -445,24 +573,14 @@ namespace ExcelManagement.DxBlazor.Migrations
                 column: "CompanyId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Roles_FileAndFolderFilesAndFolderId",
+                name: "IX_Roles_CreatedById",
                 table: "Roles",
-                column: "FileAndFolderFilesAndFolderId");
+                column: "CreatedById");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Roles_PersonId",
+                name: "IX_Roles_UpdatedById",
                 table: "Roles",
-                column: "PersonId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Roles_RoleCreatedById",
-                table: "Roles",
-                column: "RoleCreatedById");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Roles_RoleUpdatedById",
-                table: "Roles",
-                column: "RoleUpdatedById");
+                column: "UpdatedById");
 
             migrationBuilder.AddForeignKey(
                 name: "FK_AspNetUserClaims_AspNetUsers_UserId",
@@ -493,75 +611,36 @@ namespace ExcelManagement.DxBlazor.Migrations
                 table: "AspNetUsers",
                 column: "PersonId",
                 principalTable: "People",
-                principalColumn: "PersonId",
+                principalColumn: "Id",
                 onDelete: ReferentialAction.Cascade);
 
             migrationBuilder.AddForeignKey(
-                name: "FK_Companies_People_CompanyCreatedById",
+                name: "FK_Companies_People_CreatedById",
                 table: "Companies",
-                column: "CompanyCreatedById",
+                column: "CreatedById",
                 principalTable: "People",
-                principalColumn: "PersonId");
+                principalColumn: "Id",
+                onDelete: ReferentialAction.SetNull);
 
             migrationBuilder.AddForeignKey(
-                name: "FK_Companies_People_CompanyUpdatedById",
+                name: "FK_Companies_People_UpdatedById",
                 table: "Companies",
-                column: "CompanyUpdatedById",
+                column: "UpdatedById",
                 principalTable: "People",
-                principalColumn: "PersonId");
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_FilesAndFolders_Groups_GroupId",
-                table: "FilesAndFolders",
-                column: "GroupId",
-                principalTable: "Groups",
-                principalColumn: "GroupId");
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_FilesAndFolders_People_FileAndFolderCreatedById",
-                table: "FilesAndFolders",
-                column: "FileAndFolderCreatedById",
-                principalTable: "People",
-                principalColumn: "PersonId");
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_FilesAndFolders_People_FileAndFolderUpdatedById",
-                table: "FilesAndFolders",
-                column: "FileAndFolderUpdatedById",
-                principalTable: "People",
-                principalColumn: "PersonId");
+                principalColumn: "Id",
+                onDelete: ReferentialAction.SetNull);
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropForeignKey(
-                name: "FK_Companies_People_CompanyCreatedById",
+                name: "FK_Companies_People_CreatedById",
                 table: "Companies");
 
             migrationBuilder.DropForeignKey(
-                name: "FK_Companies_People_CompanyUpdatedById",
+                name: "FK_Companies_People_UpdatedById",
                 table: "Companies");
-
-            migrationBuilder.DropForeignKey(
-                name: "FK_FilesAndFolders_People_FileAndFolderCreatedById",
-                table: "FilesAndFolders");
-
-            migrationBuilder.DropForeignKey(
-                name: "FK_FilesAndFolders_People_FileAndFolderUpdatedById",
-                table: "FilesAndFolders");
-
-            migrationBuilder.DropForeignKey(
-                name: "FK_Groups_People_GroupCreatedById",
-                table: "Groups");
-
-            migrationBuilder.DropForeignKey(
-                name: "FK_Groups_People_GroupUpdatedById",
-                table: "Groups");
-
-            migrationBuilder.DropForeignKey(
-                name: "FK_Groups_People_PersonId",
-                table: "Groups");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");
@@ -579,7 +658,19 @@ namespace ExcelManagement.DxBlazor.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "Roles");
+                name: "FileAndFolderGroup");
+
+            migrationBuilder.DropTable(
+                name: "FileAndFolderPerson");
+
+            migrationBuilder.DropTable(
+                name: "FileAndFolderRole");
+
+            migrationBuilder.DropTable(
+                name: "GroupPerson");
+
+            migrationBuilder.DropTable(
+                name: "PersonRole");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
@@ -588,13 +679,16 @@ namespace ExcelManagement.DxBlazor.Migrations
                 name: "AspNetUsers");
 
             migrationBuilder.DropTable(
-                name: "People");
-
-            migrationBuilder.DropTable(
                 name: "FilesAndFolders");
 
             migrationBuilder.DropTable(
                 name: "Groups");
+
+            migrationBuilder.DropTable(
+                name: "Roles");
+
+            migrationBuilder.DropTable(
+                name: "People");
 
             migrationBuilder.DropTable(
                 name: "Companies");

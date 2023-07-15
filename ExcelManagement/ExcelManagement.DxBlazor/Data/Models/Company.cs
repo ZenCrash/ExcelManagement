@@ -7,7 +7,7 @@ namespace ExcelManagement.DxBlazor.Data.Models
     public class Company
     {
         [Key]
-        public Guid CompanyId { get; set; }
+        public int Id { get; set; }
 
         [Required]
         [StringLength(2000)]
@@ -27,18 +27,13 @@ namespace ExcelManagement.DxBlazor.Data.Models
         /* Relationships */
 
         //CreatedBy / UpdatedBy
-        public string? CompanyCreatedById { get; set; }
-        public Person CompanyCreatedBy { get; set; }
-
-        public string? CompanyUpdatedById { get; set; }
-        public Person CompanyUpdatedBy { get; set; }
+        public Person CreatedBy { get; set; }
+        public Person UpdatedBy { get; set; }
 
         //to *
         public virtual ICollection<Role> Roles { get; set; } = new List<Role>();
         public virtual ICollection<Group> Groups { get; set; } = new List<Group>();
         public virtual ICollection<FileAndFolder> FileAndFolders { get; set; } = new List<FileAndFolder>();
-
-        [InverseProperty("MemberCompany")]
-        public virtual ICollection<Person> CompanyMembers { get; set; } = new List<Person>();
+        public virtual ICollection<Person> People { get; set; } = new List<Person>();
     }
 }

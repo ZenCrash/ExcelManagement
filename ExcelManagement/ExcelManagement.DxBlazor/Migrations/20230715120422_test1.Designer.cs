@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ExcelManagement.DxBlazor.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230704191649_test1")]
+    [Migration("20230715120422_test1")]
     partial class test1
     {
         /// <inheritdoc />
@@ -61,9 +61,8 @@ namespace ExcelManagement.DxBlazor.Migrations
                     b.Property<string>("PasswordHash")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("PersonId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("PersonId")
+                        .HasColumnType("int");
 
                     b.Property<string>("PhoneNumber")
                         .HasColumnType("nvarchar(max)");
@@ -98,12 +97,11 @@ namespace ExcelManagement.DxBlazor.Migrations
 
             modelBuilder.Entity("ExcelManagement.DxBlazor.Data.Models.Company", b =>
                 {
-                    b.Property<Guid>("CompanyId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("int");
 
-                    b.Property<string>("CompanyCreatedById")
-                        .HasColumnType("nvarchar(450)");
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("CompanyLogoUrl")
                         .IsRequired()
@@ -115,8 +113,8 @@ namespace ExcelManagement.DxBlazor.Migrations
                         .HasMaxLength(2000)
                         .HasColumnType("nvarchar(2000)");
 
-                    b.Property<string>("CompanyUpdatedById")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("CreatedById")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
@@ -126,27 +124,34 @@ namespace ExcelManagement.DxBlazor.Migrations
                         .HasMaxLength(4000)
                         .HasColumnType("nvarchar(4000)");
 
+                    b.Property<int>("UpdatedById")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("UpdatedDate")
                         .HasColumnType("datetime2");
 
-                    b.HasKey("CompanyId");
+                    b.HasKey("Id");
 
-                    b.HasIndex("CompanyCreatedById");
+                    b.HasIndex("CreatedById");
 
-                    b.HasIndex("CompanyUpdatedById");
+                    b.HasIndex("UpdatedById");
 
                     b.ToTable("Companies");
                 });
 
             modelBuilder.Entity("ExcelManagement.DxBlazor.Data.Models.FileAndFolder", b =>
                 {
-                    b.Property<Guid>("FilesAndFolderId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("int");
 
-                    b.Property<Guid?>("CompanyId")
-                        .IsRequired()
-                        .HasColumnType("uniqueidentifier");
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CompanyId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CreatedById")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
@@ -161,15 +166,6 @@ namespace ExcelManagement.DxBlazor.Migrations
                         .HasMaxLength(4000)
                         .HasColumnType("nvarchar(4000)");
 
-                    b.Property<string>("FileAndFolderCreatedById")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("FileAndFolderUpdatedById")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<Guid?>("GroupId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("ItemName")
                         .IsRequired()
                         .HasMaxLength(512)
@@ -180,31 +176,36 @@ namespace ExcelManagement.DxBlazor.Migrations
                         .HasMaxLength(4000)
                         .HasColumnType("nvarchar(4000)");
 
+                    b.Property<int>("UpdatedById")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("UpdatedDate")
                         .HasColumnType("datetime2");
 
-                    b.HasKey("FilesAndFolderId");
+                    b.HasKey("Id");
 
                     b.HasIndex("CompanyId");
 
-                    b.HasIndex("FileAndFolderCreatedById");
+                    b.HasIndex("CreatedById");
 
-                    b.HasIndex("FileAndFolderUpdatedById");
-
-                    b.HasIndex("GroupId");
+                    b.HasIndex("UpdatedById");
 
                     b.ToTable("FilesAndFolders");
                 });
 
             modelBuilder.Entity("ExcelManagement.DxBlazor.Data.Models.Group", b =>
                 {
-                    b.Property<Guid>("GroupId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("int");
 
-                    b.Property<Guid?>("CompanyId")
-                        .IsRequired()
-                        .HasColumnType("uniqueidentifier");
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CompanyId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CreatedById")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
@@ -214,11 +215,8 @@ namespace ExcelManagement.DxBlazor.Migrations
                         .HasMaxLength(4000)
                         .HasColumnType("nvarchar(4000)");
 
-                    b.Property<string>("GroupCreatedById")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<Guid?>("GroupId1")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int?>("GroupId")
+                        .HasColumnType("int");
 
                     b.Property<string>("GroupLogoUrl")
                         .IsRequired()
@@ -230,44 +228,45 @@ namespace ExcelManagement.DxBlazor.Migrations
                         .HasMaxLength(512)
                         .HasColumnType("nvarchar(512)");
 
-                    b.Property<string>("GroupUpdatedById")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("PersonId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("UpdatedById")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("UpdatedDate")
                         .HasColumnType("datetime2");
 
-                    b.HasKey("GroupId");
+                    b.HasKey("Id");
 
                     b.HasIndex("CompanyId");
 
-                    b.HasIndex("GroupCreatedById");
+                    b.HasIndex("CreatedById");
 
-                    b.HasIndex("GroupId1");
+                    b.HasIndex("GroupId");
 
-                    b.HasIndex("GroupUpdatedById");
-
-                    b.HasIndex("PersonId");
+                    b.HasIndex("UpdatedById");
 
                     b.ToTable("Groups");
                 });
 
             modelBuilder.Entity("ExcelManagement.DxBlazor.Data.Models.Person", b =>
                 {
-                    b.Property<string>("PersonId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Bio")
                         .HasMaxLength(4000)
                         .HasColumnType("nvarchar(4000)");
 
+                    b.Property<int>("CompanyId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CreatedById")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
-
-                    b.Property<Guid?>("FileAndFolderFilesAndFolderId")
-                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("FirstName")
                         .IsRequired()
@@ -283,44 +282,40 @@ namespace ExcelManagement.DxBlazor.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
-                    b.Property<Guid?>("MemberCompanyId")
-                        .IsRequired()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("PersonCreatedById")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("PersonUpdatedById")
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<string>("ProfileImageUrl")
                         .HasMaxLength(4000)
                         .HasColumnType("nvarchar(4000)");
 
+                    b.Property<int>("UpdatedById")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("UpdatedDate")
                         .HasColumnType("datetime2");
 
-                    b.HasKey("PersonId");
+                    b.HasKey("Id");
 
-                    b.HasIndex("FileAndFolderFilesAndFolderId");
+                    b.HasIndex("CompanyId");
 
-                    b.HasIndex("MemberCompanyId");
+                    b.HasIndex("CreatedById");
 
-                    b.HasIndex("PersonCreatedById");
-
-                    b.HasIndex("PersonUpdatedById");
+                    b.HasIndex("UpdatedById");
 
                     b.ToTable("People");
                 });
 
             modelBuilder.Entity("ExcelManagement.DxBlazor.Data.Models.Role", b =>
                 {
-                    b.Property<string>("RoleId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
 
-                    b.Property<Guid?>("CompanyId")
-                        .IsRequired()
-                        .HasColumnType("uniqueidentifier");
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CompanyId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CreatedById")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
@@ -330,39 +325,86 @@ namespace ExcelManagement.DxBlazor.Migrations
                         .HasMaxLength(4000)
                         .HasColumnType("nvarchar(4000)");
 
-                    b.Property<Guid?>("FileAndFolderFilesAndFolderId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("PersonId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("RoleCreatedById")
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<string>("RoleLogoUrl")
                         .IsRequired()
                         .HasMaxLength(4000)
                         .HasColumnType("nvarchar(4000)");
 
-                    b.Property<string>("RoleUpdatedById")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("UpdatedById")
+                        .HasColumnType("int");
 
                     b.Property<DateTime>("UpdatedDate")
                         .HasColumnType("datetime2");
 
-                    b.HasKey("RoleId");
+                    b.HasKey("Id");
 
                     b.HasIndex("CompanyId");
 
-                    b.HasIndex("FileAndFolderFilesAndFolderId");
+                    b.HasIndex("CreatedById");
 
-                    b.HasIndex("PersonId");
-
-                    b.HasIndex("RoleCreatedById");
-
-                    b.HasIndex("RoleUpdatedById");
+                    b.HasIndex("UpdatedById");
 
                     b.ToTable("Roles");
+                });
+
+            modelBuilder.Entity("FileAndFolderGroup", b =>
+                {
+                    b.Property<int>("FileAndFoldersId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("GroupsId")
+                        .HasColumnType("int");
+
+                    b.HasKey("FileAndFoldersId", "GroupsId");
+
+                    b.HasIndex("GroupsId");
+
+                    b.ToTable("FileAndFolderGroup");
+                });
+
+            modelBuilder.Entity("FileAndFolderPerson", b =>
+                {
+                    b.Property<int>("FileAndFoldersId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PeopleId")
+                        .HasColumnType("int");
+
+                    b.HasKey("FileAndFoldersId", "PeopleId");
+
+                    b.HasIndex("PeopleId");
+
+                    b.ToTable("FileAndFolderPerson");
+                });
+
+            modelBuilder.Entity("FileAndFolderRole", b =>
+                {
+                    b.Property<int>("FileAndFoldersId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RolesId")
+                        .HasColumnType("int");
+
+                    b.HasKey("FileAndFoldersId", "RolesId");
+
+                    b.HasIndex("RolesId");
+
+                    b.ToTable("FileAndFolderRole");
+                });
+
+            modelBuilder.Entity("GroupPerson", b =>
+                {
+                    b.Property<int>("GroupsId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PeopleId")
+                        .HasColumnType("int");
+
+                    b.HasKey("GroupsId", "PeopleId");
+
+                    b.HasIndex("PeopleId");
+
+                    b.ToTable("GroupPerson");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -498,6 +540,21 @@ namespace ExcelManagement.DxBlazor.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("PersonRole", b =>
+                {
+                    b.Property<int>("PeopleId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RolesId")
+                        .HasColumnType("int");
+
+                    b.HasKey("PeopleId", "RolesId");
+
+                    b.HasIndex("RolesId");
+
+                    b.ToTable("PersonRole");
+                });
+
             modelBuilder.Entity("ExcelManagement.DxBlazor.Data.Models.ApplicationUser", b =>
                 {
                     b.HasOne("ExcelManagement.DxBlazor.Data.Models.Person", "Person")
@@ -511,17 +568,21 @@ namespace ExcelManagement.DxBlazor.Migrations
 
             modelBuilder.Entity("ExcelManagement.DxBlazor.Data.Models.Company", b =>
                 {
-                    b.HasOne("ExcelManagement.DxBlazor.Data.Models.Person", "CompanyCreatedBy")
+                    b.HasOne("ExcelManagement.DxBlazor.Data.Models.Person", "CreatedBy")
                         .WithMany("CreatedCompanys")
-                        .HasForeignKey("CompanyCreatedById");
+                        .HasForeignKey("CreatedById")
+                        .OnDelete(DeleteBehavior.SetNull)
+                        .IsRequired();
 
-                    b.HasOne("ExcelManagement.DxBlazor.Data.Models.Person", "CompanyUpdatedBy")
+                    b.HasOne("ExcelManagement.DxBlazor.Data.Models.Person", "UpdatedBy")
                         .WithMany("UpdatedCompanys")
-                        .HasForeignKey("CompanyUpdatedById");
+                        .HasForeignKey("UpdatedById")
+                        .OnDelete(DeleteBehavior.SetNull)
+                        .IsRequired();
 
-                    b.Navigation("CompanyCreatedBy");
+                    b.Navigation("CreatedBy");
 
-                    b.Navigation("CompanyUpdatedBy");
+                    b.Navigation("UpdatedBy");
                 });
 
             modelBuilder.Entity("ExcelManagement.DxBlazor.Data.Models.FileAndFolder", b =>
@@ -532,23 +593,23 @@ namespace ExcelManagement.DxBlazor.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ExcelManagement.DxBlazor.Data.Models.Person", "FileAndFolderCreatedBy")
+                    b.HasOne("ExcelManagement.DxBlazor.Data.Models.Person", "CreatedBy")
                         .WithMany("CreatedFileAndFolders")
-                        .HasForeignKey("FileAndFolderCreatedById");
+                        .HasForeignKey("CreatedById")
+                        .OnDelete(DeleteBehavior.SetNull)
+                        .IsRequired();
 
-                    b.HasOne("ExcelManagement.DxBlazor.Data.Models.Person", "FileAndFolderUpdatedBy")
+                    b.HasOne("ExcelManagement.DxBlazor.Data.Models.Person", "UpdatedBy")
                         .WithMany("UpdatedFileAndFolders")
-                        .HasForeignKey("FileAndFolderUpdatedById");
-
-                    b.HasOne("ExcelManagement.DxBlazor.Data.Models.Group", null)
-                        .WithMany("FileAndFolders")
-                        .HasForeignKey("GroupId");
+                        .HasForeignKey("UpdatedById")
+                        .OnDelete(DeleteBehavior.SetNull)
+                        .IsRequired();
 
                     b.Navigation("Company");
 
-                    b.Navigation("FileAndFolderCreatedBy");
+                    b.Navigation("CreatedBy");
 
-                    b.Navigation("FileAndFolderUpdatedBy");
+                    b.Navigation("UpdatedBy");
                 });
 
             modelBuilder.Entity("ExcelManagement.DxBlazor.Data.Models.Group", b =>
@@ -559,54 +620,54 @@ namespace ExcelManagement.DxBlazor.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ExcelManagement.DxBlazor.Data.Models.Person", "GroupCreatedBy")
+                    b.HasOne("ExcelManagement.DxBlazor.Data.Models.Person", "CreatedBy")
                         .WithMany("CreatedGroups")
-                        .HasForeignKey("GroupCreatedById");
+                        .HasForeignKey("CreatedById")
+                        .OnDelete(DeleteBehavior.SetNull)
+                        .IsRequired();
 
                     b.HasOne("ExcelManagement.DxBlazor.Data.Models.Group", null)
                         .WithMany("Groups")
-                        .HasForeignKey("GroupId1");
+                        .HasForeignKey("GroupId");
 
-                    b.HasOne("ExcelManagement.DxBlazor.Data.Models.Person", "GroupUpdatedBy")
+                    b.HasOne("ExcelManagement.DxBlazor.Data.Models.Person", "UpdatedBy")
                         .WithMany("UpdatedGroups")
-                        .HasForeignKey("GroupUpdatedById");
-
-                    b.HasOne("ExcelManagement.DxBlazor.Data.Models.Person", null)
-                        .WithMany("Groups")
-                        .HasForeignKey("PersonId");
+                        .HasForeignKey("UpdatedById")
+                        .OnDelete(DeleteBehavior.SetNull)
+                        .IsRequired();
 
                     b.Navigation("Company");
 
-                    b.Navigation("GroupCreatedBy");
+                    b.Navigation("CreatedBy");
 
-                    b.Navigation("GroupUpdatedBy");
+                    b.Navigation("UpdatedBy");
                 });
 
             modelBuilder.Entity("ExcelManagement.DxBlazor.Data.Models.Person", b =>
                 {
-                    b.HasOne("ExcelManagement.DxBlazor.Data.Models.FileAndFolder", null)
-                        .WithMany("Persons")
-                        .HasForeignKey("FileAndFolderFilesAndFolderId");
-
-                    b.HasOne("ExcelManagement.DxBlazor.Data.Models.Company", "MemberCompany")
-                        .WithMany("CompanyMembers")
-                        .HasForeignKey("MemberCompanyId")
+                    b.HasOne("ExcelManagement.DxBlazor.Data.Models.Company", "Company")
+                        .WithMany("People")
+                        .HasForeignKey("CompanyId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ExcelManagement.DxBlazor.Data.Models.Person", "PersonCreatedBy")
-                        .WithMany("CreatedPersons")
-                        .HasForeignKey("PersonCreatedById");
+                    b.HasOne("ExcelManagement.DxBlazor.Data.Models.Person", "CreatedBy")
+                        .WithMany("CreatedPeople")
+                        .HasForeignKey("CreatedById")
+                        .OnDelete(DeleteBehavior.SetNull)
+                        .IsRequired();
 
-                    b.HasOne("ExcelManagement.DxBlazor.Data.Models.Person", "PersonUpdatedBy")
-                        .WithMany("UpdatedPersons")
-                        .HasForeignKey("PersonUpdatedById");
+                    b.HasOne("ExcelManagement.DxBlazor.Data.Models.Person", "UpdatedBy")
+                        .WithMany("UpdatedPeople")
+                        .HasForeignKey("UpdatedById")
+                        .OnDelete(DeleteBehavior.SetNull)
+                        .IsRequired();
 
-                    b.Navigation("MemberCompany");
+                    b.Navigation("Company");
 
-                    b.Navigation("PersonCreatedBy");
+                    b.Navigation("CreatedBy");
 
-                    b.Navigation("PersonUpdatedBy");
+                    b.Navigation("UpdatedBy");
                 });
 
             modelBuilder.Entity("ExcelManagement.DxBlazor.Data.Models.Role", b =>
@@ -617,27 +678,83 @@ namespace ExcelManagement.DxBlazor.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ExcelManagement.DxBlazor.Data.Models.FileAndFolder", null)
-                        .WithMany("Roles")
-                        .HasForeignKey("FileAndFolderFilesAndFolderId");
-
-                    b.HasOne("ExcelManagement.DxBlazor.Data.Models.Person", null)
-                        .WithMany("Roles")
-                        .HasForeignKey("PersonId");
-
-                    b.HasOne("ExcelManagement.DxBlazor.Data.Models.Person", "RoleCreatedBy")
+                    b.HasOne("ExcelManagement.DxBlazor.Data.Models.Person", "CreatedBy")
                         .WithMany("CreatedRoles")
-                        .HasForeignKey("RoleCreatedById");
+                        .HasForeignKey("CreatedById")
+                        .OnDelete(DeleteBehavior.SetNull)
+                        .IsRequired();
 
-                    b.HasOne("ExcelManagement.DxBlazor.Data.Models.Person", "RoleUpdatedBy")
+                    b.HasOne("ExcelManagement.DxBlazor.Data.Models.Person", "UpdatedBy")
                         .WithMany("UpdatedRoles")
-                        .HasForeignKey("RoleUpdatedById");
+                        .HasForeignKey("UpdatedById")
+                        .OnDelete(DeleteBehavior.SetNull)
+                        .IsRequired();
 
                     b.Navigation("Company");
 
-                    b.Navigation("RoleCreatedBy");
+                    b.Navigation("CreatedBy");
 
-                    b.Navigation("RoleUpdatedBy");
+                    b.Navigation("UpdatedBy");
+                });
+
+            modelBuilder.Entity("FileAndFolderGroup", b =>
+                {
+                    b.HasOne("ExcelManagement.DxBlazor.Data.Models.FileAndFolder", null)
+                        .WithMany()
+                        .HasForeignKey("FileAndFoldersId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ExcelManagement.DxBlazor.Data.Models.Group", null)
+                        .WithMany()
+                        .HasForeignKey("GroupsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("FileAndFolderPerson", b =>
+                {
+                    b.HasOne("ExcelManagement.DxBlazor.Data.Models.FileAndFolder", null)
+                        .WithMany()
+                        .HasForeignKey("FileAndFoldersId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ExcelManagement.DxBlazor.Data.Models.Person", null)
+                        .WithMany()
+                        .HasForeignKey("PeopleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("FileAndFolderRole", b =>
+                {
+                    b.HasOne("ExcelManagement.DxBlazor.Data.Models.FileAndFolder", null)
+                        .WithMany()
+                        .HasForeignKey("FileAndFoldersId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ExcelManagement.DxBlazor.Data.Models.Role", null)
+                        .WithMany()
+                        .HasForeignKey("RolesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("GroupPerson", b =>
+                {
+                    b.HasOne("ExcelManagement.DxBlazor.Data.Models.Group", null)
+                        .WithMany()
+                        .HasForeignKey("GroupsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ExcelManagement.DxBlazor.Data.Models.Person", null)
+                        .WithMany()
+                        .HasForeignKey("PeopleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -691,28 +808,34 @@ namespace ExcelManagement.DxBlazor.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("PersonRole", b =>
+                {
+                    b.HasOne("ExcelManagement.DxBlazor.Data.Models.Person", null)
+                        .WithMany()
+                        .HasForeignKey("PeopleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ExcelManagement.DxBlazor.Data.Models.Role", null)
+                        .WithMany()
+                        .HasForeignKey("RolesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("ExcelManagement.DxBlazor.Data.Models.Company", b =>
                 {
-                    b.Navigation("CompanyMembers");
-
                     b.Navigation("FileAndFolders");
 
                     b.Navigation("Groups");
 
-                    b.Navigation("Roles");
-                });
-
-            modelBuilder.Entity("ExcelManagement.DxBlazor.Data.Models.FileAndFolder", b =>
-                {
-                    b.Navigation("Persons");
+                    b.Navigation("People");
 
                     b.Navigation("Roles");
                 });
 
             modelBuilder.Entity("ExcelManagement.DxBlazor.Data.Models.Group", b =>
                 {
-                    b.Navigation("FileAndFolders");
-
                     b.Navigation("Groups");
                 });
 
@@ -724,13 +847,9 @@ namespace ExcelManagement.DxBlazor.Migrations
 
                     b.Navigation("CreatedGroups");
 
-                    b.Navigation("CreatedPersons");
+                    b.Navigation("CreatedPeople");
 
                     b.Navigation("CreatedRoles");
-
-                    b.Navigation("Groups");
-
-                    b.Navigation("Roles");
 
                     b.Navigation("UpdatedCompanys");
 
@@ -738,7 +857,7 @@ namespace ExcelManagement.DxBlazor.Migrations
 
                     b.Navigation("UpdatedGroups");
 
-                    b.Navigation("UpdatedPersons");
+                    b.Navigation("UpdatedPeople");
 
                     b.Navigation("UpdatedRoles");
                 });

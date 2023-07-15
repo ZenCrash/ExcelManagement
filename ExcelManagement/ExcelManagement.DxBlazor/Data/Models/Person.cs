@@ -9,8 +9,7 @@ namespace ExcelManagement.DxBlazor.Data.Models
     public class Person
     {
         [Key]
-        [ForeignKey("ApplicationUser")]
-        public string PersonId { get; set; }
+        public int Id { get; set; }
 
         [Required]
         [StringLength(256, MinimumLength = 2)]
@@ -39,49 +38,32 @@ namespace ExcelManagement.DxBlazor.Data.Models
         /* Relationships */
 
         //to 1
-        public Guid? MemberCompanyId { get; set; }
         [Required]
-        public Company MemberCompany { get; set; }
+        public Company Company { get; set; }
 
         //CreatedBy / UpdatedBy
-        [ForeignKey("PersonCreatedBy")]
-        public string? PersonCreatedById { get; set; }
-        public Person PersonCreatedBy { get; set; }
-
-        [ForeignKey("PersonUpdatedBy")]
-        public string? PersonUpdatedById { get; set; }
-        public Person PersonUpdatedBy { get; set; }
+        public Person CreatedBy { get; set; }
+        public Person UpdatedBy { get; set; }
 
         //to *
         public virtual ICollection<Role> Roles { get; set; } = new List <Role>();
         public virtual ICollection<Group> Groups { get; set; } = new List <Group>();
-        [NotMapped]
         public virtual ICollection<FileAndFolder> FileAndFolders { get; set; } = new List<FileAndFolder>();
 
         //CreatedBy / UpdatedBy
-        [InverseProperty("PersonCreatedBy")]
-        public ICollection<Person> CreatedPersons { get; set; } = new List<Person>();
-        [InverseProperty("PersonUpdatedBy")]
-        public ICollection<Person> UpdatedPersons { get; set; } = new List<Person>();
+        public ICollection<Person> CreatedPeople { get; set; } = new List<Person>();
+        public ICollection<Person> UpdatedPeople { get; set; } = new List<Person>();
 
-        [InverseProperty("CompanyCreatedBy")]
         public ICollection<Company> CreatedCompanys { get; set; } = new List<Company>();
-        [InverseProperty("CompanyUpdatedBy")]
         public ICollection<Company> UpdatedCompanys { get; set; } = new List<Company>();
 
-        [InverseProperty("RoleCreatedBy")]
         public ICollection<Role> CreatedRoles { get; set; } = new List<Role>();
-        [InverseProperty("RoleUpdatedBy")]
         public ICollection<Role> UpdatedRoles { get; set; } = new List<Role>();
 
-        [InverseProperty("GroupCreatedBy")]
         public ICollection<Group> CreatedGroups { get; set; } = new List<Group>();
-        [InverseProperty("GroupUpdatedBy")]
         public ICollection<Group> UpdatedGroups { get; set; } = new List<Group>();
 
-        [InverseProperty("FileAndFolderCreatedBy")]
         public ICollection<FileAndFolder> CreatedFileAndFolders { get; set; } = new List<FileAndFolder>();
-        [InverseProperty("FileAndFolderUpdatedBy")]
         public ICollection<FileAndFolder> UpdatedFileAndFolders { get; set; } = new List<FileAndFolder>();
     }
 }

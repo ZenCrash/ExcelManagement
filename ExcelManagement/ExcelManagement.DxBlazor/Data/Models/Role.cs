@@ -7,8 +7,7 @@ namespace ExcelManagement.DxBlazor.Data.Models
     public class Role
     {
         [Key]
-        [ForeignKey("ApplicationRole")]
-        public string RoleId { get; set; }
+        public int Id { get; set; }
 
         [MaxLength(4000)]
         public string Description { get; set; }
@@ -26,22 +25,15 @@ namespace ExcelManagement.DxBlazor.Data.Models
         /* Relationships */
 
         //to 1
-        [ForeignKey("CompanyId")]
-        public Guid? CompanyId { get; set; }
         [Required]
         public Company Company { get; set; }
 
         //CreatedBy / UpdatedBy
-        public string? RoleCreatedById { get; set; }
-        public Person RoleCreatedBy { get; set; }
-
-        public string? RoleUpdatedById { get; set; }
-        public Person RoleUpdatedBy { get; set; }
+        public Person CreatedBy { get; set; }
+        public Person UpdatedBy { get; set; }
 
         //to *
-        [NotMapped]
         public virtual ICollection<FileAndFolder> FileAndFolders { get; set; } = new List<FileAndFolder>();
-        [NotMapped]
-        public virtual ICollection<Person> Persons { get; set; } = new List<Person>();
+        public virtual ICollection<Person> People { get; set; } = new List<Person>();
     }
 }

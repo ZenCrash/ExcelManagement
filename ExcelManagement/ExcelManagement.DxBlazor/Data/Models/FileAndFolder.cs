@@ -8,7 +8,7 @@ namespace ExcelManagement.DxBlazor.Data.Models
     public class FileAndFolder
     {
         [Key]
-        public Guid FilesAndFolderId { get; set; }
+        public int Id { get; set; }
 
         [Required]
         [MaxLength(512)]
@@ -34,23 +34,17 @@ namespace ExcelManagement.DxBlazor.Data.Models
         /* Relationships */
 
         //to 1
-        [ForeignKey("CompanyId")]
-        public Guid? CompanyId { get; set; }
         [Required]
         public Company Company { get; set; }
 
         //CreatedBy / UpdatedBy
-        public string? FileAndFolderCreatedById { get; set; }
-        public Person FileAndFolderCreatedBy { get; set; }
-
-        public string? FileAndFolderUpdatedById { get; set; }
-        public Person FileAndFolderUpdatedBy { get; set; }
+        public Person CreatedBy { get; set; }
+        public Person UpdatedBy { get; set; }
 
         //to *
         public virtual ICollection<Role> Roles { get; set; } = new List<Role>();
-        [NotMapped]
         public virtual ICollection<Group> Groups { get; set; } = new List<Group>();
-        public virtual ICollection<Person> Persons { get; set; } = new List<Person>();
+        public virtual ICollection<Person> People { get; set; } = new List<Person>();
 
     }
 }

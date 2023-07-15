@@ -152,12 +152,12 @@
         }
 
         //Valid CompanyId
-        if (!CompanyDTOs.Exists(x => x.CompanyId == Input.MemberCompanyId))
-        {
-            string error = "Company selected is not valid";
-            errorMessages.Add(error);
-            hasErrors = true;
-        }
+        //if (!CompanyDTOs.Exists(x => x.CompanyId == Input.MemberCompanyId))
+        //{
+        //    string error = "Company selected is not valid";
+        //    errorMessages.Add(error);
+        //    hasErrors = true;
+        //}
 
         //Valid DepartmentId
         //if (Input.GroupId != null && !GroupDTOs.Exists(x => x.GroupId == Input.GroupId))
@@ -193,7 +193,7 @@
                     CreatedDate = DateTime.Now,
                     UpdatedDate = DateTime.Now,
 
-                    MemberCompanyId = Input.MemberCompanyId
+                    //MemberCompanyId = Input.MemberCompanyId
                 }
             };
         var result = await UserManager.CreateAsync(identity, Input.Password);
@@ -239,7 +239,7 @@
     private async Task GetAllCompanies()
     {
         var companies = CompanyRepository.GetAll();
-        CompanyDTOs = CompanyMapper.MapCompanyToDTOList(companies).ToList();
+        //CompanyDTOs = CompanyMapper.MapCompanyToDTOList(companies).ToList();
     }
 
     private async Task OnCompanyChange(Guid companyId)

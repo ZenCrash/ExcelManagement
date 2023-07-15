@@ -8,7 +8,7 @@ namespace ExcelManagement.DxBlazor.Data.DbOption.Interface
         public List<Company> GetAll();
 
         //Get
-        public Company Get(Guid id);
+        public Company Get(int id);
 
         //Create
         public bool Create(Company entity);
@@ -17,6 +17,6 @@ namespace ExcelManagement.DxBlazor.Data.DbOption.Interface
         public bool Update(Company entity);
 
         //Delete
-        public bool Delete(Guid id);
+        public bool Delete(int id);
     }
 }

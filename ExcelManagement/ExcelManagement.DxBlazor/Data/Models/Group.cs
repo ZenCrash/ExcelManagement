@@ -9,7 +9,7 @@ namespace ExcelManagement.DxBlazor.Data.Models
     public class Group
     {
         [Key]
-        public Guid GroupId { get; set; }
+        public int Id { get; set; }
 
         [Required]
         [MaxLength(512)]
@@ -33,22 +33,16 @@ namespace ExcelManagement.DxBlazor.Data.Models
         //Self Eefrence
 
         //to 1
-        [ForeignKey("CompanyId")]
-        public Guid? CompanyId { get; set; }
         [Required]
         public Company Company { get; set; }
 
         //CreatedBy / UpdatedBy
-        public string? GroupCreatedById { get; set; }
-        public Person GroupCreatedBy { get; set; }
-
-        public string? GroupUpdatedById { get; set; }
-        public Person GroupUpdatedBy { get; set; }
+        public Person CreatedBy { get; set; }
+        public Person UpdatedBy { get; set; }
 
         //to *
         public virtual ICollection<Group> Groups { get; set; } = new List<Group>();
         public virtual ICollection<FileAndFolder> FileAndFolders { get; set; } = new List<FileAndFolder>();
-        [NotMapped]
-        public virtual ICollection<Person> Persons { get; set; } = new List<Person>();
+        public virtual ICollection<Person> People { get; set; } = new List<Person>();
     }
 }

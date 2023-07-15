@@ -7,7 +7,7 @@ namespace ExcelManagement.DxBlazor.Data.DTO
 {
     public class CompanyDTO
     {
-        public Guid CompanyId { get; set; }
+        public int CompanyId { get; set; }
 
         [Required]
         [StringLength(2000)]
