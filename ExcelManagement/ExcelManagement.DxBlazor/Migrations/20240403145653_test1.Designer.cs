@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ExcelManagement.DxBlazor.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230715182151_test1")]
+    [Migration("20240403145653_test1")]
     partial class test1
     {
         /// <inheritdoc />

@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using ExcelManagement.DxBlazor.Data.Models;
+using System.ComponentModel.DataAnnotations;
 
 namespace ExcelManagement.DxBlazor.Pages.Account
 {
@@ -21,6 +22,8 @@ namespace ExcelManagement.DxBlazor.Pages.Account
 
         [Required]
         public Guid MemberCompanyId { get; set; }
+        //[Required]
+        //public Company Company { get; set; }
         public Guid? MemberGroupId { get; set; }
         [Required]
         public Role? SelectedRole { get; set; }

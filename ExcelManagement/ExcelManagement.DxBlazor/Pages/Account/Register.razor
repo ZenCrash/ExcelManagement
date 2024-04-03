@@ -11,6 +11,7 @@
 @using Microsoft.AspNetCore.Mvc.Rendering;
 @using Microsoft.Identity.Client;
 @using System.ComponentModel.DataAnnotations;
+@using System.Linq;
 
 @inject ICompanyRepository CompanyRepository;
 @inject IGroupRepository GroupRepository;
@@ -97,7 +98,7 @@
                         <ValidationMessage For="@(() => Input.SelectedRole)" class="text-danger" />
                     </div>
 
-                    <button type="submit">Submit</button>
+                    <DxButton SubmitFormOnClick="true" RenderStyle="ButtonRenderStyle.Primary" Text="Submit"></DxButton>
                 </EditForm>
 
                 <ul class="text-danger">
@@ -130,6 +131,7 @@
     private bool CompanySelected { get; set; } = true;
     private bool AccountRegistered { get; set; } = false;
     private List<string> errorMessages { get; set; } = new();
+    private List<Company> Companies { get; set; } = new();
 
     protected override void OnInitialized()
     {
@@ -181,6 +183,10 @@
             return;
         }
 
+        var x = Input.MemberCompanyId;
+        var y = Input.SelectedRole;
+        var d = 1;
+
         //Create new user
         var identity = new ApplicationUser
             {
@@ -193,7 +199,8 @@
                     CreatedDate = DateTime.Now,
                     UpdatedDate = DateTime.Now,
 
-                    //MemberCompanyId = Input.MemberCompanyId
+                    Company = Companies.FirstOrDefault(c => c.Id == Input.MemberCompanyId),
+                    //Company = Input.MemberCompanyId
                 }
             };
         var result = await UserManager.CreateAsync(identity, Input.Password);
@@ -238,8 +245,8 @@
     //Logic
     private async Task GetAllCompanies()
     {
-        var companies = CompanyRepository.GetAll();
-        //CompanyDTOs = CompanyMapper.MapCompanyToDTOList(companies).ToList();
+        Companies = CompanyRepository.GetAll();
+        CompanyDTOs = CompanyMapper.MapToDTOEndpointList(Companies).ToList();
     }
 
     private async Task OnCompanyChange(Guid companyId)

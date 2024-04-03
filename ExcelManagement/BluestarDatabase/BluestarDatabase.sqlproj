@@ -62,6 +62,7 @@
     <None Include="Database.Create.TestData.sql" />
     <None Include="Database.Drop.And.Create.sql" />
     <None Include="Database.Create.Tables.sql" />
+    <None Include="Database.Create.TestDataUpdated.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Database.Create.Tables.New.sql" />
