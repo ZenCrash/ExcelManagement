@@ -94,7 +94,7 @@ namespace ExcelManagement.DxBlazor.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    PersonId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    PersonId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -145,7 +145,6 @@ namespace ExcelManagement.DxBlazor.Migrations
                     CompanyLogoUrl = table.Column<string>(type: "nvarchar(4000)", maxLength: 4000, nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    CreatedById = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     UpdatedById = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
                 },
                 constraints: table =>
@@ -165,7 +164,7 @@ namespace ExcelManagement.DxBlazor.Migrations
                     ProfileImageUrl = table.Column<string>(type: "nvarchar(4000)", maxLength: 4000, nullable: true),
                     CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    CompanyId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CompanyId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     CreatedById = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     UpdatedById = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
                 },
@@ -467,7 +466,8 @@ namespace ExcelManagement.DxBlazor.Migrations
                 name: "IX_AspNetUsers_PersonId",
                 table: "AspNetUsers",
                 column: "PersonId",
-                unique: true);
+                unique: true,
+                filter: "[PersonId] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "UserNameIndex",
@@ -475,11 +475,6 @@ namespace ExcelManagement.DxBlazor.Migrations
                 column: "NormalizedUserName",
                 unique: true,
                 filter: "[NormalizedUserName] IS NOT NULL");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Companies_CreatedById",
-                table: "Companies",
-                column: "CreatedById");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Companies_UpdatedById",
@@ -594,8 +589,7 @@ namespace ExcelManagement.DxBlazor.Migrations
                 table: "AspNetRoles",
                 column: "RoleId",
                 principalTable: "Roles",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
+                principalColumn: "Id");
 
             migrationBuilder.AddForeignKey(
                 name: "FK_AspNetUserClaims_AspNetUsers_UserId",
@@ -626,14 +620,6 @@ namespace ExcelManagement.DxBlazor.Migrations
                 table: "AspNetUsers",
                 column: "PersonId",
                 principalTable: "People",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_Companies_People_CreatedById",
-                table: "Companies",
-                column: "CreatedById",
-                principalTable: "People",
                 principalColumn: "Id");
 
             migrationBuilder.AddForeignKey(
@@ -648,7 +634,7 @@ namespace ExcelManagement.DxBlazor.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropForeignKey(
-                name: "FK_Companies_People_CreatedById",
+                name: "FK_Companies_People_Id",
                 table: "Companies");
 
             migrationBuilder.DropForeignKey(

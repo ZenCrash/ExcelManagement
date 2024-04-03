@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ExcelManagement.DxBlazor.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240403145653_test1")]
+    [Migration("20240403184013_test1")]
     partial class test1
     {
         /// <inheritdoc />
@@ -62,7 +62,6 @@ namespace ExcelManagement.DxBlazor.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<Guid?>("PersonId")
-                        .IsRequired()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("PhoneNumber")
@@ -92,7 +91,8 @@ namespace ExcelManagement.DxBlazor.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.HasIndex("PersonId")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasFilter("[PersonId] IS NOT NULL");
 
                     b.ToTable("AspNetUsers", (string)null);
                 });
@@ -113,9 +113,6 @@ namespace ExcelManagement.DxBlazor.Migrations
                         .HasMaxLength(2000)
                         .HasColumnType("nvarchar(2000)");
 
-                    b.Property<Guid?>("CreatedById")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("datetime2");
 
@@ -131,8 +128,6 @@ namespace ExcelManagement.DxBlazor.Migrations
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("CreatedById");
 
                     b.HasIndex("UpdatedById");
 
@@ -257,7 +252,7 @@ namespace ExcelManagement.DxBlazor.Migrations
                         .HasMaxLength(4000)
                         .HasColumnType("nvarchar(4000)");
 
-                    b.Property<Guid>("CompanyId")
+                    b.Property<Guid?>("CompanyId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid?>("CreatedById")
@@ -569,7 +564,6 @@ namespace ExcelManagement.DxBlazor.Migrations
                     b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityRole");
 
                     b.Property<Guid?>("RoleId")
-                        .IsRequired()
                         .HasColumnType("uniqueidentifier");
 
                     b.HasIndex("RoleId")
@@ -583,9 +577,7 @@ namespace ExcelManagement.DxBlazor.Migrations
                 {
                     b.HasOne("ExcelManagement.DxBlazor.Data.Models.Person", "Person")
                         .WithOne("ApplicationUser")
-                        .HasForeignKey("ExcelManagement.DxBlazor.Data.Models.ApplicationUser", "PersonId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ExcelManagement.DxBlazor.Data.Models.ApplicationUser", "PersonId");
 
                     b.Navigation("Person");
                 });
@@ -594,7 +586,9 @@ namespace ExcelManagement.DxBlazor.Migrations
                 {
                     b.HasOne("ExcelManagement.DxBlazor.Data.Models.Person", "CreatedBy")
                         .WithMany("CreatedCompanys")
-                        .HasForeignKey("CreatedById");
+                        .HasForeignKey("Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("ExcelManagement.DxBlazor.Data.Models.Person", "UpdatedBy")
                         .WithMany("UpdatedCompanys")
@@ -664,8 +658,7 @@ namespace ExcelManagement.DxBlazor.Migrations
                     b.HasOne("ExcelManagement.DxBlazor.Data.Models.Company", "Company")
                         .WithMany("Persons")
                         .HasForeignKey("CompanyId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.HasOne("ExcelManagement.DxBlazor.Data.Models.Person", "CreatedBy")
                         .WithMany("CreatedPersons")
@@ -835,9 +828,7 @@ namespace ExcelManagement.DxBlazor.Migrations
                 {
                     b.HasOne("ExcelManagement.DxBlazor.Data.Models.Role", "Role")
                         .WithOne("ApplicationRole")
-                        .HasForeignKey("ExcelManagement.DxBlazor.Data.Models.ApplicationRole", "RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ExcelManagement.DxBlazor.Data.Models.ApplicationRole", "RoleId");
 
                     b.Navigation("Role");
                 });

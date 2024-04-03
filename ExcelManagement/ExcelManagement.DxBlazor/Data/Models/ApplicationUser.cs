@@ -11,7 +11,6 @@ namespace ExcelManagement.DxBlazor.Data.Models
 
         //to 1
         public Guid? PersonId { get; set; }
-        [Required]
-        public Person Person { get; set; }
+        public Person? Person { get; set; }
     }
 }

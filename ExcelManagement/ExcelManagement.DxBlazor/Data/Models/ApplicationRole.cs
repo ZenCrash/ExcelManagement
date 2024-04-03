@@ -10,7 +10,6 @@ namespace ExcelManagement.DxBlazor.Data.Models
 
         //to 1
         public Guid? RoleId { get; set; }
-        [Required]
-        public Role Role { get; set; }
+        public Role? Role { get; set; }
     }
 }

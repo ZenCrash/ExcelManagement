@@ -199,7 +199,7 @@
                     CreatedDate = DateTime.Now,
                     UpdatedDate = DateTime.Now,
 
-                    Company = Companies.FirstOrDefault(c => c.Id == Input.MemberCompanyId),
+                    CompanyId = Input.MemberCompanyId,
                     //Company = Input.MemberCompanyId
                 }
             };
@@ -251,6 +251,8 @@
 
     private async Task OnCompanyChange(Guid companyId)
     {
+
+        Input.MemberCompanyId = companyId;
         //Input.MemberCompanyId = companyId;
         //Input.MemberGroupId = null;
 

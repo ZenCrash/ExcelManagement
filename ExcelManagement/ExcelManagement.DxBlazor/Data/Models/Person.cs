@@ -41,8 +41,8 @@ namespace ExcelManagement.DxBlazor.Data.Models
         //to 1
         public ApplicationUser ApplicationUser { get; set; }
 
-        [Required]
-        public Company Company { get; set; }
+        public Guid? CompanyId { get; set; }
+        public Company? Company { get; set; }
 
         //CreatedBy / UpdatedBy
         public Person? CreatedBy { get; set; }
