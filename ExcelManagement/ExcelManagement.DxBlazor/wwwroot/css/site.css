@@ -85,3 +85,7 @@ html, body {
 .workbook-tab:hover {
     background-color: red;
 }
+
+.valid-input {
+    outline: none;
+}

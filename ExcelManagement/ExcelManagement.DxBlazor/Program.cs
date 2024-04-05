@@ -1,21 +1,16 @@
 using ExcelManagement.ClassLibary;
-using ExcelManagement.DxBlazor.Areas.Identity;
 using ExcelManagement.DxBlazor.Data;
+using ExcelManagement.DxBlazor.Data.DbOption.Interface;
+using ExcelManagement.DxBlazor.Data.DbOption.Repository;
+using ExcelManagement.DxBlazor.Data.Models;
 using ExcelManagement.DxBlazor.Services;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
-
 var builder = WebApplication.CreateBuilder(args);
-var connectionString = builder.Configuration.GetConnectionString("ExcelManagementDxBlazorContextConnection") ?? throw new InvalidOperationException("Connection string 'ExcelManagementDxBlazorContextConnection' not found.");
-
-builder.Services.AddDbContext<ExcelManagementDxBlazorContext>(options =>
-    options.UseSqlServer(connectionString));
-
-builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-    .AddEntityFrameworkStores<ExcelManagementDxBlazorContext>();
 
 //Clean on startup
 SheetLogic sheetLogic = new();
@@ -29,14 +24,37 @@ fileLogic.DeleteFilesInTempFolder();
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
+
+//database connectionstring
+var cs = builder.Configuration.GetConnectionString("Default");
+builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(cs));
+
+//Identity
+builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
+{
+    options.Password.RequireDigit = false;
+    options.Password.RequiredLength = 8;
+    options.Password.RequireLowercase = true;
+    options.Password.RequireUppercase = true;
+    options.Password.RequireNonAlphanumeric = true;
+
+    options.SignIn.RequireConfirmedEmail = false;
+})
+    .AddRoles<IdentityRole>()
+    .AddEntityFrameworkStores<ApplicationDbContext>()
+    .AddSignInManager<SignInManager<ApplicationUser>>();
+
 builder.Services.AddDevExpressBlazor(options => {
     options.BootstrapVersion = DevExpress.Blazor.BootstrapVersion.v5;
     options.SizeMode = DevExpress.Blazor.SizeMode.Medium;
 });
 builder.Services.AddSingleton<WeatherForecastService>();
 
-//token provider
-builder.Services.AddScoped<TokenProvider>();
+//Scoped Services
+builder.Services.AddScoped<AuthenticationStateProvider, IdentityValidationProvider<ApplicationUser>>();
+builder.Services.AddScoped<ICompanyRepository, CompanyRepository>();
+builder.Services.AddScoped<IGroupRepository, GroupRepository>();
+
 
 builder.WebHost.UseWebRoot("wwwroot");
 builder.WebHost.UseStaticWebAssets();
@@ -62,14 +80,12 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
-//token access
+//Authentication and Authorization
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapRazorPages();
 
 app.MapBlazorHub();
 app.MapFallbackToPage("/_Host");
-app.UseAuthentication();;
 
 app.Run();

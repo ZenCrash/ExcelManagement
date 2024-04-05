@@ -1,156 +1,42 @@
-﻿@using DxBlazor.Data
-@using DxBlazor.Pages
-@using ClassLibary
-@using ClassLibary.Models
+﻿@page "/"
 
-@using ClosedXML.Excel
+<h3>Home Page</h3>
+<hr/>
+<p/>
+<p/>
+<AuthorizeView>
+	<Authorized>
+		<p>You are logged in! @context.User.Identity.Name</p>
+		<span>Logout: </span>
+		<NavLink href="Identity/Account/Logout">https://localhost:7060/Identity/Account/Logout</NavLink>
+	</Authorized>
+	<NotAuthorized>
+		<p>You are currently not logged in</p>
+		<span>Login: <NavLink href="Identity/Account/Login">https://localhost:7060/Identity/Account/Login</NavLink></span>
+		<p>Register: <NavLink href="/register">https://localhost:7060/register</NavLink></p>
 
-@page "/"
-
-@*Logo*@
-<div style="width: 100%; height: auto; display: flex; justify-content: center;">
-    <img src="/images/index.png" style="width: 50%" />
-</div>
-<p> </p>
-<p> </p>
-
-
-@*Loading Animation*@
-@if (IsLoadingRender)
-{
-    <div class="text-center">
-        <div class="spinner-border text-secondary" role="status">
-            <span class="sr-only">Loading</span>
-        </div>
-        <h2>Loading...</h2>
-    </div>
-}
-else
-{
-    if (!IsWorkbookSelected) //Select Workbook
-    {
-        <h3>Please select a excel document:</h3>
-        <p></p>
-        <DxComboBox Data="@Files"
-            NullText="Select a File..."
-            Value="@SelectedFileName"
-            ValueChanged="(string fileName) => { FileSelection(fileName); }">
-        </DxComboBox>
-    }
-
-    else //If Workbook Has Been Selected
-    {
-        <WorkbookComponent SelectedFileName="@SelectedFileName"
-                   FileList="Files"
-                   DirectoryPath="@DirectoryPath"
-                   AlertMessage="@Alert"
-                   NewFileName="@NewWorkbookSelected">
-        </WorkbookComponent>
-    }
-
-    @*Alert*@
-    <p></p>
-    <p></p>
-    @foreach (AlertMessageModel message in alertMessages)
-    {
-        <AlertMessage model="@message" dispose="DisposeAlert" />
-    }
-}
-
+		<p>Depricated Register: <NavLink href="Identity/Account/Register">https://localhost:7060/Identity/Account/Register</NavLink></p>
+		
+	</NotAuthorized>
+</AuthorizeView>
+@*<p></p>
+<p>@isAuthenticated</p>*@
 @code {
-    //Loading
-    bool IsLoadingRender { get; set; } = true;
-    bool IsWorkbookSelected { get; set; } = false;
-    //Files
-    private string SelectedFileName { get; set; }
-    private string DirectoryPath { get; set; }
-    private List<string> Files { get; set; } = new();
-    // Alert
-    List<AlertMessageModel> alertMessages = new();
-    //File Logic
-    FileLogic fileLogic = new();
+	//[CascadingParameter]
+	//public Task<AuthenticationState> AuthenticationStateTask { get; set; }
+	//public string isAuthenticated { get; set; }
 
-    //---------------------------------------------------------------------------//
-    /* Razor Page                                                                */
-    //---------------------------------------------------------------------------//
-
-    protected override async Task OnInitializedAsync()
-    {
-
-    }
-
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        if (firstRender)
-        {
-            DirectoryPath = @"..\ExcelDocuments"; //Default dirictory
-            GetFiles(DirectoryPath);
-
-            IsLoadingRender = false;
-            StateHasChanged();
-        }
-    }
-
-    //Get files in from dirictory.
-    private void GetFiles(string directoryPath)
-    {
-        var fileNames = Directory.GetFiles(directoryPath, "*.xlsx");
-        Files.AddRange(fileNames.Select(fileName => Path.GetFileNameWithoutExtension(fileName)));
-    }
-
-    //File has been Selected
-    private void FileSelection(string fileName)
-    {
-        SelectedFileName = fileName;
-        string selectedFileName = ((fileName.Contains(" ") && fileName == fileName.Replace(" ", "")) || fileName == null) ? null : fileName;
-
-        if (!((fileName.Contains(" ") && selectedFileName == selectedFileName.Replace(" ", "")) || selectedFileName == null))
-        {
-            if (fileLogic.IsFileAccessable(DirectoryPath, selectedFileName))
-            {
-                IsWorkbookSelected = true;
-            }
-
-            else
-            {
-                Alert(new AlertMessageModel(AlertMessageModel.AlertType.FileInaccessible));
-            }
-
-            StateHasChanged();
-        }
-    }
-
-    //New File has been selected from the WorkbookComponents
-    public void NewWorkbookSelected(string newWorkbookName)
-    {
-        SelectedFileName = newWorkbookName;
-    }
-
-    //---------------------------------------------------------------------------//
-    /* Alert Messages                                                           */
-    //---------------------------------------------------------------------------//
-
-    //Add alert messgae to alert list
-    private void Alert(AlertMessageModel alertObject)
-    {
-        alertMessages.Add(alertObject);
-    }
-
-    // Dispose alert message
-    private void DisposeAlert(Guid guid)
-    {
-        try
-        {
-            //alertMessages.Remove(alertMessages.Single(message => message.Guid.CompareTo(guid) == 0));
-            AlertMessageModel alertToBeDeleted = alertMessages.Find(alert => alert.Guid == guid);
-            if (alertToBeDeleted != null)
-            {
-                alertMessages.Remove(alertToBeDeleted);
-            }
-        }
-        catch
-        {
-
-        }
-    }
+	//protected override async Task OnInitializedAsync()
+	//{
+	//	var authState = await AuthenticationStateTask;
+	//	var user = authState.User;
+	//	if (user.Identity.IsAuthenticated)
+	//	{
+	//		isAuthenticated = "You should have access to this page";
+	//	}
+	//	else
+	//	{
+	//		isAuthenticated = "You should not have access to this page";
+	//	}
+	//}
 }

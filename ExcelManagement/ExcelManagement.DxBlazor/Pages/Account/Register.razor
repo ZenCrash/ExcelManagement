@@ -1,0 +1,273 @@
+﻿@using ExcelManagement.DxBlazor.Data.DbOption.Interface;
+@using ExcelManagement.DxBlazor.Data.DbOption.Repository;
+@using ExcelManagement.DxBlazor.Data.DTO;
+@using ExcelManagement.DxBlazor.Data.DTOMapper;
+@using ExcelManagement.DxBlazor.Data.Models;
+@using ExcelManagement.DxBlazor.Pages;
+@using ExcelManagement.DxBlazor.Pages.Account;
+@using Microsoft.AspNetCore.Identity;
+@using Microsoft.AspNetCore.Mvc;
+@using Microsoft.AspNetCore.Mvc.RazorPages;
+@using Microsoft.AspNetCore.Mvc.Rendering;
+@using Microsoft.Identity.Client;
+@using System.ComponentModel.DataAnnotations;
+@using System.Linq;
+
+@inject ICompanyRepository CompanyRepository;
+@inject IGroupRepository GroupRepository;
+
+@inject UserManager<ApplicationUser> UserManager
+@inject RoleManager<IdentityRole> RoleManager
+@inject SignInManager<ApplicationUser> SignInManager
+@inject NavigationManager navigationManager
+
+@page "/register"
+
+<h3>Register</h3>
+
+
+<div class="row" style="margin:50px">
+    <div class="col-md-4">
+        @if (AccountRegistered)
+        {
+            <h3>Account create sucessfully!</h3>
+            <h3>Rediricting in 5 seconds.</h3>
+            <div class="spinner-border text-secondary" role="status">
+                <span class="sr-only"></span>
+            </div>
+        }
+        else
+        {
+
+            @if (CompanyDTOs != null && CompanyDTOs.Count > 0)
+            {
+                <EditForm Model="@Input" OnValidSubmit="OnPostAsync">
+                    <DataAnnotationsValidator/>
+
+                    @*Email*@
+                    <div class="form-group" style="margin:10px">
+                        <label class="form-label" for="@Input.Email">Email:</label>
+                        <InputText class="form-control" id="@Input.Email" @bind-Value="@Input.Email" type="email" />
+                        <ValidationMessage For="@(() => Input.Email)" class="text-danger" />
+                    </div>
+                    @*Password*@
+                    <div class="form-group" style="margin:10px">
+                        <label class="form-label" for="@Input.Password">Password:</label>
+                        <InputText class="form-control" id="@Input.Password" @bind-Value="@Input.Password" type="password" />
+                        <ValidationMessage For="@(() => Input.Password)" class="text-danger" />
+                    </div>
+                    @*First Name*@
+                    <div class="form-group" style="margin:10px">
+                        <label class="form-label" for="@Input.FirstName">First Name:</label>
+                        <InputText class="form-control" id="@Input.FirstName" @bind-Value="@Input.FirstName" type="text" />
+                        <ValidationMessage For="@(() => Input.FirstName)" class="text-danger" />
+                    </div>
+                    @*Last Name*@
+                    <div class="form-group" style="margin:10px">
+                        <label class="form-label" for="@Input.LastName">Last Name:</label>
+                        <InputText class="form-control" id="@Input.LastName" @bind-Value="@Input.LastName" />
+                        <ValidationMessage For="@(() => Input.LastName)" class="text-danger" />
+                    </div>
+                    @*Company*@
+                    <div class="form-group" style="margin:10px">
+                        <label class="form-label" for="@Input.MemberCompanyId">Company:</label>
+                        <InputSelect class="form-select" id="@Input.MemberCompanyId" ValueExpression="@(() => Input.MemberCompanyId)" ValueChanged="@((Guid value) => OnCompanyChange(value))">
+                            @if (CompanySelected)
+                            {
+                                <option selected value="">--Select Company--</option>
+                            }
+                            @foreach (var company in CompanyDTOs)
+                            {
+                                <option value="@company.Id">@company.CompanyName</option>
+                            }
+                        </InputSelect>
+                        <ValidationMessage For="@(() => Input.MemberCompanyId)" class="text-danger" />
+                    </div>
+                    @*Role*@
+                    <div class="form-group" style="margin:10px">
+                        <label class="form-label" for="@Input.SelectedRole">Role:</label>
+                        <InputSelect class="form-select" id="@Input.SelectedRole" @bind-Value="Input.SelectedRole">
+
+                            <option selected value="">--Select Role-- (Optional)</option>
+
+                            @foreach (var roles in Input.Roles)
+                            {
+                                <option value="@roles.Key">@roles.Value</option>
+                            }
+                        </InputSelect>
+                        <ValidationMessage For="@(() => Input.SelectedRole)" class="text-danger" />
+                    </div>
+
+                    <DxButton SubmitFormOnClick="true" RenderStyle="ButtonRenderStyle.Primary" Text="Submit"></DxButton>
+                </EditForm>
+
+                <ul class="text-danger">
+                    @foreach (var item in errorMessages)
+                    {
+                        <li>
+                            <p>@item</p>
+                        </li>
+                    }
+                </ul>
+
+            }
+            else
+            {
+                <p>Page couldent load</p>
+                <p>No companies available.</p>
+            }
+        }
+    </div>
+</div>
+
+
+
+
+@code {
+    private RegisterModel Input { get; set; } = new();
+    private List<GroupDTO> GroupDTOs { get; set; } = new();
+    private List<CompanyDTO> CompanyDTOs { get; set; } = new();
+
+    private bool CompanySelected { get; set; } = true;
+    private bool AccountRegistered { get; set; } = false;
+    private List<string> errorMessages { get; set; } = new();
+    private List<Company> Companies { get; set; } = new();
+
+    protected override void OnInitialized()
+    {
+        GetAllCompanies();
+    }
+
+
+    private async Task OnPostAsync()
+    {
+        errorMessages = new List<string>();
+        bool hasErrors = false;
+
+        //Does user exist in the system?
+        var userExists = await UserManager.FindByEmailAsync(Input.Email);
+        if (userExists != null)
+        {
+            string error = "Username/Email is already in use.";
+            errorMessages.Add(error);
+            hasErrors = true;
+        }
+
+        //Valid CompanyId
+        //if (!CompanyDTOs.Exists(x => x.CompanyId == Input.MemberCompanyId))
+        //{
+        //    string error = "Company selected is not valid";
+        //    errorMessages.Add(error);
+        //    hasErrors = true;
+        //}
+
+        //Valid DepartmentId
+        //if (Input.GroupId != null && !GroupDTOs.Exists(x => x.GroupId == Input.GroupId))
+        //{
+        //    string error = "Department selected is not valid";
+        //    errorMessages.Add(error);
+        //    hasErrors = true;
+        //}
+        //Valid Role
+        if (Input.SelectedRole != null && !Enum.IsDefined(typeof(RegisterModel.Role), Input.SelectedRole))
+        {
+            string error = "Role selected is not valid";
+            errorMessages.Add(error);
+            hasErrors = true;
+        }
+
+        //if Errors
+        if (hasErrors)
+        {
+            StateHasChanged();
+            return;
+        }
+
+        var x = Input.MemberCompanyId;
+        var y = Input.SelectedRole;
+        var d = 1;
+
+        //Create new user
+        var identity = new ApplicationUser
+            {
+                UserName = Input.Email,
+                Email = Input.Email,
+                Person = new Person
+                {
+                    FirstName = Input.FirstName,
+                    LastName = Input.LastName,
+                    CreatedDate = DateTime.Now,
+                    UpdatedDate = DateTime.Now,
+
+                    CompanyId = Input.MemberCompanyId,
+                    //Company = Input.MemberCompanyId
+                }
+            };
+        var result = await UserManager.CreateAsync(identity, Input.Password);
+
+        //Create new role
+        if (Input.SelectedRole != null)
+        {
+            //NOTE Should be removed in the future!
+            foreach (var role in Enum.GetValues(typeof(RegisterModel.Role)))
+            {
+                if (!await RoleManager.RoleExistsAsync(role.ToString()))
+                {
+                    var identityRole = new IdentityRole(role.ToString());
+                    await RoleManager.CreateAsync(identityRole);
+                }
+            }
+
+            var addUserRoleResult = await UserManager.AddToRoleAsync(identity, Input.SelectedRole.ToString());
+
+            //Account create sucessfully
+            if (result.Succeeded && addUserRoleResult.Succeeded)
+            {
+                AccountRegistered = true;
+                StateHasChanged();
+                await Task.Delay(1000 * 3);
+                navigationManager.NavigateTo("/");
+            }
+        }
+        else
+        {
+            //Account create sucessfully
+            if (result.Succeeded)
+            {
+                AccountRegistered = true;
+                StateHasChanged();
+                await Task.Delay(1000 * 2);
+                navigationManager.NavigateTo("/");
+            }
+        }
+    }
+
+    //Logic
+    private async Task GetAllCompanies()
+    {
+        Companies = CompanyRepository.GetAll();
+        CompanyDTOs = CompanyMapper.MapToDTOEndpointList(Companies).ToList();
+    }
+
+    private async Task OnCompanyChange(Guid companyId)
+    {
+
+        Input.MemberCompanyId = companyId;
+        //Input.MemberCompanyId = companyId;
+        //Input.MemberGroupId = null;
+
+        //var groups = GroupRepository.GetAllByCompanyId(companyId);
+
+        //if (departments == null || departments.Count == 0)
+        //{
+        //    CompanySelected = true;
+        //}
+
+        //DepartmentDTOs = DepartmentMapper.MapDepartmentToDTOList(departments).ToList();
+
+        //CompanySelected = false;
+        //StateHasChanged();
+    }
+
+
+}
