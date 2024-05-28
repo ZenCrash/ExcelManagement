@@ -1,29 +1,31 @@
-This project was devoleped for PDM Technologies group.
-Of of the many production that PDM technology group provieds to is useser,
-is a Bluestar wich is an integrated part of Microsoft Dynamics 365 Finance.
-to simplifi the product. it manages 3d drawings, and clisifies them as a part or an assembly (item or list item).
-a motor for example can be an assembly with multiable parts, wich is a refrence to the same bolt 3d drawing.
-and the drawings can be extended with further data/information about them.
+This project was developed as a proof of concept for PDM Technologies group.
+Of the many production that PDM technology group provieds to its users,
+one of them is Bluestar wich is an integrated part of Microsoft Dynamics 365 Finance.
+to simplify the product. it manages 3d drawings, and classifies them as a part or an assembly (relational files).
 
-With the Bluestar program in mind, a large part of the workload is to do with customers.
-spesificly converting/intergrating/restructuring their existing data to a new database.
+With Bluestar program in mind, a large part of the workload is to do with customers.
+specifically converting/integrating/restructuring their existing data to a new database.
 and with that alot of people in the company are tasked with this.
-so this project seeks to automate that process, or at the very least lessen the work load for the people involved.
+so this project seeks to automate that process, or at the very least lessen the workload for the people involved.
 
-that vision come into play by giveing the customers access to impliment/edit their own data,
-in the form of an uploadable spreadsheet, wich then can be converted to a sequal or similar database at a later state.
+That vision come into play by giving the customers access to implement/edit their own data,
+in the form of an uploadable spreadsheet, which then can be converted to a sequal or similar database at a later state.
 
-
-the project consist of
-* SQL database for filemanagement, login, extended user information
-* c# project for file management / logic / dataaccess,
+the project features:
+* SQL database for filemanagement, login, extended user information.
+* C# project for file management / logic / dataaccess,
 * Blazor frontend using devexpress to look/feel similar to PDM technology groups other product.
-the project accounts for concurrentcy issues of interactions with same file/same row and others.
-it also using authentization state manager to identify same user, but with multiable tabs, and diffrent users.
-and with logout all useres when one instance logs out.
+the project accounts for concurrency issues of interactions with file management.
+It also uses authentication state manager to identify same user, but with multiple tabs, and different users. and with logout all useres when one instance logs out.
 
-this project is extensive in features so i proberly can list them all. but its one of my more refined projects.
+this project is extensive in features so i probably can list them all.
+that being said some of the features are more proof of concept so we thet may not be fully implemented.
 
-to run this project you do need to install devexpress.
-beond that. login is temperaryly disabled as filemanagement is getter an overhaul.
-more features to come.
+Requirements:
+* Microsoft Visual Studio
+* MSSQL or similar sequel database.
+
+Installation:
+* Install Devexpress from https://www.devexpress.com/products/try/
+* Install MSSQL.
+* Open project, and in the package manager console, type “update-database”, and press enter. 
