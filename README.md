@@ -21,7 +21,7 @@ It also uses authentication state manager to identify same user, but with multip
 this project is extensive in features so i probably can list them all.
 that being said some of the features are more proof of concept so we thet may not be fully implemented.
 
-<img scr="https://i.ibb.co/tKByDhC/excelmanagement"/>
+<img src="https://i.ibb.co/tKByDhC/excelmanagement.png"/>
 
 Requirements:
 * Microsoft Visual Studio
