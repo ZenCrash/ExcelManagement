@@ -13,17 +13,17 @@ IF EXISTS (SELECT * FROM sys.databases WHERE name = 'BluestarDatabase')
 		SET @CompanyId2 = NEWID();
 
 		--insert Companys
-		insert into Companies ([CompanyId], [CompanyName], [Description], [CompanyLogoUrl], [CreatedDate], [UpdatedDate]) 
+		insert into Companies ([Id], [CompanyName], [Description], [CompanyLogoUrl], [CreatedDate], [UpdatedDate]) 
 		values (NEWID(), 'Intersteller Think Tank',	'Intersteller Think Tank - DescriptionText', 'www.google.com', GETDATE(), GETDATE());
-		insert into Companies ([CompanyId], [CompanyName], [Description], [CompanyLogoUrl], [CreatedDate], [UpdatedDate]) 
+		insert into Companies ([Id], [CompanyName], [Description], [CompanyLogoUrl], [CreatedDate], [UpdatedDate]) 
 		values (NEWID(), 'Dog Fight International',	'Dog Fight International - DescriptionText', 'www.google.com', GETDATE(), GETDATE());
 
 		BEGIN
-			insert into Companies ([CompanyId], [CompanyName], [Description], [CompanyLogoUrl], [CreatedDate], [UpdatedDate])
+			insert into Companies ([Id], [CompanyName], [Description], [CompanyLogoUrl], [CreatedDate], [UpdatedDate])
 			values (@CompanyId1, 'pdm technology Group', 'pdm technology Group - DescriptionText', 'www.google.com', GETDATE(), GETDATE());
 		END
 		BEGIN
-			insert into Companies ([CompanyId], [CompanyName], [Description], [CompanyLogoUrl], [CreatedDate], [UpdatedDate]) 
+			insert into Companies ([Id], [CompanyName], [Description], [CompanyLogoUrl], [CreatedDate], [UpdatedDate]) 
 			values (@CompanyId2, 'Alvon Dynamics', 'Alvon Dynamics - DescriptionText', 'www.google.com', GETDATE(), GETDATE());
 		END
 
